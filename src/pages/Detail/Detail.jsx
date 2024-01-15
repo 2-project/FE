@@ -11,7 +11,7 @@ const Detail = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        width: "760px",
+        maxWidth: "760px",
         margin: "0 55px 0 55px",
       }}
     >

@@ -1,5 +1,5 @@
 import React from "react";
-import { ToggleButton, ToggleButtonGroup, Button } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import PolicyTable from "./PolicyTable";
 
 const Description = () => {
