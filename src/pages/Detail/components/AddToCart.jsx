@@ -1,12 +1,35 @@
 import React, { useState } from "react";
-import { ToggleButton, ToggleButtonGroup, Button } from "@mui/material";
+import {
+  ToggleButton,
+  ToggleButtonGroup,
+  Button,
+  Snackbar,
+} from "@mui/material";
 
 const AddToCart = () => {
-  const [chosenOption, setChosenOption] = useState();
+  const [open, setOpen] = useState(false);
+  const [openOption, setOpenOption] = useState(false);
+  const [chosenOption, setChosenOption] = useState(null);
   const optionData = ["S", "M", "L"];
   const [quantity, setQuantity] = useState(1);
   const handleChangeOption = (e, newValue) => {
     setChosenOption(newValue);
+    console.log("changed", newValue);
+  };
+
+  const handleDecrease = () => {
+    if (quantity > 1) setQuantity((prev) => prev - 1);
+    else setOpen(true);
+  };
+  const handleIncrease = () => {
+    setQuantity((prev) => prev + 1);
+  };
+  const handleAddToCart = () => {
+    if (chosenOption === null) {
+      setOpenOption(true);
+    } else {
+      console.log("post data");
+    }
   };
   return (
     <div style={{ width: "280px", margin: "20px 0 10px 0" }}>
@@ -43,6 +66,7 @@ const AddToCart = () => {
         <p>수량선택</p>
         <div>
           <button
+            onClick={handleDecrease}
             style={{
               width: "32px",
               height: "32px",
@@ -66,6 +90,7 @@ const AddToCart = () => {
             disabled
           ></input>
           <button
+            onClick={handleIncrease}
             style={{
               width: "32px",
               height: "32px",
@@ -85,10 +110,29 @@ const AddToCart = () => {
         <Button variant="contained" disabled style={{ width: "88px" }}>
           바로구매
         </Button>
-        <Button variant="contained" style={{ width: "88px" }}>
+        <Button
+          variant="contained"
+          style={{ width: "88px" }}
+          onClick={handleAddToCart}
+        >
           장바구니
         </Button>
       </div>
+
+      <Snackbar
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={open}
+        onClose={() => setOpen(false)}
+        message="최소 구매 수량은 1개 입니다."
+      />
+      <Snackbar
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={openOption}
+        onClose={() => setOpenOption(false)}
+        message="옵션을 선택해주세요."
+      />
     </div>
   );
 };
