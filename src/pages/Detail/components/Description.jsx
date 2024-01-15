@@ -7,13 +7,19 @@ const Description = () => {
     <>
       <div style={{ position: "sticky", top: 0 }}>
         <ToggleButtonGroup style={{ backgroundColor: "white" }}>
-          <ToggleButton style={{ width: "380px" }}>상세정보</ToggleButton>
-          <ToggleButton style={{ width: "380px" }}>
-            배송/교환/반품 정보
-          </ToggleButton>
+          <a href="#section01" style={{ textDecoration: "none" }}>
+            <ToggleButton style={{ width: "380px" }}>상세정보</ToggleButton>
+          </a>
+
+          <a href="#section02" style={{ textDecoration: "none" }}>
+            <ToggleButton style={{ width: "380px" }}>
+              배송/교환/반품 정보
+            </ToggleButton>
+          </a>
         </ToggleButtonGroup>
       </div>
       <div
+        id="section01"
         style={{
           display: "flex",
           borderBottom: "1px solid black",
@@ -26,6 +32,7 @@ const Description = () => {
         상품 상세 설명
       </div>
       <div
+        id="section02"
         style={{
           display: "flex",
           borderBottom: "1px solid black",

@@ -4,6 +4,7 @@ import ImageViewer from "./components/ImageViewer";
 import ProductInfo from "./components/ProductInfo";
 import AddToCart from "./components/AddToCart";
 import Description from "./components/Description";
+import ScrollToTop from "../../components/ScrollToTop";
 
 const Detail = () => {
   return (
@@ -23,6 +24,7 @@ const Detail = () => {
         </div>
       </div>
       <Description></Description>
+      <ScrollToTop></ScrollToTop>
     </div>
   );
 };
