@@ -1,5 +1,4 @@
 import React from "react";
-import "./Detail.module.css";
 import ImageViewer from "./components/ImageViewer";
 import ProductInfo from "./components/ProductInfo";
 import AddToCart from "./components/AddToCart";
