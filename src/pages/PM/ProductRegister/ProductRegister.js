@@ -24,28 +24,23 @@ import { useNavigate } from "react-router-dom";
 
 const ProductRegister = () => {
   const navigate = useNavigate();
-  // const [productImage, setProductImage] = useState(null);
-  // const [productName, setProductName] = useState("");
-  // const [productCategory, setProductCategory] = useState("");
-  // const [productOption, setProductOption] = useState("");
-  // const [price, setPrice] = useState("");
-  // const [description, setDescription] = useState("");
 
   const [productInputs, setProductInputs] = useState({
     productImage: null,
     productName: "",
-    productCategory: "",
+    categoryName: "",
     productOption: "",
-    price: null,
-    productQuantity: 1,
+    price: "",
+    totalStock: "",
     description: "",
+    // skuList: [{ skuImage: "", skuPrice: "", stock: "" }],
   });
 
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   const handleSelectCategory = (e) => {
-    setProductInputs({ ...productInputs, productCategory: e.target.value });
+    setProductInputs({ ...productInputs, categoryName: e.target.value });
   };
 
   const handleSelectOption = (e) => {
@@ -68,23 +63,29 @@ const ProductRegister = () => {
     const file = e.target.files[0];
     setProductInputs({ ...productInputs, productImage: file });
   };
-
   const handleIncrement = () => {
     setProductInputs((prevInputs) => ({
       ...prevInputs,
-      productQuantity: prevInputs.productQuantity + 1,
+      totalStock: prevInputs.totalStock + 1,
       price: calculatePrice(),
     }));
   };
 
   const handleDecrement = () => {
-    if (productInputs.productQuantity > 1) {
+    if (productInputs.totalStock > 1) {
       setProductInputs((prevInputs) => ({
         ...prevInputs,
-        productQuantity: prevInputs.productQuantity - 1,
+        totalStock: prevInputs.totalStock - 1,
         price: calculatePrice(),
       }));
     }
+  };
+
+  const handleTotalStockChange = (e) => {
+    setProductInputs((prevInputs) => ({
+      ...prevInputs,
+      totalStock: parseInt(e.target.value),
+    }));
   };
 
   const calculatePrice = () => {
@@ -95,10 +96,10 @@ const ProductRegister = () => {
     if (
       productInputs.productImage &&
       productInputs.productName &&
-      productInputs.productCategory &&
+      productInputs.categoryName &&
       productInputs.productOption &&
       productInputs.price &&
-      productInputs.productQuantity &&
+      productInputs.totalStock &&
       productInputs.description
     ) {
       setShowSuccessAlert(true);
@@ -117,10 +118,10 @@ const ProductRegister = () => {
     setProductInputs({
       productImage: null,
       productName: "",
-      productCategory: "",
+      categoryName: "",
       productOption: "",
-      price: null,
-      productQuantity: 1,
+      price: "",
+      totalStock: "",
       description: "",
     });
 
@@ -132,9 +133,8 @@ const ProductRegister = () => {
     <div>
       <header>header section</header>
       <main>
-        <Box className="category-title">category bar</Box>
         <Container className="pr-container">
-          <Box className="pr-title" sx={{ flexGrow: 1 }}>
+          <Box className="pr-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
             <AppBar position="static">
               <Toolbar>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -150,7 +150,7 @@ const ProductRegister = () => {
               justifyContent: "center",
               alignItems: "center",
               paddingTop: 5,
-              paddingBottom: 10,
+              paddingBottom: 5,
             }}
           >
             <Container
@@ -161,7 +161,7 @@ const ProductRegister = () => {
                 alignItems: "center",
                 flexDirection: "column",
                 width: 550,
-                height: 600,
+                height: 650,
                 backgroundColor: "pink",
               }}
             >
@@ -209,7 +209,7 @@ const ProductRegister = () => {
 
             <Container
               className="pr-description-box"
-              sx={{ width: 550, height: 600, backgroundColor: "skyblue" }}
+              sx={{ width: 550, height: 650, backgroundColor: "skyblue" }}
             >
               <Box
                 className="pr-inputs"
@@ -219,7 +219,7 @@ const ProductRegister = () => {
                   padding: "10px",
                 }}
               >
-                <Avatar sx={{ marginTop: 2 }}>staff</Avatar>
+                <Avatar sx={{ marginTop: 2 }}>A</Avatar>
 
                 <TextField
                   id="productName"
@@ -236,12 +236,12 @@ const ProductRegister = () => {
                 />
 
                 <FormControl sx={{ marginTop: 2 }}>
-                  <InputLabel>product category</InputLabel>
+                  <InputLabel>category</InputLabel>
                   <Select
-                    id="productCategory"
-                    value={productInputs.productCategory}
+                    id="categoryName"
+                    value={productInputs.categoryName}
                     onChange={handleSelectCategory}
-                    label="product category"
+                    label="category"
                     required
                   >
                     <MenuItem value="">
@@ -297,12 +297,16 @@ const ProductRegister = () => {
                     marginTop: 2,
                   }}
                 >
-                  <FormLabel sx={{ paddingRight: 2 }}>
-                    product quantity
-                  </FormLabel>
+                  <FormLabel sx={{ paddingRight: 2 }}>total stock</FormLabel>
                   <ButtonGroup>
                     <Button onClick={handleDecrement}>-</Button>
-                    <Button>{productInputs.productQuantity}</Button>
+                    <TextField
+                      type="number"
+                      pattern="[0-9]*"
+                      value={productInputs.totalStock}
+                      onChange={handleTotalStockChange}
+                      sx={{ width: 80 }}
+                    />
                     <Button onClick={handleIncrement}>+</Button>
                   </ButtonGroup>
                 </FormControl>
