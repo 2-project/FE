@@ -40,13 +40,14 @@ function Login({ onClose }) {
         </Box>
         <Box className={styles.textContainer}>
           <TextField
-            label="아이디"
+            label="이메일"
+            type="email"
             variant="outlined"
             fullWidth
             margin="normal"
             value={LoginId}
             onChange={handleLoginIdChange}
-            placeholder="아이디를 입력하세요."
+            placeholder="이메일 아이디를 입력하세요."
             className="form-input"
           />
           <TextField
