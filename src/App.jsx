@@ -12,6 +12,7 @@ import Main from "./pages/Main/Main/Main";
 import Login from "./pages/Login/Login";
 import PM from "./pages/PM/PM";
 import ProductRegister from "./pages/PM/ProductRegister";
+import Detail from "./pages/Detail/Detail";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path="/login" element={<Login />}></Route>
       <Route path="/product_manage" element={<PM />}></Route>
       <Route path="/product_register" element={<ProductRegister />}></Route>
+      <Route path="/detail" element={<Detail />}></Route>
     </Routes>
   );
 }
