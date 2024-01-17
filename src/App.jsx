@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -11,8 +11,8 @@ import "./App.css";
 import Main from "./pages/Main/Main/Main";
 import Login from "./pages/Login/Login";
 import Detail from "./pages/Detail/Detail";
-import Order from './pages/Order/Order';
-import Cart from './pages/Cart/Cart';
+import Order from "./pages/Order/Order";
+import Cart from "./pages/Cart/Cart";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
       <Route path="/" element={<Main />}></Route>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/detail" element={<Detail />}></Route>
-      <Route path="/login" element={<Cart />}></Route>
+      {/* <Route path="/login" element={<Cart />}></Route> */}
       {/* <Route path="/login" component={Login} /> */}
       <Route path="/order" component={Order} />
       <Route path="/cart" component={Cart} />
