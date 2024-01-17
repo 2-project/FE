@@ -16,6 +16,9 @@ import {
   CardMedia,
   Alert,
   ButtonGroup,
+  Divider,
+  ImageList,
+  ImageListItem,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +33,7 @@ const ProductRegister = () => {
 
   const [productInputs, setProductInputs] = useState({
     productImages: [],
+    imageIndex: 0,
     productName: "",
     categoryName: "",
     options: [
@@ -45,6 +49,7 @@ const ProductRegister = () => {
 
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [showFileUploadError, setShowFileUploadError] = useState(false);
 
   const handleSelectCategory = (e) => {
     setProductInputs({ ...productInputs, categoryName: e.target.value });
@@ -79,26 +84,25 @@ const ProductRegister = () => {
     return totalStock;
   };
 
-  const ImageUploadInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
-
   const handleImageUpload = (e) => {
     const files = e.target.files;
-    const newProductImages = [...productInputs.productImages, ...files];
-    setProductInputs({
-      ...productInputs,
-      productImages: newProductImages,
-      imageIndex: newProductImages.length - 1,
-    });
+
+    if (productInputs.productImages.length + files.length > 5) {
+      setShowFileUploadError(true);
+    } else {
+      const newProductImages = [...productInputs.productImages, ...files].slice(
+        0,
+        5
+      );
+
+      setProductInputs({
+        ...productInputs,
+        productImages: newProductImages,
+        imageIndex: newProductImages.length - 1,
+      });
+
+      setShowFileUploadError(false);
+    }
   };
 
   const handlePrevImage = () => {
@@ -118,24 +122,27 @@ const ProductRegister = () => {
   };
 
   const handleFormSubmit = () => {
-    if (
-      productInputs.productImage &&
+    const isFormValid =
+      productInputs.productImages.length > 0 &&
       productInputs.productName &&
       productInputs.categoryName &&
+      productInputs.options.length > 0 &&
       productInputs.options.some((sku) => sku.optionName && sku.optionStock) &&
       productInputs.productPrice &&
-      productInputs.productDescription
-    ) {
-      setShowSuccessAlert(true);
-      setShowErrorAlert(false);
-    } else {
-      setShowErrorAlert(true);
-      setShowSuccessAlert(false);
-    }
+      productInputs.productDescription;
+
+    setShowSuccessAlert(isFormValid);
+    setShowErrorAlert(!isFormValid);
+    setShowFileUploadError(productInputs.productImages.length === 0);
   };
 
   const handleAlertClose = () => {
-    navigate("/product_manage");
+    if (showErrorAlert || showFileUploadError) {
+      setShowErrorAlert(false);
+      setShowFileUploadError(false);
+    } else if (showSuccessAlert) {
+      navigate("/product_manage");
+    }
   };
 
   const handleReset = () => {
@@ -156,6 +163,7 @@ const ProductRegister = () => {
 
     setShowSuccessAlert(false);
     setShowErrorAlert(false);
+    setShowFileUploadError(false);
   };
 
   return (
@@ -192,6 +200,21 @@ const ProductRegister = () => {
                 flexDirection: "column",
               }}
             >
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+                sx={{ marginBottom: 5 }}
+              >
+                upload img
+                <ImageUploadInput
+                  type="file"
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                />
+              </Button>
+              <Box>up to 5 files</Box>
+
               <Card
                 sx={{
                   display: "flex",
@@ -200,7 +223,7 @@ const ProductRegister = () => {
                   maxWidth: 500,
                 }}
               >
-                <Button onClick={handlePrevImage}>prev</Button>
+                <Button onClick={handlePrevImage}>{"<"}</Button>
                 <CardMedia
                   sx={{
                     display: "flex",
@@ -218,44 +241,58 @@ const ProductRegister = () => {
                       : ""
                   }
                 />
-                <Button onClick={handleNextImage}>next</Button>
+                <Button onClick={handleNextImage}>{">"}</Button>
               </Card>
-
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-                sx={{ marginTop: 2 }}
-              >
-                upload img
-                <ImageUploadInput
-                  type="file"
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                />
-              </Button>
 
               <Box
                 className="pr-image-list"
                 sx={{
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   marginTop: 5,
+                  marginBottom: 5,
                 }}
               >
-                <Box>image list</Box>
-                {productInputs.productImages.map((image, index) => (
-                  <img
-                    key={index}
-                    src={URL.createObjectURL(image)}
-                    alt={`Product Image ${index + 1}`}
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      marginRight: "8px",
-                    }}
-                  />
-                ))}
+                <Divider
+                  orientation="horizontal"
+                  sx={{ marginTop: 2, marginBottom: 2 }}
+                >
+                  IMAGE LIST
+                </Divider>
+
+                <ImageList cols={5}>
+                  {productInputs.productImages.map((image, index) => (
+                    <ImageListItem
+                      key={index}
+                      style={{ width: 80, height: 80 }}
+                    >
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt={`Product Image ${index + 1}`}
+                        loading="lazy"
+                      />
+                    </ImageListItem>
+                  ))}
+                </ImageList>
+
+                <Divider
+                  orientation="horizontal"
+                  sx={{ marginTop: 2, marginBottom: 2 }}
+                ></Divider>
+
+                {showFileUploadError &&
+                  productInputs.productImages.length === 0 && (
+                    <Alert severity="error" onClose={handleAlertClose}>
+                      Error: Please upload at least one file.
+                    </Alert>
+                  )}
+
+                {showFileUploadError &&
+                  productInputs.productImages.length > 0 && (
+                    <Alert severity="error" onClose={handleAlertClose}>
+                      Error: Up to 5 files are allowed.
+                    </Alert>
+                  )}
               </Box>
             </Container>
 
@@ -441,10 +478,7 @@ const ProductRegister = () => {
                 )}
 
                 {showErrorAlert && (
-                  <Alert
-                    severity="error"
-                    onClose={() => setShowErrorAlert(false)}
-                  >
+                  <Alert severity="error" onClose={handleAlertClose}>
                     Error: Please fill in all required fields.
                   </Alert>
                 )}
@@ -459,3 +493,15 @@ const ProductRegister = () => {
 };
 
 export default ProductRegister;
+
+const ImageUploadInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});

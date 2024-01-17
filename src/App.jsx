@@ -10,8 +10,8 @@ import {
 import "./App.css";
 import Main from "./pages/Main/Main/Main";
 import Login from "./pages/Login/Login";
-import PM from "./pages/PM/ProductManage/PM";
-import ProductRegister from "./pages/PM/ProductRegister/ProductRegister";
+import PM from "./pages/PM/ProductManage";
+import ProductRegister from "./pages/PM/ProductRegister";
 import Detail from "./pages/Detail/Detail";
 import Order from "./pages/Order/Order";
 import Cart from "./pages/Cart/Cart";

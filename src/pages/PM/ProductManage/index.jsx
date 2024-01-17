@@ -17,7 +17,7 @@ const PM = () => {
   const [isRegistered, setIsRegistered] = useState(false);
 
   const [productInputs, setProductInputs] = useState({
-    productId: "",
+    productId: 1,
     productImages: [],
     productName: "",
     categoryName: "",
@@ -28,8 +28,8 @@ const PM = () => {
       },
     ],
     productPrice: "",
-    totalStock: "",
-    totalPrice: "",
+    totalStock: 0,
+    totalPrice: 0,
     productDescription: "",
   });
 
