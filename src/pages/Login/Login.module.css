@@ -1,0 +1,48 @@
+.loginContainer {
+  max-width: 400px;
+}
+
+.loginHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.loginHeader .formTitle {
+  font-size: 28px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.goSignUp {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.goSignUp span:hover {
+  cursor: pointer;
+}
+
+.goSignUpArrowIcon {
+  width: 15px;
+}
+
+.textContainer {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.buttonBox {
+  padding-bottom: 20px;
+}
+
+.buttonBox .createButton {
+  width: 100%;
+  height: auto;
+  font-size: 18px;
+  font-weight: bold;
+}
