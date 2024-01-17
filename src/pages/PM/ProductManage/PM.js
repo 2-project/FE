@@ -3,19 +3,12 @@ import {
   Container,
   Box,
   Button,
-  ButtonGroup,
   AppBar,
   Toolbar,
   Typography,
-  TableContainer,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import MUIDataTable from "mui-datatables";
 
 const PM = () => {
   const navigate = useNavigate();
@@ -23,90 +16,93 @@ const PM = () => {
 
   const [productInputs, setProductInputs] = useState({
     productId: "",
+    productImages: [],
     productName: "",
     categoryName: "",
-    productOption: "",
-    price: 0,
-    totalStock: 0,
-    description: "",
-    set: "set",
+    options: [
+      {
+        optionName: "",
+        optionStock: "",
+      },
+    ],
+    productPrice: "",
+    totalStock: "",
+    totalPrice: "",
+    productDescription: "",
   });
 
-  const [isEditing, setIsEditing] = useState(false);
-
-  const rows = [
-    {
-      productId: productInputs.productId,
-      productName: productInputs.productName,
-      categoryName: productInputs.categoryName,
-      productOption: productInputs.productOption,
-      price: productInputs.price,
-      totalStock: productInputs.totalStock,
-      description: productInputs.description,
-      set: productInputs.set,
-    },
-  ];
   const columns = [
-    { id: "productId", label: "PRODUCT ID" },
-    { id: "productName", label: "PRODUCT NAME" },
-    { id: "categoryName", label: "CATEGORY" },
-    { id: "productOption", label: "PRODUCT OPTION" },
-    { id: "price", label: "PRICE", type: "number" },
+    { name: "productId", label: "ID" },
     {
-      id: "totalStock",
-      label: "TOTAL STOCK",
-      type: "number",
+      name: "productImages",
+      label: "PRODUCT IMAGES",
+      options: {
+        customBodyRender: (value) =>
+          Array.isArray(value) ? value.join(", ") : value,
+      },
     },
-    { id: "description", label: "DESCRIPTION" },
-    { id: "set", label: "SET" },
+    { name: "productName", label: "PRODUCT NAME" },
+    { name: "categoryName", label: "CATEGORY" },
+    { name: "optionName", label: "OPTION NAME" },
+    { name: "optionStock", label: "OPTION STOCK" },
+    { name: "totalStock", label: "TOTAL STOCK" },
+    { name: "productPrice", label: "PRODUCT PRICE" },
+    { name: "totalPrice", label: "TOTAL PRICE" },
+    { name: "productDescription", label: "PRODUCT DESCRIPTION" },
   ];
+
+  const rows = productInputs.options.map((sku, skuIndex) => ({
+    productId: productInputs.productId,
+    productImages: productInputs.productImages.join(", "),
+    productName: productInputs.productName,
+    categoryName: productInputs.categoryName,
+    optionName: sku.optionName,
+    optionStock: sku.optionStock,
+    productPrice: productInputs.productPrice,
+    totalStock: productInputs.totalStock,
+    totalPrice: productInputs.totalPrice,
+    // totalStock: sumTotalStock(),
+    // totalPrice: calculateTotalPrice(),
+    productDescription: productInputs.productDescription,
+  }));
+
+  const options = {
+    filter: true,
+    filterType: "dropdown",
+    responsive: "scroll",
+    selectableRows: "multiple",
+  };
+
+  const sumTotalStock = () => {
+    const totalStock = productInputs.options.reduce((result, sku) => {
+      result += parseFloat(sku.optionStock) || 0;
+      return result;
+    }, 0);
+
+    return totalStock;
+  };
+
+  const calculateTotalPrice = () => {
+    const productPrice = parseFloat(productInputs.productPrice) || 0;
+    return productPrice * sumTotalStock();
+  };
 
   const handleRegister = () => {
     setIsRegistered(false);
     navigate("/product_register");
   };
 
-  const handleIncrement = () => {
-    setProductInputs((prevInputs) => ({
-      ...prevInputs,
-      totalStock: prevInputs.totalStock + 1,
-      price: calculatePrice(),
-    }));
-  };
-
-  const handleDecrement = () => {
-    if (productInputs.totalStock > 1) {
-      setProductInputs((prevInputs) => ({
-        ...prevInputs,
-        totalStock: prevInputs.totalStock - 1,
-        price: calculatePrice(),
-      }));
-    }
-  };
-
-  const handleTotalStockChange = (e) => {
-    setProductInputs((prevInputs) => ({
-      ...prevInputs,
-      totalStock: parseInt(e.target.value),
-    }));
-  };
-
-  const calculatePrice = () => {
-    return;
-  };
-
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
-  };
-
   return (
     <div>
       <header>header section</header>
       <main>
-        <Button variant="contained" onClick={handleRegister}>
-          product register
-        </Button>
         <Container>
+          <Box sx={{ paddingTop: 2 }}>
+            <Button variant="contained" onClick={handleRegister}>
+              Product Register
+            </Button>
+          </Box>
+
           <Box className="pm-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
             <AppBar position="static">
               <Toolbar>
@@ -116,82 +112,15 @@ const PM = () => {
               </Toolbar>
             </AppBar>
           </Box>
-          <TableContainer sx={{ paddingTop: 5, paddingBottom: 5 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} sx={{ textAlign: "center" }}>
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ textAlign: "center" }}
-                    >
-                      {row.productId}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      {" "}
-                      {row.productName}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      {" "}
-                      {row.categoryName}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      {" "}
-                      {row.productOption}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      {" "}
-                      {row.price}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      {isEditing ? (
-                        <>
-                          <ButtonGroup>
-                            <Button onClick={handleDecrement}>-</Button>
-                            <TextField
-                              type="number"
-                              pattern="[0-9]*"
-                              value={productInputs.totalStock}
-                              onChange={handleTotalStockChange}
-                              sx={{ width: 80 }}
-                            />
-                            <Button onClick={handleIncrement}>+</Button>
-                          </ButtonGroup>
-                        </>
-                      ) : (
-                        <>{row.totalStock}</>
-                      )}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      {" "}
-                      {row.description}
-                    </TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      {isEditing ? (
-                        <Button variant="contained" onClick={handleEdit}>
-                          Done
-                        </Button>
-                      ) : (
-                        <Button variant="contained" onClick={handleEdit}>
-                          Edit
-                        </Button>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+
+          <Box sx={{ paddingTop: 5, paddingBottom: 5 }}>
+            <MUIDataTable
+              title={"MUJI MALL"}
+              data={rows}
+              columns={columns}
+              options={options}
+            />
+          </Box>
         </Container>
       </main>
       <footer>footer section</footer>

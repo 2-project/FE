@@ -4,7 +4,6 @@ import {
   Box,
   TextField,
   Button,
-  ButtonGroup,
   AppBar,
   Toolbar,
   Typography,
@@ -16,24 +15,30 @@ import {
   Card,
   CardMedia,
   Alert,
-  FormLabel,
+  ButtonGroup,
 } from "@mui/material";
-import styled from "@emotion/styled";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const ProductRegister = () => {
   const navigate = useNavigate();
 
   const [productInputs, setProductInputs] = useState({
-    productImage: null,
+    productImages: [],
     productName: "",
     categoryName: "",
-    productOption: "",
-    price: "",
-    totalStock: "",
-    description: "",
-    // skuList: [{ skuImage: "", skuPrice: "", stock: "" }],
+    options: [
+      {
+        optionName: "",
+        optionStock: "",
+      },
+    ],
+    totalStock: 0,
+    productPrice: "",
+    productDescription: "",
   });
 
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -43,8 +48,33 @@ const ProductRegister = () => {
     setProductInputs({ ...productInputs, categoryName: e.target.value });
   };
 
-  const handleSelectOption = (e) => {
-    setProductInputs({ ...productInputs, productOption: e.target.value });
+  const handleAddOption = () => {
+    setProductInputs((prevInputs) => ({
+      ...prevInputs,
+      options: [
+        ...prevInputs.options,
+        {
+          optionName: "",
+          optionStock: "",
+        },
+      ],
+    }));
+  };
+
+  const handleDeleteOption = (skuIndex) => {
+    setProductInputs((prevInputs) => ({
+      ...prevInputs,
+      options: prevInputs.options.filter((_, index) => index !== skuIndex),
+    }));
+  };
+
+  const sumTotalStock = () => {
+    const totalStock = productInputs.options.reduce((result, sku) => {
+      result += parseFloat(sku.optionStock) || 0;
+      return result;
+    }, 0);
+
+    return totalStock;
   };
 
   const ImageUploadInput = styled("input")({
@@ -60,36 +90,29 @@ const ProductRegister = () => {
   });
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setProductInputs({ ...productInputs, productImage: file });
+    const files = e.target.files;
+    const newProductImages = [...productInputs.productImages, ...files];
+    setProductInputs({
+      ...productInputs,
+      productImages: newProductImages,
+      imageIndex: newProductImages.length - 1,
+    });
   };
-  const handleIncrement = () => {
+
+  const handlePrevImage = () => {
     setProductInputs((prevInputs) => ({
       ...prevInputs,
-      totalStock: prevInputs.totalStock + 1,
-      price: calculatePrice(),
+      imageIndex:
+        (prevInputs.imageIndex - 1 + prevInputs.productImages.length) %
+        prevInputs.productImages.length,
     }));
   };
 
-  const handleDecrement = () => {
-    if (productInputs.totalStock > 1) {
-      setProductInputs((prevInputs) => ({
-        ...prevInputs,
-        totalStock: prevInputs.totalStock - 1,
-        price: calculatePrice(),
-      }));
-    }
-  };
-
-  const handleTotalStockChange = (e) => {
+  const handleNextImage = () => {
     setProductInputs((prevInputs) => ({
       ...prevInputs,
-      totalStock: parseInt(e.target.value),
+      imageIndex: (prevInputs.imageIndex + 1) % prevInputs.productImages.length,
     }));
-  };
-
-  const calculatePrice = () => {
-    return;
   };
 
   const handleFormSubmit = () => {
@@ -97,10 +120,9 @@ const ProductRegister = () => {
       productInputs.productImage &&
       productInputs.productName &&
       productInputs.categoryName &&
-      productInputs.productOption &&
-      productInputs.price &&
-      productInputs.totalStock &&
-      productInputs.description
+      productInputs.options.some((sku) => sku.optionName && sku.optionStock) &&
+      productInputs.productPrice &&
+      productInputs.productDescription
     ) {
       setShowSuccessAlert(true);
       setShowErrorAlert(false);
@@ -116,13 +138,18 @@ const ProductRegister = () => {
 
   const handleReset = () => {
     setProductInputs({
-      productImage: null,
+      productImages: [],
+      imageIndex: 0,
       productName: "",
       categoryName: "",
-      productOption: "",
-      price: "",
-      totalStock: "",
-      description: "",
+      options: [
+        {
+          optionName: "",
+          optionStock: "",
+        },
+      ],
+      productPrice: "",
+      productDescription: "",
     });
 
     setShowSuccessAlert(false);
@@ -160,9 +187,6 @@ const ProductRegister = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "column",
-                width: 550,
-                height: 650,
-                backgroundColor: "pink",
               }}
             >
               <Card
@@ -173,7 +197,7 @@ const ProductRegister = () => {
                   maxWidth: 500,
                 }}
               >
-                <Button>prev</Button>
+                <Button onClick={handlePrevImage}>prev</Button>
                 <CardMedia
                   sx={{
                     display: "flex",
@@ -182,14 +206,16 @@ const ProductRegister = () => {
                     height: 350,
                   }}
                   component="img"
-                  alt="Product Image"
+                  alt={`Product Image ${productInputs.imageIndex + 1}`}
                   src={
-                    productInputs.productImage
-                      ? URL.createObjectURL(productInputs.productImage)
+                    productInputs.productImages.length > 0
+                      ? URL.createObjectURL(
+                          productInputs.productImages[productInputs.imageIndex]
+                        )
                       : ""
                   }
                 />
-                <Button>next</Button>
+                <Button onClick={handleNextImage}>next</Button>
               </Card>
 
               <Button
@@ -205,12 +231,32 @@ const ProductRegister = () => {
                   accept="image/*"
                 />
               </Button>
+
+              <Box
+                className="pr-image-list"
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginTop: 5,
+                }}
+              >
+                <Box>image list</Box>
+                {productInputs.productImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={URL.createObjectURL(image)}
+                    alt={`Product Image ${index + 1}`}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      marginRight: "8px",
+                    }}
+                  />
+                ))}
+              </Box>
             </Container>
 
-            <Container
-              className="pr-description-box"
-              sx={{ width: 550, height: 650, backgroundColor: "skyblue" }}
-            >
+            <Container className="pr-description-box">
               <Box
                 className="pr-inputs"
                 sx={{
@@ -220,10 +266,9 @@ const ProductRegister = () => {
                 }}
               >
                 <Avatar sx={{ marginTop: 2 }}>A</Avatar>
-
                 <TextField
                   id="productName"
-                  label={"product name"}
+                  label="product name"
                   value={productInputs.productName}
                   onChange={(e) =>
                     setProductInputs({
@@ -234,52 +279,118 @@ const ProductRegister = () => {
                   required
                   sx={{ marginTop: 2 }}
                 />
-
                 <FormControl sx={{ marginTop: 2 }}>
                   <InputLabel>category</InputLabel>
                   <Select
                     id="categoryName"
+                    label="category"
                     value={productInputs.categoryName}
                     onChange={handleSelectCategory}
-                    label="category"
                     required
                   >
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem value="남성복">남성복</MenuItem>
-                    <MenuItem value="여성복">여성복</MenuItem>
-                    <MenuItem value="생활잡화">생활잡화</MenuItem>
-                    <MenuItem value="식품">식품</MenuItem>
+                    <MenuItem value="인기상품">인기상품</MenuItem>
+                    <MenuItem value="주간특가">주간특가</MenuItem>
+                    <MenuItem value="매거진">매거진</MenuItem>
+                    <MenuItem value="아울렛">아울렛</MenuItem>
                   </Select>
                 </FormControl>
 
-                <FormControl sx={{ marginTop: 2 }}>
-                  <InputLabel>product option</InputLabel>
-                  <Select
-                    id="productOption"
-                    value={productInputs.productOption}
-                    onChange={handleSelectOption}
-                    label="product option"
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="1">1</MenuItem>
-                    <MenuItem value="2">2</MenuItem>
-                    <MenuItem value="3">3</MenuItem>
-                    <MenuItem value="4">4</MenuItem>
-                  </Select>
-                </FormControl>
+                {productInputs.options.map((sku, skuIndex) => (
+                  <div key={skuIndex}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <TextField
+                        label="option name"
+                        value={sku.optionName}
+                        onChange={(e) =>
+                          setProductInputs((prevInputs) => {
+                            const updatedOptions = [...prevInputs.options];
+                            updatedOptions[skuIndex] = {
+                              ...updatedOptions[skuIndex],
+                              optionName: e.target.value,
+                            };
+                            return {
+                              ...prevInputs,
+                              options: updatedOptions,
+                              totalStock: sumTotalStock(updatedOptions),
+                            };
+                          })
+                        }
+                        required
+                        sx={{ marginTop: 2 }}
+                      />
+
+                      <TextField
+                        label="option stock"
+                        value={sku.optionStock}
+                        type="number"
+                        pattern="[0-9]*"
+                        onChange={(e) =>
+                          setProductInputs((prevInputs) => {
+                            const updatedOptions = [...prevInputs.options];
+                            updatedOptions[skuIndex] = {
+                              ...updatedOptions[skuIndex],
+                              optionStock: e.target.value,
+                            };
+                            return {
+                              ...prevInputs,
+                              options: updatedOptions,
+                              totalStock: sumTotalStock(updatedOptions),
+                            };
+                          })
+                        }
+                        required
+                        sx={{ marginTop: 2, marginLeft: 1 }}
+                      />
+
+                      <ButtonGroup
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginTop: 2,
+                        }}
+                      >
+                        {productInputs.options.length > 1 && (
+                          <RemoveIcon
+                            onClick={() => handleDeleteOption(skuIndex)}
+                            sx={{ marginLeft: 1 }}
+                          />
+                        )}
+
+                        {skuIndex === productInputs.options.length - 1 && (
+                          <AddIcon
+                            onClick={() => handleAddOption(skuIndex)}
+                            sx={{ marginLeft: 1 }}
+                          />
+                        )}
+                      </ButtonGroup>
+                    </Box>
+                  </div>
+                ))}
 
                 <TextField
-                  id="price"
-                  label={"product price"}
-                  value={productInputs.price}
+                  id="totalStock"
+                  label="total stock"
+                  value={sumTotalStock()}
+                  sx={{ marginTop: 2 }}
+                />
+
+                <TextField
+                  id="productPrice"
+                  label="product price"
+                  value={productInputs.productPrice}
                   onChange={(e) =>
                     setProductInputs({
                       ...productInputs,
-                      price: e.target.value,
+                      productPrice: e.target.value,
                     })
                   }
                   type="number"
@@ -288,43 +399,21 @@ const ProductRegister = () => {
                   sx={{ marginTop: 2 }}
                 />
 
-                <FormControl
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    flexDirection: "row",
-                    marginTop: 2,
-                  }}
-                >
-                  <FormLabel sx={{ paddingRight: 2 }}>total stock</FormLabel>
-                  <ButtonGroup>
-                    <Button onClick={handleDecrement}>-</Button>
-                    <TextField
-                      type="number"
-                      pattern="[0-9]*"
-                      value={productInputs.totalStock}
-                      onChange={handleTotalStockChange}
-                      sx={{ width: 80 }}
-                    />
-                    <Button onClick={handleIncrement}>+</Button>
-                  </ButtonGroup>
-                </FormControl>
-
                 <TextField
-                  id="description"
-                  label={"product description"}
-                  value={productInputs.description}
+                  id="productDescription"
+                  label="product description"
+                  value={productInputs.productDescription}
                   onChange={(e) =>
                     setProductInputs({
                       ...productInputs,
-                      description: e.target.value,
+                      productDescription: e.target.value,
                     })
                   }
                   required
                   sx={{ marginTop: 2 }}
                 />
               </Box>
+
               <Box
                 className="pr-description-button"
                 sx={{
