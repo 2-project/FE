@@ -1,4 +1,4 @@
-const TOKEN_KEY = "muji_token";
+const TOKEN_KEY = "auth_token";
 
 export const localToken = {
   set(token) {

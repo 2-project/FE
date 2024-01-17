@@ -1,45 +1,84 @@
-import axios from "axios";
-import { localToken } from "../../utils/auth";
+import qs from "qs";
+import request from "./axios";
 
-const base_url = "";
-
-const instance = axios.create({
-  baseURL: base_url,
-  timeout: 6000,
-});
-
-// 요청 인터셉터
-instance.interceptors.request.use(
-  (config) => {
-    if (!config.headers) {
-      return;
+class Http {
+  static instance = null;
+  static getInstance() {
+    if (Http.instance) {
+      return Http.instance;
     }
-    config.headers["time-zone"] =
-      Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    const token = localToken.get();
-
-    let auth = "";
-
-    if (token) {
-      auth = "Bearer " + token;
-    } else {
-      auth = "Basic " + btoa("webApp:webApp");
-    }
-
-    // TODO: 为什么要加这个
-    // if (!config.headers.NotToken) {
-    //   auth = "";
-    // }
-
-    if (auth) {
-      config.headers.Authorization = auth;
-    }
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+    Http.instance = new Http();
+    return Http.instance;
   }
-);
-export default instance;
+
+  async createRequest(config) {
+    const response = await request(config);
+    return response.data;
+  }
+
+  get(url, params, headers, responseType) {
+    return this.createRequest({
+      method: "GET",
+      url,
+      params: {
+        ...params,
+      },
+      headers,
+      responseType: responseType,
+    });
+  }
+
+  post(url, data, headers) {
+    return this.createRequest({
+      method: "POST",
+      url,
+      data: qs.stringify({ ...data }),
+      headers,
+    });
+  }
+
+  postJSON(url, data) {
+    return this.createRequest({
+      method: "POST",
+      url,
+      data:
+        Object.prototype.toString.call(data) === "[object Object]"
+          ? { ...data }
+          : data,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  delete(url, data, headers) {
+    return this.createRequest({
+      method: "DELETE",
+      url,
+      data,
+      headers,
+    });
+  }
+  put(url, data) {
+    return this.createRequest({
+      method: "PUT",
+      url,
+      data,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  upload(url, formData) {
+    return this.createRequest({
+      method: "POST",
+      url,
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+}
+
+export default Http.getInstance();
