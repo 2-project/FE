@@ -1,13 +1,14 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import ImageSlider from './ImageSlider';
 import Header from '../../../components/Header/Header';
 import Footer from '../../../components/Footer/Footer';
-import styles from './Main.module.css'; //
 
 const Main = () => {
   return (
     <div>
-      <Header /> {/* Header */}
-      <main>{/*메인 */ <div className={styles.nsns}></div>}</main>
+      <Header />
+      <ImageSlider />
       <Footer />
     </div>
   );
