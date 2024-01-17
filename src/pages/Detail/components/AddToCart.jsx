@@ -4,6 +4,7 @@ import {
   ToggleButtonGroup,
   Button,
   Snackbar,
+  Tooltip,
 } from "@mui/material";
 
 const AddToCart = () => {
@@ -104,12 +105,21 @@ const AddToCart = () => {
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button variant="outlined" disabled style={{ width: "88px" }}>
-          WISH
-        </Button>
-        <Button variant="contained" disabled style={{ width: "88px" }}>
-          바로구매
-        </Button>
+        <Tooltip title="Coming Soon" placement="top" arrow>
+          <div>
+            <Button variant="outlined" disabled style={{ width: "88px" }}>
+              WISH
+            </Button>
+          </div>
+        </Tooltip>
+        <Tooltip title="Coming Soon" placement="top" arrow>
+          <div>
+            <Button variant="contained" disabled style={{ width: "88px" }}>
+              바로구매
+            </Button>
+          </div>
+        </Tooltip>
+
         <Button
           variant="contained"
           style={{ width: "88px" }}

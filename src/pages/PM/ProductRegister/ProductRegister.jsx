@@ -22,6 +22,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import Header from "../../../components/Header/Header";
+import Footer from "../../../components/Footer/Footer";
 
 const ProductRegister = () => {
   const navigate = useNavigate();
@@ -158,7 +160,7 @@ const ProductRegister = () => {
 
   return (
     <div>
-      <header>header section</header>
+      <Header />
       <main>
         <Container className="pr-container">
           <Box className="pr-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
@@ -176,6 +178,7 @@ const ProductRegister = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              flexDirection: "row",
               paddingTop: 5,
               paddingBottom: 5,
             }}
@@ -450,7 +453,7 @@ const ProductRegister = () => {
           </Container>
         </Container>
       </main>
-      <footer>footer section</footer>
+      <Footer />
     </div>
   );
 };

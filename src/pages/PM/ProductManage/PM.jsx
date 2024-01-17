@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
+import Header from "../../../components/Header/Header";
+import Footer from "../../../components/Footer/Footer";
 
 const PM = () => {
   const navigate = useNavigate();
@@ -94,7 +96,7 @@ const PM = () => {
 
   return (
     <div>
-      <header>header section</header>
+      <Header />
       <main>
         <Container>
           <Box sx={{ paddingTop: 2 }}>
@@ -123,7 +125,7 @@ const PM = () => {
           </Box>
         </Container>
       </main>
-      <footer>footer section</footer>
+      <Footer />
     </div>
   );
 };
