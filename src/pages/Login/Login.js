@@ -12,6 +12,9 @@ function Login({ onClose }) {
   const [ismemberLoginOpen, setMemberLoginOpen] = useState(false);
   const navigate = useNavigate();
 
+  const isEmailValid = /^(?=.*[a-z\d])[a-z\d]+@[a-z]+\.[a-z]+$/i.test(LoginId);
+  const isPasswordValid = /^(?=.*[a-z])(?=.*\d).{8,20}$/.test(LoginPassword);
+
   const handleLoginIdChange = (event) => {
     setLoginId(event.target.value);
   };
@@ -20,6 +23,10 @@ function Login({ onClose }) {
   };
 
   const handleButton = (event) => {
+    if (isEmailValid && isPasswordValid) {
+      // 로그인 로직 수행 및 이동
+      // navigate('/main');
+    }
     // navigate('/main');
   };
 
@@ -49,6 +56,12 @@ function Login({ onClose }) {
             onChange={handleLoginIdChange}
             placeholder="이메일 아이디를 입력하세요."
             className="form-input"
+            error={!isEmailValid && LoginId.trim() !== ""}
+            helperText={
+              !isEmailValid &&
+              LoginId.trim() !== "" &&
+              "올바른 이메일 형식이 아닙니다."
+            }
           />
           <TextField
             label="비밀번호"
@@ -60,6 +73,12 @@ function Login({ onClose }) {
             onChange={handlePasswordChange}
             placeholder="비밀번호를 입력하세요."
             className="form-input"
+            error={!isPasswordValid && LoginPassword.trim() !== ""}
+            helperText={
+              !isPasswordValid &&
+              LoginPassword.trim() !== "" &&
+              "비밀번호는 소문자와 숫자를 포함한 8~20자여야 합니다."
+            }
           />
           <Box
             sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
@@ -70,6 +89,7 @@ function Login({ onClose }) {
               color="primary"
               className={styles.createButton}
               onClick={handleButton}
+              disabled={!isEmailValid || !isPasswordValid}
             >
               로그인
             </Button>
