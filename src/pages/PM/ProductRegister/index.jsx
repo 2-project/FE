@@ -39,6 +39,7 @@ const ProductRegister = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showFileUploadError, setShowFileUploadError] = useState(false);
+  const [showInfoAlert, setShowInfoAlert] = useState(false);
   const [date, setDate] = useState(dayjs("2024-01-01"));
 
   const [productInputs, setProductInputs] = useState({
@@ -64,16 +65,20 @@ const ProductRegister = () => {
   };
 
   const handleAddOption = () => {
-    setProductInputs((prevInputs) => ({
-      ...prevInputs,
-      options: [
-        ...prevInputs.options,
-        {
-          optionName: "",
-          optionStock: "",
-        },
-      ],
-    }));
+    if (productInputs.options.length < 5) {
+      setProductInputs((prevInputs) => ({
+        ...prevInputs,
+        options: [
+          ...prevInputs.options,
+          {
+            optionName: "",
+            optionStock: "",
+          },
+        ],
+      }));
+    } else {
+      setShowInfoAlert(true);
+    }
   };
 
   const handleDeleteOption = (skuIndex) => {
@@ -147,9 +152,10 @@ const ProductRegister = () => {
   };
 
   const handleAlertClose = () => {
-    if (showErrorAlert || showFileUploadError) {
+    if (showErrorAlert || showFileUploadError || showInfoAlert) {
       setShowErrorAlert(false);
       setShowFileUploadError(false);
+      setShowInfoAlert(false);
     } else if (showSuccessAlert) {
       navigate("/product_manage");
     }
@@ -176,6 +182,7 @@ const ProductRegister = () => {
     setShowSuccessAlert(false);
     setShowErrorAlert(false);
     setShowFileUploadError(false);
+    setShowInfoAlert(false);
   };
 
   return (
@@ -225,7 +232,22 @@ const ProductRegister = () => {
                   accept="image/*"
                 />
               </Button>
-              <Box>up to 5 files</Box>
+
+              <Box sx={{ marginBottom: 2 }}>
+                {showFileUploadError &&
+                  productInputs.productImages.length === 0 && (
+                    <Alert severity="error" onClose={handleAlertClose}>
+                      Error: Please upload at least one file.
+                    </Alert>
+                  )}
+
+                {showFileUploadError &&
+                  productInputs.productImages.length > 0 && (
+                    <Alert severity="error" onClose={handleAlertClose}>
+                      Error: Up to 5 files are allowed.
+                    </Alert>
+                  )}
+              </Box>
 
               <Card
                 sx={{
@@ -291,20 +313,6 @@ const ProductRegister = () => {
                   orientation="horizontal"
                   sx={{ marginTop: 2, marginBottom: 2 }}
                 ></Divider>
-
-                {showFileUploadError &&
-                  productInputs.productImages.length === 0 && (
-                    <Alert severity="error" onClose={handleAlertClose}>
-                      Error: Please upload at least one file.
-                    </Alert>
-                  )}
-
-                {showFileUploadError &&
-                  productInputs.productImages.length > 0 && (
-                    <Alert severity="error" onClose={handleAlertClose}>
-                      Error: Up to 5 files are allowed.
-                    </Alert>
-                  )}
               </Box>
             </Container>
 
@@ -416,7 +424,6 @@ const ProductRegister = () => {
                             sx={{ marginLeft: 1 }}
                           />
                         )}
-
                         {skuIndex === productInputs.options.length - 1 && (
                           <AddIcon
                             onClick={() => handleAddOption(skuIndex)}
@@ -428,13 +435,22 @@ const ProductRegister = () => {
                   </div>
                 ))}
 
+                {showInfoAlert && (
+                  <Alert
+                    severity="info"
+                    sx={{ marginTop: 2 }}
+                    onClose={handleAlertClose}
+                  >
+                    up to 5 options
+                  </Alert>
+                )}
+
                 <TextField
                   id="totalStock"
                   label="total stock"
                   value={sumTotalStock()}
                   sx={{ marginTop: 2 }}
                 />
-
                 <TextField
                   id="productPrice"
                   label="product price"
@@ -450,7 +466,6 @@ const ProductRegister = () => {
                   required
                   sx={{ marginTop: 2 }}
                 />
-
                 <TextField
                   id="productDescription"
                   label="product description"
@@ -464,7 +479,6 @@ const ProductRegister = () => {
                   required
                   sx={{ marginTop: 2, marginBottom: 2 }}
                 />
-
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={["SaleStartDate", "SaleEndDate"]}>
                     <DatePicker
