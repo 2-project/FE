@@ -1,0 +1,39 @@
+.loginContainer {
+}
+
+.loginBox {
+
+}
+
+.loginHeader {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+.formTitle {
+}
+
+.loginLogo {
+}
+
+.textContainer {
+}
+
+.formInput {
+    margin-bottom: 10px;
+}
+
+.buttonsBox {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cancelButton {
+    margin-right: 10px;
+}
+
+.createButton {
+}
