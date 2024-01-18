@@ -44,7 +44,7 @@ const ProductRegister = () => {
 
   const [productInputs, setProductInputs] = useState({
     productImages: [],
-    imageIndex: 0,
+    imageIndex: 0, // 대표이미지 설정?
     productName: "",
     categoryName: "",
     options: [
@@ -325,7 +325,17 @@ const ProductRegister = () => {
                   padding: "10px",
                 }}
               >
-                <Avatar sx={{ marginTop: 2 }}>A</Avatar>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Avatar src="/broken-image.jpg" />
+                  <Typography sx={{ paddingLeft: 1 }}>Administrator</Typography>
+                </Box>
+
                 <TextField
                   id="productName"
                   label="product name"

@@ -16,22 +16,24 @@ const PM = () => {
   const navigate = useNavigate();
   const [isRegistered, setIsRegistered] = useState(false);
 
-  const [productInputs, setProductInputs] = useState({
-    productId: 1,
-    productImages: [],
-    productName: "",
-    categoryName: "",
+  const pmData = {
+    productId: "number",
+    productImages: [], // 대표이미지 설정?
+    productName: "string",
+    categoryName: "string",
     options: [
       {
-        optionName: "",
-        optionStock: "",
+        optionName: "string",
+        optionStock: "number", // edit
       },
     ],
-    productPrice: "",
-    totalStock: 0,
-    totalPrice: 0,
-    productDescription: "",
-  });
+    productPrice: "number", // edit
+    totalStock: "number",
+    totalPrice: "number",
+    productDescription: "string",
+    productSaleStart: "Date",
+    productSaleDelete: "Date",
+  };
 
   const columns = [
     { name: "productId", label: "ID" },
@@ -44,8 +46,8 @@ const PM = () => {
       },
     },
     { name: "productName", label: "PRODUCT NAME" },
-    { name: "categoryName", label: "CATEGORY", editable: true },
-    { name: "optionName", label: "OPTION NAME", editable: true },
+    { name: "categoryName", label: "CATEGORY" },
+    { name: "optionName", label: "OPTION NAME" },
     {
       name: "optionStock",
       label: "OPTION STOCK",
@@ -61,22 +63,26 @@ const PM = () => {
     },
     { name: "totalPrice", label: "TOTAL PRICE", type: "number" },
     { name: "productDescription", label: "PRODUCT DESCRIPTION" },
+    { name: "productSaleStart", label: "START DATE" },
+    { name: "productSaleDelete", label: "END DATE" },
   ];
 
-  const rows = productInputs.options.map((sku, skuIndex) => ({
-    productId: productInputs.productId,
-    productImages: productInputs.productImages.join(", "),
-    productName: productInputs.productName,
-    categoryName: productInputs.categoryName,
-    optionName: sku.optionName,
-    optionStock: sku.optionStock,
-    productPrice: productInputs.productPrice,
-    totalStock: productInputs.totalStock,
-    totalPrice: productInputs.totalPrice,
-    // totalStock: sumTotalStock(),
-    // totalPrice: calculateTotalPrice(),
-    productDescription: productInputs.productDescription,
-  }));
+  const rows = [
+    {
+      productId: pmData.productId,
+      productImages: pmData.productImages.join(", "),
+      productName: pmData.productName,
+      categoryName: pmData.categoryName,
+      optionName: pmData.options[0].optionName,
+      optionStock: pmData.options[0].optionStock,
+      productPrice: pmData.productPrice,
+      totalStock: pmData.totalStock,
+      totalPrice: pmData.totalPrice,
+      productDescription: pmData.productDescription,
+      productSaleStart: pmData.productSaleStart,
+      productSaleDelete: pmData.productSaleDelete,
+    },
+  ];
 
   const options = {
     filter: true,
@@ -86,7 +92,7 @@ const PM = () => {
   };
 
   const sumTotalStock = () => {
-    const totalStock = productInputs.options.reduce((result, sku) => {
+    const totalStock = pmData.options.reduce((result, sku) => {
       result += parseFloat(sku.optionStock) || 0;
       return result;
     }, 0);
@@ -95,7 +101,7 @@ const PM = () => {
   };
 
   const calculateTotalPrice = () => {
-    const productPrice = parseFloat(productInputs.productPrice) || 0;
+    const productPrice = parseFloat(pmData.productPrice) || 0;
     return productPrice * sumTotalStock();
   };
 
