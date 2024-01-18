@@ -44,12 +44,22 @@ const PM = () => {
       },
     },
     { name: "productName", label: "PRODUCT NAME" },
-    { name: "categoryName", label: "CATEGORY" },
-    { name: "optionName", label: "OPTION NAME" },
-    { name: "optionStock", label: "OPTION STOCK" },
-    { name: "totalStock", label: "TOTAL STOCK" },
-    { name: "productPrice", label: "PRODUCT PRICE" },
-    { name: "totalPrice", label: "TOTAL PRICE" },
+    { name: "categoryName", label: "CATEGORY", editable: true },
+    { name: "optionName", label: "OPTION NAME", editable: true },
+    {
+      name: "optionStock",
+      label: "OPTION STOCK",
+      type: "number",
+      editable: true,
+    },
+    { name: "totalStock", label: "TOTAL STOCK", type: "number" },
+    {
+      name: "productPrice",
+      label: "PRODUCT PRICE",
+      type: "number",
+      editable: true,
+    },
+    { name: "totalPrice", label: "TOTAL PRICE", type: "number" },
     { name: "productDescription", label: "PRODUCT DESCRIPTION" },
   ];
 
@@ -114,7 +124,6 @@ const PM = () => {
               </Toolbar>
             </AppBar>
           </Box>
-
           <Box sx={{ paddingTop: 5, paddingBottom: 5 }}>
             <MUIDataTable
               title={"MUJI MALL"}

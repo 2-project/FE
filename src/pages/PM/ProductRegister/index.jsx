@@ -28,8 +28,18 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 const ProductRegister = () => {
   const navigate = useNavigate();
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [showFileUploadError, setShowFileUploadError] = useState(false);
+  const [date, setDate] = useState(dayjs("2024-01-01"));
 
   const [productInputs, setProductInputs] = useState({
     productImages: [],
@@ -45,11 +55,9 @@ const ProductRegister = () => {
     totalStock: 0,
     productPrice: "",
     productDescription: "",
+    productSaleStart: dayjs(),
+    productSaleDelete: dayjs(),
   });
-
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [showFileUploadError, setShowFileUploadError] = useState(false);
 
   const handleSelectCategory = (e) => {
     setProductInputs({ ...productInputs, categoryName: e.target.value });
@@ -129,7 +137,9 @@ const ProductRegister = () => {
       productInputs.options.length > 0 &&
       productInputs.options.some((sku) => sku.optionName && sku.optionStock) &&
       productInputs.productPrice &&
-      productInputs.productDescription;
+      productInputs.productDescription &&
+      productInputs.productSaleStart &&
+      productInputs.productSaleDelete;
 
     setShowSuccessAlert(isFormValid);
     setShowErrorAlert(!isFormValid);
@@ -159,6 +169,8 @@ const ProductRegister = () => {
       ],
       productPrice: "",
       productDescription: "",
+      productSaleStart: dayjs(),
+      productSaleDelete: dayjs(),
     });
 
     setShowSuccessAlert(false);
@@ -347,7 +359,7 @@ const ProductRegister = () => {
                       }}
                     >
                       <TextField
-                        label="option name"
+                        label="size or color"
                         value={sku.optionName}
                         onChange={(e) =>
                           setProductInputs((prevInputs) => {
@@ -368,7 +380,7 @@ const ProductRegister = () => {
                       />
 
                       <TextField
-                        label="option stock"
+                        label="stock"
                         value={sku.optionStock}
                         type="number"
                         pattern="[0-9]*"
@@ -450,8 +462,33 @@ const ProductRegister = () => {
                     })
                   }
                   required
-                  sx={{ marginTop: 2 }}
+                  sx={{ marginTop: 2, marginBottom: 2 }}
                 />
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["SaleStartDate", "SaleEndDate"]}>
+                    <DatePicker
+                      label="Sale Start Date"
+                      value={productInputs.productSaleStart}
+                      onChange={(newDate) =>
+                        setProductInputs((prevInputs) => ({
+                          ...prevInputs,
+                          productSaleStart: newDate,
+                        }))
+                      }
+                    />
+                    <DatePicker
+                      label="Sale End Date"
+                      value={productInputs.productSaleDelete}
+                      onChange={(newDate) =>
+                        setProductInputs((prevInputs) => ({
+                          ...prevInputs,
+                          productSaleDelete: newDate,
+                        }))
+                      }
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </Box>
 
               <Box
@@ -491,7 +528,6 @@ const ProductRegister = () => {
     </div>
   );
 };
-
 export default ProductRegister;
 
 const ImageUploadInput = styled("input")({
