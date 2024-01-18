@@ -5,7 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const theme = createTheme({
   palette: {
     primary: {
@@ -17,11 +18,19 @@ const theme = createTheme({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <ThemeProvider theme={theme}>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
+      <App />
+    </ThemeProvider>
+    {/* </React.StrictMode> */}
   </BrowserRouter>
 );
 

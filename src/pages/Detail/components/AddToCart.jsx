@@ -41,9 +41,10 @@ const AddToCart = () => {
         exclusive
         onChange={handleChangeOption}
       >
-        {optionData.map((item) => {
+        {optionData.map((item, index) => {
           return (
             <ToggleButton
+              key={index}
               value={item}
               style={{
                 // padding: "3px",

@@ -27,6 +27,7 @@ const Detail = () => {
         margin: "0 55px 0 55px",
       }}
     >
+      {/* <button onClick={() => redirect("/login")}>redi</button> */}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <ImageViewer></ImageViewer>
         <div>
