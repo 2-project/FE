@@ -31,11 +31,12 @@ const PM = () => {
     categoryName: "string",
     options: [
       {
+        optionCid: "number", // optionid로 수정
         optionName: "string",
         optionStock: "number", // edit
       },
     ],
-    productPrice: "number", // edit
+    productPrice: "number",
     totalStock: "number",
     totalPrice: "number",
     productDescription: "string",

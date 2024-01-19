@@ -52,6 +52,7 @@ const ProductRegister = (props) => {
     categoryName: "",
     options: [
       {
+        optionCid: "",
         optionName: "",
         optionStock: "",
       },
@@ -161,21 +162,27 @@ const ProductRegister = (props) => {
       productInputs.productSaleStart &&
       productInputs.productSaleEnd;
 
-    if (isEditing) {
-      // editing mode (update)
-      if (isFormValid && productInputs.productImages.length > 0) {
-        setShowSuccessAlert(true); // update success alert
-      } else {
-        setShowErrorAlert(!isFormValid);
-        setShowFileUploadError(productInputs.productImages.length === 0);
-      }
+    if (isFormValid && productInputs.productImages.length > 0) {
+      setShowSuccessAlert(true);
+      setShowErrorAlert(false);
+    } else if (!isFormValid) {
+      setShowErrorAlert(true);
+      setShowSuccessAlert(false);
+    } else if (productInputs.productImages.length === 0) {
+      setShowFileUploadError(true);
+    }
+  };
+
+  const handleFormUpdate = () => {
+    const hasValidOption = productInputs.options.some(
+      (sku) => sku.optionStock === 0 || sku.optionStock > 0
+    );
+    if (hasValidOption) {
+      setShowSuccessAlert(true); // Update success alert
+      setShowErrorAlert(false);
     } else {
-      // not editing, first submit
-      setShowSuccessAlert(
-        isFormValid && productInputs.productImages.length > 0
-      );
-      setShowErrorAlert(!isFormValid);
-      setShowFileUploadError(productInputs.productImages.length === 0);
+      setShowErrorAlert(true);
+      setShowSuccessAlert(false);
     }
   };
 
@@ -595,9 +602,16 @@ const ProductRegister = (props) => {
                 >
                   reset
                 </Button>
-                <Button variant="contained" onClick={handleFormSubmit}>
-                  {isEditing ? "Update" : "Submit"}
-                </Button>
+
+                {isEditing ? (
+                  <Button variant="contained" onClick={handleFormUpdate}>
+                    Update
+                  </Button>
+                ) : (
+                  <Button variant="contained" onClick={handleFormSubmit}>
+                    Submit
+                  </Button>
+                )}
               </Box>
               <Box>
                 {showSuccessAlert && (
@@ -620,6 +634,7 @@ const ProductRegister = (props) => {
     </div>
   );
 };
+
 export default ProductRegister;
 
 const ImageUploadInput = styled("input")({
