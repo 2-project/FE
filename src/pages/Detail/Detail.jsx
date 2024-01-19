@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ImageViewer from "./components/ImageViewer";
 import ProductInfo from "./components/ProductInfo";
 import AddToCart from "./components/AddToCart";
@@ -6,8 +6,20 @@ import Description from "./components/Description";
 import ScrollToTop from "../../components/ScrollToTop";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import { getGoodsDetails } from "../../api/detailApi";
 
 const Detail = () => {
+  const requestGoodsDetail = async () => {
+    try {
+      const res = await getGoodsDetails({ productId: "2232323" });
+      console.log("res", res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    requestGoodsDetail();
+  }, []);
   return (
     <div>
       <Header></Header>
