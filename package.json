@@ -24,6 +24,7 @@
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.8",
+    "styled-reset": "^4.5.2",
     "swiper": "^6.8.4",
     "web-vitals": "^2.1.4"
   },
@@ -50,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/styled-components": "^5.1.34"
   }
 }
