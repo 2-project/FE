@@ -32,7 +32,7 @@ const PM = () => {
     totalPrice: "number",
     productDescription: "string",
     productSaleStart: "Date",
-    productSaleDelete: "Date",
+    productSaleEnd: "Date",
   };
 
   const columns = [
@@ -52,19 +52,17 @@ const PM = () => {
       name: "optionStock",
       label: "OPTION STOCK",
       type: "number",
-      editable: true,
     },
     { name: "totalStock", label: "TOTAL STOCK", type: "number" },
     {
       name: "productPrice",
       label: "PRODUCT PRICE",
       type: "number",
-      editable: true,
     },
     { name: "totalPrice", label: "TOTAL PRICE", type: "number" },
     { name: "productDescription", label: "PRODUCT DESCRIPTION" },
     { name: "productSaleStart", label: "START DATE" },
-    { name: "productSaleDelete", label: "END DATE" },
+    { name: "productSaleEnd", label: "END DATE" },
   ];
 
   const rows = [
@@ -78,9 +76,11 @@ const PM = () => {
       productPrice: pmData.productPrice,
       totalStock: pmData.totalStock,
       totalPrice: pmData.totalPrice,
+      // totalStock: sumTotalStock(),
+      // totalPrice: calculateTotalPrice(),
       productDescription: pmData.productDescription,
       productSaleStart: pmData.productSaleStart,
-      productSaleDelete: pmData.productSaleDelete,
+      productSaleEnd: pmData.productSaleEnd,
     },
   ];
 
@@ -99,6 +99,7 @@ const PM = () => {
 
     return totalStock;
   };
+  // if totalStock == 0, 판매 종료, 테이블에서 삭제
 
   const calculateTotalPrice = () => {
     const productPrice = parseFloat(pmData.productPrice) || 0;
