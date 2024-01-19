@@ -1,6 +1,11 @@
 .modalContainer {
+<<<<<<< HEAD
   width: 25rem;
   height: 43rem;
+=======
+  width: 30rem;
+  height: 48rem;
+>>>>>>> origin
   background-color: white;
   padding: 0 20px 0 20px;
   display: flex;
@@ -22,6 +27,7 @@
 }
 
 .modalContainer .signupButton {
+<<<<<<< HEAD
   margin-top: 5px;
   margin-bottom: 10px;
   font-weight: bold;
@@ -95,3 +101,8 @@
   overflow: hidden;
   border: 0;
 }
+=======
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+>>>>>>> origin

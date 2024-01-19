@@ -14,7 +14,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import styles from "./Cart.module.css";
+import styles from "./PurchaseHistory.module.css";
 import { useNavigate } from "react-router-dom";
 
 function Cart({ onClose }) {
@@ -111,20 +111,20 @@ function Cart({ onClose }) {
         <Box className={styles.cartContainer}>
           <Box className={styles.header}>
             <Typography variant="h4" className={styles.title}>
-              장바구니
+              주문내역
             </Typography>
           </Box>
 
-          <Typography variant="subtitle1" className={styles.notice}>
+          {/* <Typography variant="subtitle1" className={styles.notice}>
             장바구니에 저장된 상품이 없습니다
-          </Typography>
+          </Typography> */}
 
           <Box className={styles.productContainer}>
             <TableContainer component={Paper} className={styles.tableContainer}>
               <Table aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell padding="checkbox">
+                    {/* <TableCell padding="checkbox">
                       <Checkbox
                         indeterminate={
                           checkedUsers.length > 0 &&
@@ -133,11 +133,11 @@ function Cart({ onClose }) {
                         checked={selectAll}
                         onChange={handleSelectAllClick}
                       />
-                    </TableCell>
-                    <TableCell>상품정보</TableCell>
-                    <TableCell>판매가</TableCell>
-                    <TableCell>배송비</TableCell>
+                    </TableCell> */}
+                    <TableCell>상품이미지</TableCell>
+                    <TableCell>상품명</TableCell>
                     <TableCell>주문금액</TableCell>
+                    <TableCell>주문날짜</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -161,31 +161,10 @@ function Cart({ onClose }) {
           </Box>
           <Box className={styles.productList}>
             <Box className={styles.product}>
-              <Typography className={styles.productName}>
+              {/* <Typography className={styles.productName}>
                 선택한 상품
-              </Typography>
-              <Button
-                className={styles.productDelete}
-                onClick={handleDelete}
-                variant="contained"
-                disabled={isDeleting}
-              >
-                {isDeleting ? "삭제 중..." : "X 삭제하기"}
-              </Button>
+              </Typography> */}
             </Box>
-
-            <Button
-              sx={{
-                fontSize: "x-large",
-                color: "white",
-                padding: "15px 45px",
-                margin: "30px 0 100px 0",
-              }}
-              onClick={paymentHandleSubmit}
-              variant="contained"
-            >
-              주문하기
-            </Button>
           </Box>
         </Box>
       </Container>
