@@ -16,6 +16,14 @@ const PM = () => {
   const navigate = useNavigate();
   const [isRegistered, setIsRegistered] = useState(false);
 
+  const handleEdit = (tableMeta) => {
+    console.log("tableMeta", tableMeta);
+    const { rowData } = tableMeta;
+    navigate("/product_register", {
+      state: { isEditing: true, productId: rowData[0] },
+    });
+  };
+
   const pmData = {
     productId: "number",
     productImages: [], // 대표이미지 설정?
@@ -65,6 +73,34 @@ const PM = () => {
     { name: "productDescription", label: "PRODUCT DESCRIPTION" },
     { name: "productSaleStart", label: "START DATE" },
     { name: "productSaleDelete", label: "END DATE" },
+    {
+      name: "Actions",
+      label: "Actions",
+      options: {
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return <Button onClick={() => handleEdit(tableMeta)}>Edit</Button>;
+        },
+        setCellProps: () => ({
+          style: {
+            whiteSpace: "nowrap",
+            position: "sticky",
+            right: "0",
+            background: "white",
+            zIndex: 100,
+          },
+        }),
+        setCellHeaderProps: () => ({
+          style: {
+            whiteSpace: "nowrap",
+            position: "sticky",
+            right: 0,
+            background: "var(--main-color)",
+            color: "white",
+            zIndex: 101,
+          },
+        }),
+      },
+    },
   ];
 
   const rows = [
@@ -107,7 +143,7 @@ const PM = () => {
 
   const handleRegister = () => {
     setIsRegistered(false);
-    navigate("/product_register");
+    navigate("/product_register", { state: { isEditing: false } });
   };
 
   return (

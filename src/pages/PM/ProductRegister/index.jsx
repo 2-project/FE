@@ -21,7 +21,8 @@ import {
   ImageListItem,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import {} from "react-router-dom";
 import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -34,8 +35,9 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const ProductRegister = () => {
+const ProductRegister = (props) => {
   const navigate = useNavigate();
+  const { state } = useLocation(); // state.isEditing의 값에 따라 새 물품 등록인지 편집인지 결정. state.productId로 데이터 요청
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showFileUploadError, setShowFileUploadError] = useState(false);
