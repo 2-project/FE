@@ -22,12 +22,32 @@ function Login({ onClose }) {
     setLoginPassword(event.target.value);
   };
 
-  const handleButton = (event) => {
+  const handleButton = async (event) => {
     if (isEmailValid && isPasswordValid) {
-      // 로그인 로직 수행 및 이동
-      // navigate('/main');
+      try {
+        const response = await fetch("여러분의_백엔드_로그인_엔드포인트", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: LoginId,
+            password: LoginPassword,
+          }),
+        });
+
+        if (response.ok) {
+          // 로그인 성공, 필요한 경우 추가 작업 수행
+          // 예를 들어 다른 페이지로 이동할 수 있습니다.
+          // navigate('/main');
+        } else {
+          // 로그인 실패 처리, 사용자에게 오류 메시지를 표시할 수 있습니다.
+          console.error("로그인 실패");
+        }
+      } catch (error) {
+        console.error("로그인 중 오류 발생:", error);
+      }
     }
-    // navigate('/main');
   };
 
   const handleMemberButton = (event) => {
