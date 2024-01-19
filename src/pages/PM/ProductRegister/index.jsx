@@ -42,7 +42,8 @@ const ProductRegister = (props) => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showFileUploadError, setShowFileUploadError] = useState(false);
   const [showInfoAlert, setShowInfoAlert] = useState(false);
-  const [date, setDate] = useState(dayjs("2024-01-01"));
+  const [date, setDate] = useState(dayjs());
+  const [isEditing, setIsEditing] = useState(false);
 
   const [productInputs, setProductInputs] = useState({
     productImages: [],
@@ -58,8 +59,8 @@ const ProductRegister = (props) => {
     totalStock: 0,
     productPrice: "",
     productDescription: "",
-    productSaleStart: dayjs(),
-    productSaleDelete: dayjs(),
+    productSaleStart: null,
+    productSaleEnd: null,
   });
 
   const handleSelectCategory = (e) => {
@@ -121,24 +122,36 @@ const ProductRegister = (props) => {
   };
 
   const handlePrevImage = () => {
-    setProductInputs((prevInputs) => ({
-      ...prevInputs,
-      imageIndex:
-        (prevInputs.imageIndex - 1 + prevInputs.productImages.length) %
-        prevInputs.productImages.length,
-    }));
+    if (productInputs.productImages.length > 1) {
+      const newIndex =
+        (productInputs.imageIndex - 1 + productInputs.productImages.length) %
+        productInputs.productImages.length;
+
+      setProductInputs((prevInputs) => ({
+        ...prevInputs,
+        imageIndex: newIndex,
+      }));
+    }
   };
 
   const handleNextImage = () => {
-    setProductInputs((prevInputs) => ({
-      ...prevInputs,
-      imageIndex: (prevInputs.imageIndex + 1) % prevInputs.productImages.length,
-    }));
+    if (productInputs.productImages.length > 1) {
+      const newIndex =
+        (productInputs.imageIndex + 1) % productInputs.productImages.length;
+
+      setProductInputs((prevInputs) => ({
+        ...prevInputs,
+        imageIndex: newIndex,
+      }));
+    }
+  };
+
+  const handleEditing = () => {
+    setIsEditing(true);
   };
 
   const handleFormSubmit = () => {
     const isFormValid =
-      productInputs.productImages.length > 0 &&
       productInputs.productName &&
       productInputs.categoryName &&
       productInputs.options.length > 0 &&
@@ -146,11 +159,24 @@ const ProductRegister = (props) => {
       productInputs.productPrice &&
       productInputs.productDescription &&
       productInputs.productSaleStart &&
-      productInputs.productSaleDelete;
+      productInputs.productSaleEnd;
 
-    setShowSuccessAlert(isFormValid);
-    setShowErrorAlert(!isFormValid);
-    setShowFileUploadError(productInputs.productImages.length === 0);
+    if (isEditing) {
+      // editing mode (update)
+      if (isFormValid && productInputs.productImages.length > 0) {
+        setShowSuccessAlert(true); // update success alert
+      } else {
+        setShowErrorAlert(!isFormValid);
+        setShowFileUploadError(productInputs.productImages.length === 0);
+      }
+    } else {
+      // not editing, first submit
+      setShowSuccessAlert(
+        isFormValid && productInputs.productImages.length > 0
+      );
+      setShowErrorAlert(!isFormValid);
+      setShowFileUploadError(productInputs.productImages.length === 0);
+    }
   };
 
   const handleAlertClose = () => {
@@ -177,8 +203,8 @@ const ProductRegister = (props) => {
       ],
       productPrice: "",
       productDescription: "",
-      productSaleStart: dayjs(),
-      productSaleDelete: dayjs(),
+      productSaleStart: null,
+      productSaleEnd: null,
     });
 
     setShowSuccessAlert(false);
@@ -201,7 +227,9 @@ const ProductRegister = (props) => {
               </Toolbar>
             </AppBar>
           </Box>
-
+          <Button variant="contained" onClick={handleEditing}>
+            Edit
+          </Button>
           <Container
             sx={{
               display: "flex",
@@ -226,6 +254,7 @@ const ProductRegister = (props) => {
                 variant="contained"
                 startIcon={<CloudUploadIcon />}
                 sx={{ marginBottom: 5 }}
+                disabled={isEditing}
               >
                 upload img
                 <ImageUploadInput
@@ -259,13 +288,12 @@ const ProductRegister = (props) => {
                   maxWidth: 500,
                 }}
               >
-                <Button onClick={handlePrevImage}>{"<"}</Button>
                 <CardMedia
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    width: 350,
-                    height: 350,
+                    width: 400,
+                    height: 400,
                   }}
                   component="img"
                   alt={`Product Image ${productInputs.imageIndex + 1}`}
@@ -277,7 +305,6 @@ const ProductRegister = (props) => {
                       : ""
                   }
                 />
-                <Button onClick={handleNextImage}>{">"}</Button>
               </Card>
 
               <Box
@@ -295,22 +322,44 @@ const ProductRegister = (props) => {
                 >
                   IMAGE LIST
                 </Divider>
-
-                <ImageList cols={5}>
-                  {productInputs.productImages.map((image, index) => (
-                    <ImageListItem
-                      key={index}
-                      style={{ width: 80, height: 80 }}
-                    >
-                      <img
-                        src={URL.createObjectURL(image)}
-                        alt={`Product Image ${index + 1}`}
-                        loading="lazy"
-                      />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
-
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    maxWidth: 500,
+                    width: 500,
+                    height: 104,
+                  }}
+                >
+                  <Button
+                    onClick={handlePrevImage}
+                    disabled={productInputs.productImages.length <= 1}
+                  >
+                    {"<"}
+                  </Button>
+                  <ImageList cols={5}>
+                    {productInputs.productImages.map((image, index) => (
+                      <ImageListItem
+                        key={index}
+                        style={{ width: 80, height: 80 }}
+                      >
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Product Image ${index + 1}`}
+                          loading="lazy"
+                        />
+                      </ImageListItem>
+                    ))}
+                  </ImageList>
+                  <Button
+                    onClick={handleNextImage}
+                    disabled={productInputs.productImages.length <= 1}
+                  >
+                    {">"}
+                  </Button>
+                </Box>
                 <Divider
                   orientation="horizontal"
                   sx={{ marginTop: 2, marginBottom: 2 }}
@@ -350,8 +399,9 @@ const ProductRegister = (props) => {
                   }
                   required
                   sx={{ marginTop: 2 }}
+                  disabled={isEditing}
                 />
-                <FormControl sx={{ marginTop: 2 }}>
+                <FormControl sx={{ marginTop: 2 }} disabled={isEditing}>
                   <InputLabel>category</InputLabel>
                   <Select
                     id="categoryName"
@@ -397,6 +447,7 @@ const ProductRegister = (props) => {
                         }
                         required
                         sx={{ marginTop: 2 }}
+                        disabled={isEditing}
                       />
 
                       <TextField
@@ -431,16 +482,22 @@ const ProductRegister = (props) => {
                         }}
                       >
                         {productInputs.options.length > 1 && (
-                          <RemoveIcon
+                          <Button
                             onClick={() => handleDeleteOption(skuIndex)}
-                            sx={{ marginLeft: 1 }}
-                          />
+                            sx={{ marginLeft: 1, height: 20, width: 20 }}
+                            disabled={isEditing}
+                          >
+                            <RemoveIcon />
+                          </Button>
                         )}
                         {skuIndex === productInputs.options.length - 1 && (
-                          <AddIcon
+                          <Button
                             onClick={() => handleAddOption(skuIndex)}
-                            sx={{ marginLeft: 1 }}
-                          />
+                            sx={{ marginLeft: 1, height: 20, width: 20 }}
+                            disabled={isEditing}
+                          >
+                            <AddIcon />
+                          </Button>
                         )}
                       </ButtonGroup>
                     </Box>
@@ -462,6 +519,7 @@ const ProductRegister = (props) => {
                   label="total stock"
                   value={sumTotalStock()}
                   sx={{ marginTop: 2 }}
+                  disabled={isEditing}
                 />
                 <TextField
                   id="productPrice"
@@ -477,6 +535,7 @@ const ProductRegister = (props) => {
                   pattern="[0-9]*"
                   required
                   sx={{ marginTop: 2 }}
+                  disabled={isEditing}
                 />
                 <TextField
                   id="productDescription"
@@ -490,6 +549,7 @@ const ProductRegister = (props) => {
                   }
                   required
                   sx={{ marginTop: 2, marginBottom: 2 }}
+                  disabled={isEditing}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={["SaleStartDate", "SaleEndDate"]}>
@@ -502,16 +562,18 @@ const ProductRegister = (props) => {
                           productSaleStart: newDate,
                         }))
                       }
+                      disabled={isEditing}
                     />
                     <DatePicker
                       label="Sale End Date"
-                      value={productInputs.productSaleDelete}
+                      value={productInputs.productSaleEnd}
                       onChange={(newDate) =>
                         setProductInputs((prevInputs) => ({
                           ...prevInputs,
-                          productSaleDelete: newDate,
+                          productSaleEnd: newDate,
                         }))
                       }
+                      disabled={isEditing}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -526,11 +588,15 @@ const ProductRegister = (props) => {
                   marginBottom: 2,
                 }}
               >
-                <Button variant="contained" onClick={handleReset}>
+                <Button
+                  variant="contained"
+                  onClick={handleReset}
+                  disabled={isEditing}
+                >
                   reset
                 </Button>
                 <Button variant="contained" onClick={handleFormSubmit}>
-                  submit
+                  {isEditing ? "Update" : "Submit"}
                 </Button>
               </Box>
               <Box>
