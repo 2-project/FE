@@ -10,10 +10,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import styles from "./SignUp.module.css";
-<<<<<<< HEAD
 import userBasicIcon_1 from "../../../assets/icons/basic_profile_1.png";
-=======
->>>>>>> origin
 
 function MemberLoginModal({ onClose }) {
   const [LoginId, setLoginId] = useState("");
@@ -22,7 +19,6 @@ function MemberLoginModal({ onClose }) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-<<<<<<< HEAD
   const [profilePicture, setProfilePicture] = useState(userBasicIcon_1);
   const [isCheckboxChecked, setCheckboxChecked] = useState(true);
   const [isProfilePictureValid, setIsProfilePictureValid] = useState(true);
@@ -109,11 +105,6 @@ function MemberLoginModal({ onClose }) {
     }
   };
 
-=======
-  const [profilePicture, setProfilePicture] = useState("");
-
-  const handleSignup = () => {};
->>>>>>> origin
   return (
     <Modal
       open={true}
@@ -130,11 +121,7 @@ function MemberLoginModal({ onClose }) {
           회원가입
         </Typography>
         <TextField
-<<<<<<< HEAD
           label="*이름"
-=======
-          label="이름"
->>>>>>> origin
           variant="outlined"
           fullWidth
           margin="normal"
@@ -142,7 +129,6 @@ function MemberLoginModal({ onClose }) {
           onChange={(e) => setName(e.target.value)}
           className={styles.inputField}
           placeholder="한글로만 입력"
-<<<<<<< HEAD
           size="small"
           error={!isNameValid && name.trim() !== ""}
           helperText={
@@ -188,22 +174,6 @@ function MemberLoginModal({ onClose }) {
         </Box>
         <TextField
           label="*비밀번호"
-=======
-        />
-        <TextField
-          label="이메일"
-          type="email"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={LoginId}
-          onChange={(e) => setLoginId(e.target.value)}
-          className={styles.inputField}
-          placeholder="@ 필수 입력"
-        />
-        <TextField
-          label="비밀번호"
->>>>>>> origin
           type="password"
           variant="outlined"
           fullWidth
@@ -212,7 +182,6 @@ function MemberLoginModal({ onClose }) {
           onChange={(e) => setLoginPassword(e.target.value)}
           className={styles.inputField}
           placeholder="영문(소문자), 숫자 합쳐서 8~20자"
-<<<<<<< HEAD
           size="small"
           error={!isPasswordValid && LoginPassword.trim() !== ""}
           helperText={
@@ -223,11 +192,6 @@ function MemberLoginModal({ onClose }) {
         />
         <TextField
           label="*비밀번호 확인"
-=======
-        />
-        <TextField
-          label="비밀번호 확인"
->>>>>>> origin
           type="password"
           variant="outlined"
           fullWidth
@@ -236,7 +200,6 @@ function MemberLoginModal({ onClose }) {
           onChange={(e) => setConfirmPassword(e.target.value)}
           className={styles.inputField}
           placeholder="영문(소문자), 숫자 합쳐서 8~20자"
-<<<<<<< HEAD
           size="small"
           error={confirmPassword !== LoginPassword && confirmPassword !== ""}
           helperText={
@@ -264,28 +227,12 @@ function MemberLoginModal({ onClose }) {
         />
         <TextField
           label="*주소"
-=======
-        />
-        <TextField
-          label="휴대폰 번호"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          className={styles.inputField}
-          placeholder="'-' 없이 숫자만 입력"
-        />
-        <TextField
-          label="주소"
->>>>>>> origin
           variant="outlined"
           fullWidth
           margin="normal"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           className={styles.inputField}
-<<<<<<< HEAD
           size="small"
           error={!isAddressValid && address.trim() !== ""}
           helperText={
@@ -326,21 +273,6 @@ function MemberLoginModal({ onClose }) {
               onChange={() => setCheckboxChecked(!isCheckboxChecked)}
             />
           }
-=======
-        />
-        <TextField
-          label="프로필사진"
-          type="file"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={profilePicture}
-          onChange={(e) => setProfilePicture(e.target.value)}
-          className={styles.inputField}
-        />
-        <FormControlLabel
-          control={<Checkbox defaultChecked />}
->>>>>>> origin
           label="개인정보 제3자 동의 체크"
         />
         <Button
@@ -349,10 +281,7 @@ function MemberLoginModal({ onClose }) {
           fullWidth
           onClick={handleSignup}
           className={styles.signupButton}
-<<<<<<< HEAD
           disabled={!isSignupButtonEnabled}
-=======
->>>>>>> origin
         >
           회원가입
         </Button>
