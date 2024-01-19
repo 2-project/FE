@@ -50,6 +50,7 @@ class Http {
       },
     });
   }
+
   delete(url, data, headers) {
     return this.createRequest({
       method: "DELETE",
@@ -58,6 +59,7 @@ class Http {
       headers,
     });
   }
+
   put(url, data) {
     return this.createRequest({
       method: "PUT",

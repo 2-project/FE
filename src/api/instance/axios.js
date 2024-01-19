@@ -1,5 +1,6 @@
 import axios from "axios";
 import { localToken } from "../../utils/auth";
+import { toast } from "react-toastify";
 
 const base_url = "";
 
@@ -50,6 +51,22 @@ instance.interceptors.response.use(
   function (error) {
     // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
     // 응답 오류가 있는 작업 수행
+    const { response } = error;
+    if (response) {
+      if (response.status === 401) {
+        toast.info("로그인이 필요합니다.");
+        setInterval(() => {
+          window.location.href = "/login";
+        }, 2000);
+
+        //TODO: history에 푸쉬, 로그인 뒤에 원래 있던 페이지로 이동
+      } else if (response.status === 503) {
+        toast.error("server error");
+      } else {
+        toast.error(`${response.statusText}`);
+      }
+      return response;
+    }
     return Promise.reject(error);
   }
 );
