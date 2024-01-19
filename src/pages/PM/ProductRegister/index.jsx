@@ -299,9 +299,7 @@ const ProductRegister = (props) => {
               </Toolbar>
             </AppBar>
           </Box>
-          <Button variant="contained" onClick={handleEditing}>
-            Edit
-          </Button>
+
           <Container
             sx={{
               display: "flex",

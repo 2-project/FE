@@ -138,6 +138,7 @@ const PM = () => {
   };
   // if totalStock == 0, 판매 종료, 테이블에서 삭제
   // delete
+
   const calculateTotalPrice = () => {
     const productPrice = parseFloat(pmData.productPrice) || 0;
     return productPrice * sumTotalStock();
