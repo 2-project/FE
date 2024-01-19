@@ -34,6 +34,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import axios from "axios";
 
 const ProductRegister = (props) => {
   const navigate = useNavigate();
@@ -151,7 +152,8 @@ const ProductRegister = (props) => {
     setIsEditing(true);
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
+    // post
     const isFormValid =
       productInputs.productName &&
       productInputs.categoryName &&
@@ -163,27 +165,90 @@ const ProductRegister = (props) => {
       productInputs.productSaleEnd;
 
     if (isFormValid && productInputs.productImages.length > 0) {
-      setShowSuccessAlert(true);
-      setShowErrorAlert(false);
+      const formData = new FormData();
+      formData.append("productName", productInputs.productName);
+      formData.append("categoryName", productInputs.categoryName);
+      formData.append("productPrice", productInputs.productPrice);
+      formData.append("productDescription", productInputs.productDescription);
+      formData.append("productSaleStart", productInputs.productSaleStart);
+      formData.append("productSaleEnd", productInputs.productSaleEnd);
+
+      productInputs.options.forEach((sku, index) => {
+        formData.append(`options[${index}][optionName]`, sku.optionName);
+        formData.append(`options[${index}][optionStock]`, sku.optionStock);
+      });
+
+      productInputs.productImages.forEach((image, index) => {
+        formData.append(`productImages[${index}]`, image);
+      });
+      try {
+        const response = await axios.post("/api/submit-product", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        setShowSuccessAlert(true);
+        setShowErrorAlert(false);
+      } catch (error) {
+        console.error("Error submitting product:", error);
+        setShowErrorAlert(true);
+        setShowSuccessAlert(false);
+      }
     } else if (!isFormValid) {
       setShowErrorAlert(true);
       setShowSuccessAlert(false);
     } else if (productInputs.productImages.length === 0) {
       setShowFileUploadError(true);
     }
+
+    // if (isFormValid && productInputs.productImages.length > 0) {
+    //   setShowSuccessAlert(true);
+    //   setShowErrorAlert(false);
+    // } else if (!isFormValid) {
+    //   setShowErrorAlert(true);
+    //   setShowSuccessAlert(false);
+    // } else if (productInputs.productImages.length === 0) {
+    //   setShowFileUploadError(true);
+    // }
   };
 
-  const handleFormUpdate = () => {
+  const handleFormUpdate = async () => {
+    // put
     const hasValidOption = productInputs.options.some(
       (sku) => sku.optionStock === 0 || sku.optionStock > 0
     );
+
     if (hasValidOption) {
-      setShowSuccessAlert(true); // Update success alert
-      setShowErrorAlert(false);
+      const optionStockUpdates = productInputs.options.map((sku) => ({
+        optionCid: sku.optionCid, // Assuming you have an optionCid property
+        optionStock: sku.optionStock,
+      }));
+
+      try {
+        const response = await axios.put("/api/update-product-options", {
+          optionStockUpdates,
+        });
+
+        setShowSuccessAlert(true);
+        setShowErrorAlert(false);
+      } catch (error) {
+        console.error("Error updating product options:", error);
+        setShowErrorAlert(true);
+        setShowSuccessAlert(false);
+      }
     } else {
       setShowErrorAlert(true);
       setShowSuccessAlert(false);
     }
+
+    // if (hasValidOption) {
+    //   setShowSuccessAlert(true); // Update success alert
+    //   setShowErrorAlert(false);
+    // } else {
+    //   setShowErrorAlert(true);
+    //   setShowSuccessAlert(false);
+    // }
   };
 
   const handleAlertClose = () => {

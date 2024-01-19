@@ -71,8 +71,6 @@ const PM = () => {
     { name: "totalPrice", label: "TOTAL PRICE", type: "number" },
     { name: "productDescription", label: "PRODUCT DESCRIPTION" },
     { name: "productSaleStart", label: "START DATE" },
-    { name: "productSaleDelete", label: "END DATE" },
-
     { name: "productSaleEnd", label: "END DATE" },
     {
       name: "Actions",
@@ -139,7 +137,7 @@ const PM = () => {
     return totalStock;
   };
   // if totalStock == 0, 판매 종료, 테이블에서 삭제
-
+  // delete
   const calculateTotalPrice = () => {
     const productPrice = parseFloat(pmData.productPrice) || 0;
     return productPrice * sumTotalStock();
