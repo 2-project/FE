@@ -1,10 +1,11 @@
 import axios from "axios";
 
+const base_url =
+  "http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com:8080";
+
 export const getProduct = async () => {
   try {
-    const response = await axios.get(
-      "http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com/product/getCategoryProduct"
-    );
+    const response = await axios.get(`${base_url}/api/product`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -14,7 +15,7 @@ export const getProduct = async () => {
 export const addProduct = async (formData) => {
   try {
     const response = await axios.post(
-      "http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com/product/addProduct",
+      `${base_url}/api/product/addProduct`,
       formData,
       {
         headers: {
@@ -31,7 +32,7 @@ export const addProduct = async (formData) => {
 export const editProduct = async (productId, requestBody) => {
   try {
     const response = await axios.put(
-      `http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com/product/editProduct/${productId}`,
+      `${base_url}/api/product/editProduct/${productId}`,
       requestBody
     );
     return response;
@@ -43,9 +44,7 @@ export const editProduct = async (productId, requestBody) => {
 
 export const deleteProduct = async (productId) => {
   try {
-    const response = await axios.delete(
-      `http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com/product/${productId}`
-    );
+    const response = await axios.delete(`${base_url}/api/product/${productId}`);
     return response;
   } catch (error) {
     console.error(error);

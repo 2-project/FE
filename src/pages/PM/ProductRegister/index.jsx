@@ -54,6 +54,7 @@ const ProductRegister = (props) => {
     categoryName: "",
     options: [
       {
+        optionCid: "",
         optionName: "",
         optionStock: "",
       },
@@ -185,9 +186,9 @@ const ProductRegister = (props) => {
           })
         );
 
-        productInputs.productImages.forEach((image, index) => {
-          formData.append(`productImages[${index}]`, image);
-        });
+        for (let i = 0; i < productInputs.productImages.length; i++) {
+          formData.append("productImages", productInputs.productImages[i]);
+        }
         const response = await addProduct(formData);
 
         console.log(response);
@@ -319,7 +320,7 @@ const ProductRegister = (props) => {
                 sx={{ marginBottom: 5 }}
                 disabled={state.isEditing}
               >
-                upload img
+                upload
                 <ImageUploadInput
                   type="file"
                   onChange={handleImageUpload}
@@ -367,6 +368,7 @@ const ProductRegister = (props) => {
                   component="img"
                   alt={`Product Image ${productInputs.imageIndex + 1}`}
                   src={
+                    productInputs.productImages &&
                     productInputs.productImages.length > 0
                       ? URL.createObjectURL(
                           productInputs.productImages[productInputs.imageIndex]
@@ -387,9 +389,9 @@ const ProductRegister = (props) => {
               >
                 <Divider
                   orientation="horizontal"
-                  sx={{ marginTop: 2, marginBottom: 2 }}
+                  sx={{ marginTop: 2, marginBottom: 2, fontSize: 14 }}
                 >
-                  IMAGE LIST
+                  미리보기
                 </Divider>
                 <Box
                   sx={{
@@ -453,12 +455,12 @@ const ProductRegister = (props) => {
                   }}
                 >
                   <Avatar src="/broken-image.jpg" />
-                  <Typography sx={{ paddingLeft: 1 }}>Administrator</Typography>
+                  <Typography sx={{ paddingLeft: 1 }}>관리자</Typography>
                 </Box>
 
                 <TextField
                   id="productName"
-                  label="product name"
+                  label="상품명"
                   value={productInputs.productName}
                   onChange={(e) =>
                     setProductInputs({
@@ -471,10 +473,10 @@ const ProductRegister = (props) => {
                   disabled={state.isEditing}
                 />
                 <FormControl sx={{ marginTop: 2 }} disabled={state.isEditing}>
-                  <InputLabel>category</InputLabel>
+                  <InputLabel>카테고리</InputLabel>
                   <Select
                     id="categoryName"
-                    label="category"
+                    label="카테고리"
                     value={productInputs.categoryName}
                     onChange={handleSelectCategory}
                     required
@@ -498,7 +500,7 @@ const ProductRegister = (props) => {
                       }}
                     >
                       <TextField
-                        label="size or color"
+                        label="size / color"
                         value={sku.optionName}
                         onChange={(e) =>
                           setProductInputs((prevInputs) => {
@@ -520,7 +522,7 @@ const ProductRegister = (props) => {
                       />
 
                       <TextField
-                        label="stock"
+                        label="수량"
                         value={sku.optionStock}
                         type="number"
                         pattern="[0-9]*"
@@ -585,14 +587,14 @@ const ProductRegister = (props) => {
 
                 <TextField
                   id="totalStock"
-                  label="total stock"
+                  label="총 수량"
                   value={sumTotalStock()}
                   sx={{ marginTop: 2 }}
                   disabled={state.isEditing}
                 />
                 <TextField
                   id="productPrice"
-                  label="product price"
+                  label="상품 가격"
                   value={productInputs.productPrice}
                   onChange={(e) =>
                     setProductInputs({
@@ -608,7 +610,7 @@ const ProductRegister = (props) => {
                 />
                 <TextField
                   id="productDescription"
-                  label="product description"
+                  label="상품 설명"
                   value={productInputs.productDescription}
                   onChange={(e) =>
                     setProductInputs({
@@ -621,9 +623,9 @@ const ProductRegister = (props) => {
                   disabled={state.isEditing}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["SaleStartDate", "SaleEndDate"]}>
+                  <DemoContainer components={["판매시작일", "판매종료일"]}>
                     <DatePicker
-                      label="Sale Start Date"
+                      label="판매시작일"
                       value={productInputs.productSaleStart}
                       onChange={(newDate) =>
                         setProductInputs((prevInputs) => ({
@@ -634,7 +636,7 @@ const ProductRegister = (props) => {
                       readOnly={state.isEditing}
                     />
                     <DatePicker
-                      label="Sale End Date"
+                      label="판매종료일"
                       value={productInputs.productSaleEnd}
                       onChange={(newDate) =>
                         setProductInputs((prevInputs) => ({

@@ -17,14 +17,15 @@ import { getProduct, deleteProduct } from "../../../api/pmApi";
 
 const PM = () => {
   const navigate = useNavigate();
-  const [productInputs, setProductInputs] = useState([]);
+  const { productInputs } = useLocation(); // productInputs으로 product 불러오기
   const [isRegistered, setIsRegistered] = useState(false);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const getRegisteredProducts = async () => {
       try {
         const products = await getProduct();
-        setProductInputs(products);
+        setProducts(products || []);
       } catch (error) {
         console.error(error);
       }
@@ -82,7 +83,7 @@ const PM = () => {
     { name: "productId", label: "ID" },
     {
       name: "productImages",
-      label: "PRODUCT IMAGES",
+      label: "이미지",
       options: {
         customBodyRender: (value) => {
           const representativeImage =
@@ -97,24 +98,24 @@ const PM = () => {
         },
       },
     },
-    { name: "productName", label: "PRODUCT NAME" },
-    { name: "categoryName", label: "CATEGORY" },
-    { name: "optionName", label: "OPTION NAME" },
+    { name: "productName", label: "상품명" },
+    { name: "categoryName", label: "카테고리" },
+    { name: "optionName", label: "옵션명" },
     {
       name: "optionStock",
-      label: "OPTION STOCK",
+      label: "옵션 수량",
       type: "number",
     },
-    { name: "totalStock", label: "TOTAL STOCK", type: "number" },
+    { name: "totalStock", label: "총 수량", type: "number" },
     {
       name: "productPrice",
-      label: "PRODUCT PRICE",
+      label: "상품 가격",
       type: "number",
     },
-    { name: "totalPrice", label: "TOTAL PRICE", type: "number" },
-    { name: "productDescription", label: "PRODUCT DESCRIPTION" },
-    { name: "productSaleStart", label: "START DATE" },
-    { name: "productSaleEnd", label: "END DATE" },
+    { name: "totalPrice", label: "총 가격", type: "number" },
+    { name: "productDescription", label: "상품 설명" },
+    { name: "productSaleStart", label: "판매시작일" },
+    { name: "productSaleEnd", label: "판매종료일" },
     {
       name: "Actions",
       label: "Actions",
@@ -145,21 +146,38 @@ const PM = () => {
     },
   ];
 
-  const rows = [
-    {
-      productId: productInputs.productId,
-      productImages: productInputs.productImages,
-      productName: productInputs.productName,
-      categoryName: productInputs.categoryName,
-      options: productInputs.options,
-      productPrice: productInputs.productPrice,
-      totalStock: sumTotalStock(),
-      totalPrice: calculateTotalPrice(),
-      productDescription: productInputs.productDescription,
-      productSaleStart: productInputs.productSaleStart,
-      productSaleEnd: productInputs.productSaleEnd,
-    },
-  ];
+  // const rows = [
+  //   {
+  //     productId: productInputs.productId,
+  //     productImages: productInputs.productImages,
+  //     productName: productInputs.productName,
+  //     categoryName: productInputs.categoryName,
+  //     options: productInputs.options,
+  //     productPrice: productInputs.productPrice,
+  //     totalStock: sumTotalStock(productInputs.options),
+  //     totalPrice: calculateTotalPrice(
+  //       productInputs.productPrice,
+  //       productInputs.options
+  //     ),
+  //     productDescription: productInputs.productDescription,
+  //     productSaleStart: productInputs.productSaleStart,
+  //     productSaleEnd: productInputs.productSaleEnd,
+  //   },
+  // ];
+
+  const rows = products.map((product) => ({
+    productId: product.productId,
+    productImages: product.productImages,
+    productName: product.productName,
+    categoryName: product.categoryName,
+    options: product.options,
+    productPrice: product.productPrice,
+    totalStock: sumTotalStock(product.options),
+    totalPrice: calculateTotalPrice(product.productPrice, product.options),
+    productDescription: product.productDescription,
+    productSaleStart: product.productSaleStart,
+    productSaleEnd: product.productSaleEnd,
+  }));
 
   return (
     <div>
