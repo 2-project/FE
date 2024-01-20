@@ -22,19 +22,19 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNavigate, useLocation } from "react-router-dom";
-import {} from "react-router-dom";
 import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
-
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import axios from "axios";
+// post - api/product/addProduct
+// put - api/product/editProduct{productId}
+import { addProduct, editProduct } from "../../../api/pmApi";
 
 const ProductRegister = (props) => {
   const navigate = useNavigate();
@@ -47,13 +47,13 @@ const ProductRegister = (props) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [productInputs, setProductInputs] = useState({
+    productId: "",
     productImages: [],
-    imageIndex: 0, // 대표이미지 설정?
+    imageIndex: 0,
     productName: "",
     categoryName: "",
     options: [
       {
-        optionCid: "",
         optionName: "",
         optionStock: "",
       },
@@ -94,7 +94,7 @@ const ProductRegister = (props) => {
   };
 
   const sumTotalStock = () => {
-    const totalStock = productInputs.options.reduce((result, sku) => {
+    const totalStock = (productInputs.options || []).reduce((result, sku) => {
       result += parseFloat(sku.optionStock) || 0;
       return result;
     }, 0);
@@ -152,116 +152,109 @@ const ProductRegister = (props) => {
     setIsEditing(true);
   };
 
-  const handleFormSubmit = async () => {
-    // post
-    const isFormValid =
-      productInputs.productName &&
-      productInputs.categoryName &&
-      productInputs.options.length > 0 &&
-      productInputs.options.some((sku) => sku.optionName && sku.optionStock) &&
-      productInputs.productPrice &&
-      productInputs.productDescription &&
-      productInputs.productSaleStart &&
-      productInputs.productSaleEnd;
+  const onSubmit = async () => {
+    try {
+      const isFormValid =
+        productInputs.productName &&
+        productInputs.categoryName &&
+        productInputs.options.length > 0 &&
+        productInputs.options.every(
+          (sku) => sku.optionName && sku.optionStock
+        ) &&
+        productInputs.productPrice &&
+        productInputs.productDescription &&
+        productInputs.productSaleStart &&
+        productInputs.productSaleEnd;
 
-    if (isFormValid && productInputs.productImages.length > 0) {
-      const formData = new FormData();
-      formData.append("productName", productInputs.productName);
-      formData.append("categoryName", productInputs.categoryName);
-      formData.append("productPrice", productInputs.productPrice);
-      formData.append("productDescription", productInputs.productDescription);
-      formData.append("productSaleStart", productInputs.productSaleStart);
-      formData.append("productSaleEnd", productInputs.productSaleEnd);
+      if (isFormValid && productInputs.productImages.length > 0) {
+        const formData = new FormData();
+        formData.append(
+          "productInfo",
+          JSON.stringify({
+            productName: productInputs.productName,
+            productDescription: productInputs.productDescription,
+            productPrice: Number(productInputs.productPrice),
+            productSaleStart: dayjs(productInputs.productSaleStart).format(
+              "YYYY-MM-DD"
+            ),
+            productSaleEnd: dayjs(productInputs.productSaleEnd).format(
+              "YYYY-MM-DD"
+            ),
+            options: productInputs.options,
+            category: productInputs.categoryName,
+          })
+        );
 
-      productInputs.options.forEach((sku, index) => {
-        formData.append(`options[${index}][optionName]`, sku.optionName);
-        formData.append(`options[${index}][optionStock]`, sku.optionStock);
-      });
-
-      productInputs.productImages.forEach((image, index) => {
-        formData.append(`productImages[${index}]`, image);
-      });
-      try {
-        const response = await axios.post("/api/submit-product", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        productInputs.productImages.forEach((image, index) => {
+          formData.append(`productImages[${index}]`, image);
         });
+        const response = await addProduct(formData);
 
+        console.log(response);
         setShowSuccessAlert(true);
         setShowErrorAlert(false);
-      } catch (error) {
-        console.error("Error submitting product:", error);
+        navigate("/product_manage", { state: { productInputs } });
+      } else {
         setShowErrorAlert(true);
         setShowSuccessAlert(false);
+
+        if (!isFormValid) {
+          setShowErrorAlert(true);
+          console.error("Error: Form data is not valid");
+        }
+
+        if (productInputs.productImages.length === 0) {
+          setShowFileUploadError(true);
+          console.error("Error: Please upload at least one file.");
+        }
       }
-    } else if (!isFormValid) {
-      setShowErrorAlert(true);
-      setShowSuccessAlert(false);
-    } else if (productInputs.productImages.length === 0) {
-      setShowFileUploadError(true);
-    }
-
-    // if (isFormValid && productInputs.productImages.length > 0) {
-    //   setShowSuccessAlert(true);
-    //   setShowErrorAlert(false);
-    // } else if (!isFormValid) {
-    //   setShowErrorAlert(true);
-    //   setShowSuccessAlert(false);
-    // } else if (productInputs.productImages.length === 0) {
-    //   setShowFileUploadError(true);
-    // }
-  };
-
-  const handleFormUpdate = async () => {
-    // put
-    const hasValidOption = productInputs.options.some(
-      (sku) => sku.optionStock === 0 || sku.optionStock > 0
-    );
-
-    if (hasValidOption) {
-      const optionStockUpdates = productInputs.options.map((sku) => ({
-        optionCid: sku.optionCid, // Assuming you have an optionCid property
-        optionStock: sku.optionStock,
-      }));
-
-      try {
-        const response = await axios.put("/api/update-product-options", {
-          optionStockUpdates,
-        });
-
-        setShowSuccessAlert(true);
-        setShowErrorAlert(false);
-      } catch (error) {
-        console.error("Error updating product options:", error);
-        setShowErrorAlert(true);
-        setShowSuccessAlert(false);
-      }
-    } else {
+    } catch (error) {
+      console.error("Error:", error);
       setShowErrorAlert(true);
       setShowSuccessAlert(false);
     }
-
-    // if (hasValidOption) {
-    //   setShowSuccessAlert(true); // Update success alert
-    //   setShowErrorAlert(false);
-    // } else {
-    //   setShowErrorAlert(true);
-    //   setShowSuccessAlert(false);
-    // }
   };
 
-  const handleAlertClose = () => {
-    if (showErrorAlert || showFileUploadError || showInfoAlert) {
-      setShowErrorAlert(false);
-      setShowFileUploadError(false);
-      setShowInfoAlert(false);
-    } else if (showSuccessAlert) {
-      navigate("/product_manage");
+  const handleUpdate = async () => {
+    const { options, productId } = productInputs;
+
+    try {
+      if (state.isEditing && productId) {
+        const hasValidOption = options.every(
+          (sku) => sku.optionStock === 0 || sku.optionStock > 0
+        );
+
+        if (hasValidOption) {
+          const optionStockUpdates = options.map((sku) => ({
+            optionStock: sku.optionStock,
+          }));
+
+          const requestBody = {
+            productId: Number(productId),
+            options: optionStockUpdates,
+          };
+
+          const response = await editProduct(productId, requestBody);
+          console.log(response);
+
+          setShowSuccessAlert(true);
+          setShowErrorAlert(false);
+        } else {
+          setShowErrorAlert(true);
+          setShowSuccessAlert(false);
+          console.error("Error: Please enter valid option stock values.");
+        }
+      } else {
+        console.error("Error: Invalid productId or editing state.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setShowErrorAlert(true);
+      setShowSuccessAlert(false);
     }
   };
 
-  const handleReset = () => {
+  const onReset = () => {
     setProductInputs({
       productImages: [],
       imageIndex: 0,
@@ -324,7 +317,7 @@ const ProductRegister = (props) => {
                 variant="contained"
                 startIcon={<CloudUploadIcon />}
                 sx={{ marginBottom: 5 }}
-                disabled={isEditing}
+                disabled={state.isEditing}
               >
                 upload img
                 <ImageUploadInput
@@ -337,14 +330,20 @@ const ProductRegister = (props) => {
               <Box sx={{ marginBottom: 2 }}>
                 {showFileUploadError &&
                   productInputs.productImages.length === 0 && (
-                    <Alert severity="error" onClose={handleAlertClose}>
+                    <Alert
+                      severity="error"
+                      onClose={() => setShowErrorAlert(false)}
+                    >
                       Error: Please upload at least one file.
                     </Alert>
                   )}
 
                 {showFileUploadError &&
                   productInputs.productImages.length > 0 && (
-                    <Alert severity="error" onClose={handleAlertClose}>
+                    <Alert
+                      severity="error"
+                      onClose={() => setShowFileUploadError(false)}
+                    >
                       Error: Up to 5 files are allowed.
                     </Alert>
                   )}
@@ -469,9 +468,9 @@ const ProductRegister = (props) => {
                   }
                   required
                   sx={{ marginTop: 2 }}
-                  disabled={isEditing}
+                  disabled={state.isEditing}
                 />
-                <FormControl sx={{ marginTop: 2 }} disabled={isEditing}>
+                <FormControl sx={{ marginTop: 2 }} disabled={state.isEditing}>
                   <InputLabel>category</InputLabel>
                   <Select
                     id="categoryName"
@@ -517,7 +516,7 @@ const ProductRegister = (props) => {
                         }
                         required
                         sx={{ marginTop: 2 }}
-                        disabled={isEditing}
+                        disabled={state.isEditing}
                       />
 
                       <TextField
@@ -555,7 +554,7 @@ const ProductRegister = (props) => {
                           <Button
                             onClick={() => handleDeleteOption(skuIndex)}
                             sx={{ marginLeft: 1, height: 20, width: 20 }}
-                            disabled={isEditing}
+                            disabled={state.isEditing}
                           >
                             <RemoveIcon />
                           </Button>
@@ -564,7 +563,7 @@ const ProductRegister = (props) => {
                           <Button
                             onClick={() => handleAddOption(skuIndex)}
                             sx={{ marginLeft: 1, height: 20, width: 20 }}
-                            disabled={isEditing}
+                            disabled={state.isEditing}
                           >
                             <AddIcon />
                           </Button>
@@ -578,7 +577,7 @@ const ProductRegister = (props) => {
                   <Alert
                     severity="info"
                     sx={{ marginTop: 2 }}
-                    onClose={handleAlertClose}
+                    onClose={() => setShowInfoAlert(false)}
                   >
                     up to 5 options
                   </Alert>
@@ -589,7 +588,7 @@ const ProductRegister = (props) => {
                   label="total stock"
                   value={sumTotalStock()}
                   sx={{ marginTop: 2 }}
-                  disabled={isEditing}
+                  disabled={state.isEditing}
                 />
                 <TextField
                   id="productPrice"
@@ -605,7 +604,7 @@ const ProductRegister = (props) => {
                   pattern="[0-9]*"
                   required
                   sx={{ marginTop: 2 }}
-                  disabled={isEditing}
+                  disabled={state.isEditing}
                 />
                 <TextField
                   id="productDescription"
@@ -619,7 +618,7 @@ const ProductRegister = (props) => {
                   }
                   required
                   sx={{ marginTop: 2, marginBottom: 2 }}
-                  disabled={isEditing}
+                  disabled={state.isEditing}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={["SaleStartDate", "SaleEndDate"]}>
@@ -632,7 +631,7 @@ const ProductRegister = (props) => {
                           productSaleStart: newDate,
                         }))
                       }
-                      disabled={isEditing}
+                      readOnly={state.isEditing}
                     />
                     <DatePicker
                       label="Sale End Date"
@@ -643,7 +642,7 @@ const ProductRegister = (props) => {
                           productSaleEnd: newDate,
                         }))
                       }
-                      disabled={isEditing}
+                      readOnly={state.isEditing}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -660,31 +659,37 @@ const ProductRegister = (props) => {
               >
                 <Button
                   variant="contained"
-                  onClick={handleReset}
-                  disabled={isEditing}
+                  onClick={onReset}
+                  disabled={state.isEditing}
                 >
                   reset
                 </Button>
 
                 {isEditing ? (
-                  <Button variant="contained" onClick={handleFormUpdate}>
+                  <Button variant="contained" onClick={handleUpdate}>
                     Update
                   </Button>
                 ) : (
-                  <Button variant="contained" onClick={handleFormSubmit}>
+                  <Button variant="contained" onClick={onSubmit}>
                     Submit
                   </Button>
                 )}
               </Box>
               <Box>
                 {showSuccessAlert && (
-                  <Alert severity="success" onClose={handleAlertClose}>
+                  <Alert
+                    severity="success"
+                    onClose={() => setShowSuccessAlert(false)}
+                  >
                     Success: Product registered successfully!
                   </Alert>
                 )}
 
                 {showErrorAlert && (
-                  <Alert severity="error" onClose={handleAlertClose}>
+                  <Alert
+                    severity="error"
+                    onClose={() => setShowErrorAlert(false)}
+                  >
                     Error: Please fill in all required fields.
                   </Alert>
                 )}

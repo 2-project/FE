@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -7,14 +7,35 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
+// get - api/product/getCategoryProduct
+// delete - api/product/{productId}
+import { getProduct, deleteProduct } from "../../../api/pmApi";
 
 const PM = () => {
   const navigate = useNavigate();
+  const [productInputs, setProductInputs] = useState([]);
   const [isRegistered, setIsRegistered] = useState(false);
+
+  useEffect(() => {
+    const getRegisteredProducts = async () => {
+      try {
+        const products = await getProduct();
+        setProductInputs(products);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getRegisteredProducts();
+  }, []);
+
+  const handleRegister = () => {
+    setIsRegistered(false);
+    navigate("/product_register", { state: { isEditing: false } });
+  };
 
   const handleEdit = (tableMeta) => {
     console.log("tableMeta", tableMeta);
@@ -24,24 +45,37 @@ const PM = () => {
     });
   };
 
-  const pmData = {
-    productId: "number",
-    productImages: [], // 대표이미지 설정?
-    productName: "string",
-    categoryName: "string",
-    options: [
-      {
-        optionCid: "number", // optionid로 수정
-        optionName: "string",
-        optionStock: "number", // edit
-      },
-    ],
-    productPrice: "number",
-    totalStock: "number",
-    totalPrice: "number",
-    productDescription: "string",
-    productSaleStart: "Date",
-    productSaleEnd: "Date",
+  const handleDelete = async (tableMeta) => {
+    console.log("tableMeta", tableMeta);
+    const { rowData } = tableMeta;
+    const productId = rowData[0];
+    try {
+      const response = await deleteProduct(productId);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const sumTotalStock = () => {
+    const totalStock = (productInputs.options || []).reduce((result, sku) => {
+      result += parseFloat(sku.optionStock) || 0;
+      return result;
+    }, 0);
+
+    return totalStock;
+  };
+
+  const calculateTotalPrice = () => {
+    const productPrice = parseFloat(productInputs.productPrice) || 0;
+    return productPrice * sumTotalStock();
+  };
+
+  const options = {
+    filter: true,
+    filterType: "dropdown",
+    responsive: "scroll",
+    selectableRows: "multiple",
   };
 
   const columns = [
@@ -50,8 +84,17 @@ const PM = () => {
       name: "productImages",
       label: "PRODUCT IMAGES",
       options: {
-        customBodyRender: (value) =>
-          Array.isArray(value) ? value.join(", ") : value,
+        customBodyRender: (value) => {
+          const representativeImage =
+            Array.isArray(value) && value.length > 0 ? value[0] : <></>;
+          return (
+            <img
+              src={representativeImage}
+              alt="Representative Image"
+              style={{ maxWidth: "50px", maxHeight: "50px" }}
+            />
+          );
+        },
       },
     },
     { name: "productName", label: "PRODUCT NAME" },
@@ -104,50 +147,19 @@ const PM = () => {
 
   const rows = [
     {
-      productId: pmData.productId,
-      productImages: pmData.productImages.join(", "),
-      productName: pmData.productName,
-      categoryName: pmData.categoryName,
-      optionName: pmData.options[0].optionName,
-      optionStock: pmData.options[0].optionStock,
-      productPrice: pmData.productPrice,
-      totalStock: pmData.totalStock,
-      totalPrice: pmData.totalPrice,
-      // totalStock: sumTotalStock(),
-      // totalPrice: calculateTotalPrice(),
-      productDescription: pmData.productDescription,
-      productSaleStart: pmData.productSaleStart,
-      productSaleEnd: pmData.productSaleEnd,
+      productId: productInputs.productId,
+      productImages: productInputs.productImages,
+      productName: productInputs.productName,
+      categoryName: productInputs.categoryName,
+      options: productInputs.options,
+      productPrice: productInputs.productPrice,
+      totalStock: sumTotalStock(),
+      totalPrice: calculateTotalPrice(),
+      productDescription: productInputs.productDescription,
+      productSaleStart: productInputs.productSaleStart,
+      productSaleEnd: productInputs.productSaleEnd,
     },
   ];
-
-  const options = {
-    filter: true,
-    filterType: "dropdown",
-    responsive: "scroll",
-    selectableRows: "multiple",
-  };
-
-  const sumTotalStock = () => {
-    const totalStock = pmData.options.reduce((result, sku) => {
-      result += parseFloat(sku.optionStock) || 0;
-      return result;
-    }, 0);
-
-    return totalStock;
-  };
-  // if totalStock == 0, 판매 종료, 테이블에서 삭제
-  // delete
-
-  const calculateTotalPrice = () => {
-    const productPrice = parseFloat(pmData.productPrice) || 0;
-    return productPrice * sumTotalStock();
-  };
-
-  const handleRegister = () => {
-    setIsRegistered(false);
-    navigate("/product_register", { state: { isEditing: false } });
-  };
 
   return (
     <div>
@@ -175,6 +187,14 @@ const PM = () => {
               data={rows}
               columns={columns}
               options={options}
+              onRowClick={(rowData) => handleEdit({ rowData })}
+              contextActions={[
+                {
+                  icon: "delete",
+                  tooltip: "Delete Product",
+                  onClick: (event, rowData) => handleDelete({ rowData }),
+                },
+              ]}
             />
           </Box>
         </Container>
