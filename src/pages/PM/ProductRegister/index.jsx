@@ -280,8 +280,7 @@ const ProductRegister = (props) => {
   };
 
   return (
-    <div>
-      <Header />
+    <>
       <main>
         <Container className="pr-container">
           <Box className="pr-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
@@ -366,7 +365,7 @@ const ProductRegister = (props) => {
                     height: 400,
                   }}
                   component="img"
-                  alt={`Product Image ${productInputs.imageIndex + 1}`}
+                  alt={`이미지 ${productInputs.imageIndex + 1}`}
                   src={
                     productInputs.productImages &&
                     productInputs.productImages.length > 0
@@ -418,7 +417,7 @@ const ProductRegister = (props) => {
                       >
                         <img
                           src={URL.createObjectURL(image)}
-                          alt={`Product Image ${index + 1}`}
+                          alt={`이미지 ${index + 1}`}
                           loading="lazy"
                         />
                       </ImageListItem>
@@ -701,7 +700,7 @@ const ProductRegister = (props) => {
         </Container>
       </main>
       <Footer />
-    </div>
+    </>
   );
 };
 

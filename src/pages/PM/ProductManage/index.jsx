@@ -180,8 +180,7 @@ const PM = () => {
   }));
 
   return (
-    <div>
-      <Header />
+    <>
       <main>
         <Container>
           <Box sx={{ paddingTop: 2 }}>
@@ -218,7 +217,7 @@ const PM = () => {
         </Container>
       </main>
       <Footer />
-    </div>
+    </>
   );
 };
 
