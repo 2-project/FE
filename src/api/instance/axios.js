@@ -3,7 +3,7 @@ import { localToken } from "../../utils/auth";
 import { toast } from "react-toastify";
 
 const base_url =
-  "http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com/api";
+  "http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com";
 
 //인스턴스 생성
 const instance = axios.create({
