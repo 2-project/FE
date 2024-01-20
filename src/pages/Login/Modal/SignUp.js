@@ -233,6 +233,7 @@ function MemberLoginModal({ onClose }) {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           className={styles.inputField}
+          placeholder="상세주소까지 입력"
           size="small"
           error={!isAddressValid && address.trim() !== ""}
           helperText={
