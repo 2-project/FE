@@ -29,7 +29,7 @@ const ScrollToTop = () => {
       style={{
         position: "fixed",
         zIndex: 999,
-        right: 100,
+        right: 50,
         bottom: 10,
         display: isVisible ? "flex" : "none",
       }}
