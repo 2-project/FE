@@ -55,25 +55,17 @@ function Login({ onClose }) {
   };
 
   return (
-    <Container maxWidth="false" classuserName={styles.loginContainer}>
-      <Box sx={{ mt: 4, mb: 4 }} classuserName={styles.loginBox}>
-        <Box classuserName={styles.loginHeader}>
-          <Typography
-            variant="h4"
-            gutterBottom
-            classuserName={styles.formTitle}
-          >
+    <Container maxWidth="false" className={styles.loginContainer}>
+      <Box sx={{ mt: 4, mb: 4 }} className={styles.loginBox}>
+        <Box className={styles.loginHeader}>
+          <Typography variant="h4" gutterBottom className={styles.formTitle}>
             로그인
           </Typography>
           <span>
-            <img
-              classuserName={styles.loginLogo}
-              src={LoginLogo}
-              alt="로고"
-            ></img>
+            <img className={styles.loginLogo} src={LoginLogo} alt="로고"></img>
           </span>
         </Box>
-        <Box classuserName={styles.textContainer}>
+        <Box className={styles.textContainer}>
           <TextField
             label="이메일"
             type="email"
@@ -83,7 +75,7 @@ function Login({ onClose }) {
             value={userId}
             onChange={handleuserIdChange}
             placeholder="이메일 아이디를 입력하세요."
-            classuserName="form-input"
+            className="form-input"
             error={!isEmailValid && userId.trim() !== ""}
             helperText={
               !isEmailValid &&
@@ -100,7 +92,7 @@ function Login({ onClose }) {
             value={userPwd}
             onChange={handlePasswordChange}
             placeholder="비밀번호를 입력하세요."
-            classuserName="form-input"
+            className="form-input"
             error={!isPasswordValid && userPwd.trim() !== ""}
             helperText={
               !isPasswordValid &&
@@ -110,21 +102,21 @@ function Login({ onClose }) {
           />
           <Box
             sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-            classuserName={styles.buttonBox}
+            className={styles.buttonBox}
           >
             <Button
               variant="contained"
               color="primary"
-              classuserName={styles.createButton}
+              className={styles.createButton}
               onClick={handleButton}
               disabled={!isEmailValid || !isPasswordValid}
             >
               로그인
             </Button>
           </Box>
-          <div classuserName={styles.goSignUp}>
+          <div className={styles.goSignUp}>
             <span onClick={handleMemberButton}>회원가입 하러가기</span>
-            <img classuserName={styles.goSignUpArrowIcon} src={goSignUpIcon} />
+            <img className={styles.goSignUpArrowIcon} src={goSignUpIcon} />
           </div>
         </Box>
       </Box>

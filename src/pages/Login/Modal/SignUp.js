@@ -112,11 +112,11 @@ function MemberLoginModal({ onClose }) {
       aria-labelledby="login-modal-title"
       aria-describedby="login-modal-description"
     >
-      <Box classuserName={styles.modalContainer}>
+      <Box className={styles.modalContainer}>
         <Typography
           variant="h5"
           id="login-modal-title"
-          classuserName={styles.modalTitle}
+          className={styles.modalTitle}
         >
           회원가입
         </Typography>
@@ -127,7 +127,7 @@ function MemberLoginModal({ onClose }) {
           margin="normal"
           value={userName}
           onChange={(e) => setuserName(e.target.value)}
-          classuserName={styles.inputField}
+          className={styles.inputField}
           placeholder="한글로만 입력"
           size="small"
           error={!isuserNameValid && userName.trim() !== ""}
@@ -138,7 +138,7 @@ function MemberLoginModal({ onClose }) {
           }
         />
         <Box
-          classuserName={styles.emailContainer}
+          className={styles.emailContainer}
           sx={{
             width: 400,
             maxWidth: "100%",
@@ -152,7 +152,7 @@ function MemberLoginModal({ onClose }) {
             margin="normal"
             value={userId}
             onChange={(e) => setuserId(e.target.value)}
-            classuserName={styles.inputField}
+            className={styles.inputField}
             placeholder="@ 필수 입력"
             size="small"
             error={!isEmailValid && userId.trim() !== ""}
@@ -167,7 +167,7 @@ function MemberLoginModal({ onClose }) {
             color="primary"
             //onClick={handleEmailCheck}
             size="small"
-            classuserName={styles.emailDoubleCheck}
+            className={styles.emailDoubleCheck}
           >
             중복확인
           </Button>
@@ -180,7 +180,7 @@ function MemberLoginModal({ onClose }) {
           margin="normal"
           value={userPwd}
           onChange={(e) => setuserPwd(e.target.value)}
-          classuserName={styles.inputField}
+          className={styles.inputField}
           placeholder="영문(소문자), 숫자 합쳐서 8~20자"
           size="small"
           error={!isPasswordValid && userPwd.trim() !== ""}
@@ -198,7 +198,7 @@ function MemberLoginModal({ onClose }) {
           margin="normal"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          classuserName={styles.inputField}
+          className={styles.inputField}
           placeholder="영문(소문자), 숫자 합쳐서 8~20자"
           size="small"
           error={confirmPassword !== userPwd && confirmPassword !== ""}
@@ -215,7 +215,7 @@ function MemberLoginModal({ onClose }) {
           margin="normal"
           value={formatuserPhone(userPhone)}
           onChange={(e) => setuserPhone(e.target.value)}
-          classuserName={styles.inputField}
+          className={styles.inputField}
           placeholder="'-' 없이 숫자만 입력"
           size="small"
           error={!isuserPhoneValid && userPhone.trim() !== ""}
@@ -232,7 +232,7 @@ function MemberLoginModal({ onClose }) {
           margin="normal"
           value={userAddress}
           onChange={(e) => setuserAddress(e.target.value)}
-          classuserName={styles.inputField}
+          className={styles.inputField}
           placeholder="상세주소까지 입력"
           size="small"
           error={!isuserAddressValid && userAddress.trim() !== ""}
@@ -242,26 +242,26 @@ function MemberLoginModal({ onClose }) {
             "올바른 주소를 입력하세요."
           }
         />
-        <div classuserName={styles.profileUploadBox}>
+        <div className={styles.profileUploadBox}>
           <img
-            classuserName={styles.userBasicIcon}
+            className={styles.userBasicIcon}
             //src={userBasicIcon_1}
             src={profilePicture}
             alt="프로필사진"
           ></img>
           <input
-            classuserName={styles.uploaduserName}
+            className={styles.uploadName}
             value={profilePicture ? profilePicture.userName : "첨부파일"}
             placeholder="프로필 사진 업로드"
             readOnly
           />
-          <label htmlFor="file" classuserName={styles.profileLabel}>
+          <label htmlFor="file" className={styles.profileLabel}>
             사진 찾기
           </label>
           <input
             id="file"
             type="file"
-            classuserName={styles.userProfilePicture}
+            className={styles.userProfilePicture}
             onChange={handleFileChange}
           />
         </div>
@@ -281,7 +281,7 @@ function MemberLoginModal({ onClose }) {
           color="primary"
           fullWidth
           onClick={handleSignup}
-          classuserName={styles.signupButton}
+          className={styles.signupButton}
           disabled={!isSignupButtonEnabled}
         >
           회원가입
@@ -290,7 +290,7 @@ function MemberLoginModal({ onClose }) {
           variant="outlined"
           fullWidth
           onClick={onClose}
-          classuserName={styles.cancelButton}
+          className={styles.cancelButton}
         >
           취소
         </Button>
