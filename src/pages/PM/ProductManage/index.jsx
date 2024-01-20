@@ -181,42 +181,40 @@ const PM = () => {
 
   return (
     <>
-      <main>
-        <Container>
-          <Box sx={{ paddingTop: 2 }}>
-            <Button variant="contained" onClick={handleRegister}>
-              Product Register
-            </Button>
-          </Box>
+      <Container>
+        <Box className="pm-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
+          <AppBar
+            position="static"
+            sx={{ background: "none", color: "#000000DE" }}
+          >
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                상품 관리
+              </Typography>
+              <Button variant="contained" onClick={handleRegister}>
+                상품 등록
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </Box>
 
-          <Box className="pm-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
-            <AppBar position="static">
-              <Toolbar>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                  Product Manage
-                </Typography>
-              </Toolbar>
-            </AppBar>
-          </Box>
-          <Box sx={{ paddingTop: 5, paddingBottom: 5 }}>
-            <MUIDataTable
-              title={"MUJI MALL"}
-              data={rows}
-              columns={columns}
-              options={options}
-              onRowClick={(rowData) => handleEdit({ rowData })}
-              contextActions={[
-                {
-                  icon: "delete",
-                  tooltip: "Delete Product",
-                  onClick: (event, rowData) => handleDelete({ rowData }),
-                },
-              ]}
-            />
-          </Box>
-        </Container>
-      </main>
-      <Footer />
+        <Box sx={{ paddingTop: 5, paddingBottom: 5 }}>
+          <MUIDataTable
+            title={"MUJI MALL"}
+            data={rows}
+            columns={columns}
+            options={options}
+            onRowClick={(rowData) => handleEdit({ rowData })}
+            contextActions={[
+              {
+                icon: "delete",
+                tooltip: "Delete Product",
+                onClick: (event, rowData) => handleDelete({ rowData }),
+              },
+            ]}
+          />
+        </Box>
+      </Container>
     </>
   );
 };

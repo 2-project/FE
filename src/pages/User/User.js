@@ -47,8 +47,15 @@ function User({ onClose }) {
     fetchAndGreetUser();
   }, []);
 
+  const productManage = () => {
+    navigate("/product_manage");
+  };
+
   return (
     <Container maxWidth={false} className={styles.userContainer}>
+      <Button variant="contained" onClick={productManage}>
+        상품 관리
+      </Button>
       <Box className={styles.card}>
         <Box className={styles.leftItem}>
           <Stack direction="column" spacing={2}>

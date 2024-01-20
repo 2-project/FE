@@ -281,425 +281,425 @@ const ProductRegister = (props) => {
 
   return (
     <>
-      <main>
-        <Container className="pr-container">
-          <Box className="pr-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
-            <AppBar position="static">
-              <Toolbar>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                  Product Register
-                </Typography>
-              </Toolbar>
-            </AppBar>
-          </Box>
+      <Container className="pr-container">
+        <Box className="pr-title" sx={{ paddingTop: 5, flexGrow: 1 }}>
+          <AppBar
+            position="static"
+            sx={{ background: "none", color: "#000000DE" }}
+          >
+            <Toolbar>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                상품 등록
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        </Box>
 
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            paddingTop: 5,
+            paddingBottom: 5,
+          }}
+        >
           <Container
+            className="pr-img-box"
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              flexDirection: "row",
-              paddingTop: 5,
-              paddingBottom: 5,
+              flexDirection: "column",
             }}
           >
-            <Container
-              className="pr-img-box"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-              }}
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+              sx={{ marginBottom: 5 }}
+              disabled={state.isEditing}
             >
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-                sx={{ marginBottom: 5 }}
-                disabled={state.isEditing}
-              >
-                upload
-                <ImageUploadInput
-                  type="file"
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                />
-              </Button>
+              upload
+              <ImageUploadInput
+                type="file"
+                onChange={handleImageUpload}
+                accept="image/*"
+              />
+            </Button>
 
-              <Box sx={{ marginBottom: 2 }}>
-                {showFileUploadError &&
-                  productInputs.productImages.length === 0 && (
-                    <Alert
-                      severity="error"
-                      onClose={() => setShowErrorAlert(false)}
-                    >
-                      Error: Please upload at least one file.
-                    </Alert>
-                  )}
-
-                {showFileUploadError &&
-                  productInputs.productImages.length > 0 && (
-                    <Alert
-                      severity="error"
-                      onClose={() => setShowFileUploadError(false)}
-                    >
-                      Error: Up to 5 files are allowed.
-                    </Alert>
-                  )}
-              </Box>
-
-              <Card
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  maxWidth: 500,
-                }}
-              >
-                <CardMedia
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    width: 400,
-                    height: 400,
-                  }}
-                  component="img"
-                  alt={`이미지 ${productInputs.imageIndex + 1}`}
-                  src={
-                    productInputs.productImages &&
-                    productInputs.productImages.length > 0
-                      ? URL.createObjectURL(
-                          productInputs.productImages[productInputs.imageIndex]
-                        )
-                      : ""
-                  }
-                />
-              </Card>
-
-              <Box
-                className="pr-image-list"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 5,
-                  marginBottom: 5,
-                }}
-              >
-                <Divider
-                  orientation="horizontal"
-                  sx={{ marginTop: 2, marginBottom: 2, fontSize: 14 }}
-                >
-                  미리보기
-                </Divider>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    maxWidth: 500,
-                    width: 500,
-                    height: 104,
-                  }}
-                >
-                  <Button
-                    onClick={handlePrevImage}
-                    disabled={productInputs.productImages.length <= 1}
-                  >
-                    {"<"}
-                  </Button>
-                  <ImageList cols={5}>
-                    {productInputs.productImages.map((image, index) => (
-                      <ImageListItem
-                        key={index}
-                        style={{ width: 80, height: 80 }}
-                      >
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt={`이미지 ${index + 1}`}
-                          loading="lazy"
-                        />
-                      </ImageListItem>
-                    ))}
-                  </ImageList>
-                  <Button
-                    onClick={handleNextImage}
-                    disabled={productInputs.productImages.length <= 1}
-                  >
-                    {">"}
-                  </Button>
-                </Box>
-                <Divider
-                  orientation="horizontal"
-                  sx={{ marginTop: 2, marginBottom: 2 }}
-                ></Divider>
-              </Box>
-            </Container>
-
-            <Container className="pr-description-box">
-              <Box
-                className="pr-inputs"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "10px",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar src="/broken-image.jpg" />
-                  <Typography sx={{ paddingLeft: 1 }}>관리자</Typography>
-                </Box>
-
-                <TextField
-                  id="productName"
-                  label="상품명"
-                  value={productInputs.productName}
-                  onChange={(e) =>
-                    setProductInputs({
-                      ...productInputs,
-                      productName: e.target.value,
-                    })
-                  }
-                  required
-                  sx={{ marginTop: 2 }}
-                  disabled={state.isEditing}
-                />
-                <FormControl sx={{ marginTop: 2 }} disabled={state.isEditing}>
-                  <InputLabel>카테고리</InputLabel>
-                  <Select
-                    id="categoryName"
-                    label="카테고리"
-                    value={productInputs.categoryName}
-                    onChange={handleSelectCategory}
-                    required
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="인기상품">인기상품</MenuItem>
-                    <MenuItem value="주간특가">주간특가</MenuItem>
-                    <MenuItem value="매거진">매거진</MenuItem>
-                    <MenuItem value="아울렛">아울렛</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {productInputs.options.map((sku, skuIndex) => (
-                  <div key={skuIndex}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <TextField
-                        label="size / color"
-                        value={sku.optionName}
-                        onChange={(e) =>
-                          setProductInputs((prevInputs) => {
-                            const updatedOptions = [...prevInputs.options];
-                            updatedOptions[skuIndex] = {
-                              ...updatedOptions[skuIndex],
-                              optionName: e.target.value,
-                            };
-                            return {
-                              ...prevInputs,
-                              options: updatedOptions,
-                              totalStock: sumTotalStock(updatedOptions),
-                            };
-                          })
-                        }
-                        required
-                        sx={{ marginTop: 2 }}
-                        disabled={state.isEditing}
-                      />
-
-                      <TextField
-                        label="수량"
-                        value={sku.optionStock}
-                        type="number"
-                        pattern="[0-9]*"
-                        onChange={(e) =>
-                          setProductInputs((prevInputs) => {
-                            const updatedOptions = [...prevInputs.options];
-                            updatedOptions[skuIndex] = {
-                              ...updatedOptions[skuIndex],
-                              optionStock: e.target.value,
-                            };
-                            return {
-                              ...prevInputs,
-                              options: updatedOptions,
-                              totalStock: sumTotalStock(updatedOptions),
-                            };
-                          })
-                        }
-                        required
-                        sx={{ marginTop: 2, marginLeft: 1 }}
-                      />
-
-                      <ButtonGroup
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginTop: 2,
-                        }}
-                      >
-                        {productInputs.options.length > 1 && (
-                          <Button
-                            onClick={() => handleDeleteOption(skuIndex)}
-                            sx={{ marginLeft: 1, height: 20, width: 20 }}
-                            disabled={state.isEditing}
-                          >
-                            <RemoveIcon />
-                          </Button>
-                        )}
-                        {skuIndex === productInputs.options.length - 1 && (
-                          <Button
-                            onClick={() => handleAddOption(skuIndex)}
-                            sx={{ marginLeft: 1, height: 20, width: 20 }}
-                            disabled={state.isEditing}
-                          >
-                            <AddIcon />
-                          </Button>
-                        )}
-                      </ButtonGroup>
-                    </Box>
-                  </div>
-                ))}
-
-                {showInfoAlert && (
-                  <Alert
-                    severity="info"
-                    sx={{ marginTop: 2 }}
-                    onClose={() => setShowInfoAlert(false)}
-                  >
-                    up to 5 options
-                  </Alert>
-                )}
-
-                <TextField
-                  id="totalStock"
-                  label="총 수량"
-                  value={sumTotalStock()}
-                  sx={{ marginTop: 2 }}
-                  disabled={state.isEditing}
-                />
-                <TextField
-                  id="productPrice"
-                  label="상품 가격"
-                  value={productInputs.productPrice}
-                  onChange={(e) =>
-                    setProductInputs({
-                      ...productInputs,
-                      productPrice: e.target.value,
-                    })
-                  }
-                  type="number"
-                  pattern="[0-9]*"
-                  required
-                  sx={{ marginTop: 2 }}
-                  disabled={state.isEditing}
-                />
-                <TextField
-                  id="productDescription"
-                  label="상품 설명"
-                  value={productInputs.productDescription}
-                  onChange={(e) =>
-                    setProductInputs({
-                      ...productInputs,
-                      productDescription: e.target.value,
-                    })
-                  }
-                  required
-                  sx={{ marginTop: 2, marginBottom: 2 }}
-                  disabled={state.isEditing}
-                />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["판매시작일", "판매종료일"]}>
-                    <DatePicker
-                      label="판매시작일"
-                      value={productInputs.productSaleStart}
-                      onChange={(newDate) =>
-                        setProductInputs((prevInputs) => ({
-                          ...prevInputs,
-                          productSaleStart: newDate,
-                        }))
-                      }
-                      readOnly={state.isEditing}
-                    />
-                    <DatePicker
-                      label="판매종료일"
-                      value={productInputs.productSaleEnd}
-                      onChange={(newDate) =>
-                        setProductInputs((prevInputs) => ({
-                          ...prevInputs,
-                          productSaleEnd: newDate,
-                        }))
-                      }
-                      readOnly={state.isEditing}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </Box>
-
-              <Box
-                className="pr-description-button"
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: 2,
-                  marginBottom: 2,
-                }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={onReset}
-                  disabled={state.isEditing}
-                >
-                  reset
-                </Button>
-
-                {isEditing ? (
-                  <Button variant="contained" onClick={handleUpdate}>
-                    Update
-                  </Button>
-                ) : (
-                  <Button variant="contained" onClick={onSubmit}>
-                    Submit
-                  </Button>
-                )}
-              </Box>
-              <Box>
-                {showSuccessAlert && (
-                  <Alert
-                    severity="success"
-                    onClose={() => setShowSuccessAlert(false)}
-                  >
-                    Success: Product registered successfully!
-                  </Alert>
-                )}
-
-                {showErrorAlert && (
+            <Box sx={{ marginBottom: 2 }}>
+              {showFileUploadError &&
+                productInputs.productImages.length === 0 && (
                   <Alert
                     severity="error"
                     onClose={() => setShowErrorAlert(false)}
                   >
-                    Error: Please fill in all required fields.
+                    Error: Please upload at least one file.
                   </Alert>
                 )}
+
+              {showFileUploadError &&
+                productInputs.productImages.length > 0 && (
+                  <Alert
+                    severity="error"
+                    onClose={() => setShowFileUploadError(false)}
+                  >
+                    Error: Up to 5 files are allowed.
+                  </Alert>
+                )}
+            </Box>
+
+            <Card
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                maxWidth: 500,
+              }}
+            >
+              <CardMedia
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: 400,
+                  height: 400,
+                }}
+                component="img"
+                alt={`이미지 ${productInputs.imageIndex + 1}`}
+                src={
+                  productInputs.productImages &&
+                  productInputs.productImages.length > 0
+                    ? URL.createObjectURL(
+                        productInputs.productImages[productInputs.imageIndex]
+                      )
+                    : ""
+                }
+              />
+            </Card>
+
+            <Box
+              className="pr-image-list"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 5,
+                marginBottom: 5,
+              }}
+            >
+              <Divider
+                orientation="horizontal"
+                sx={{ marginTop: 2, marginBottom: 2, fontSize: 14 }}
+              >
+                미리보기
+              </Divider>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  maxWidth: 500,
+                  width: 500,
+                  height: 104,
+                }}
+              >
+                <Button
+                  onClick={handlePrevImage}
+                  disabled={productInputs.productImages.length <= 1}
+                >
+                  {"<"}
+                </Button>
+                <ImageList cols={5}>
+                  {productInputs.productImages.map((image, index) => (
+                    <ImageListItem
+                      key={index}
+                      style={{ width: 80, height: 80 }}
+                    >
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt={`이미지 ${index + 1}`}
+                        loading="lazy"
+                      />
+                    </ImageListItem>
+                  ))}
+                </ImageList>
+                <Button
+                  onClick={handleNextImage}
+                  disabled={productInputs.productImages.length <= 1}
+                >
+                  {">"}
+                </Button>
               </Box>
-            </Container>
+              <Divider
+                orientation="horizontal"
+                sx={{ marginTop: 2, marginBottom: 2 }}
+              ></Divider>
+            </Box>
+          </Container>
+
+          <Container className="pr-description-box">
+            <Box
+              className="pr-inputs"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "10px",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar src="/broken-image.jpg" />
+                <Typography sx={{ paddingLeft: 1 }}>관리자</Typography>
+              </Box>
+
+              <TextField
+                id="productName"
+                label="상품명"
+                value={productInputs.productName}
+                onChange={(e) =>
+                  setProductInputs({
+                    ...productInputs,
+                    productName: e.target.value,
+                  })
+                }
+                required
+                sx={{ marginTop: 2 }}
+                disabled={state.isEditing}
+              />
+              <FormControl sx={{ marginTop: 2 }} disabled={state.isEditing}>
+                <InputLabel>카테고리</InputLabel>
+                <Select
+                  id="categoryName"
+                  label="카테고리"
+                  value={productInputs.categoryName}
+                  onChange={handleSelectCategory}
+                  required
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="인기상품">인기상품</MenuItem>
+                  <MenuItem value="주간특가">주간특가</MenuItem>
+                  <MenuItem value="매거진">매거진</MenuItem>
+                  <MenuItem value="아울렛">아울렛</MenuItem>
+                </Select>
+              </FormControl>
+
+              {productInputs.options.map((sku, skuIndex) => (
+                <div key={skuIndex}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <TextField
+                      label="size / color"
+                      value={sku.optionName}
+                      onChange={(e) =>
+                        setProductInputs((prevInputs) => {
+                          const updatedOptions = [...prevInputs.options];
+                          updatedOptions[skuIndex] = {
+                            ...updatedOptions[skuIndex],
+                            optionName: e.target.value,
+                          };
+                          return {
+                            ...prevInputs,
+                            options: updatedOptions,
+                            totalStock: sumTotalStock(updatedOptions),
+                          };
+                        })
+                      }
+                      required
+                      sx={{ marginTop: 2 }}
+                      disabled={state.isEditing}
+                    />
+
+                    <TextField
+                      label="수량"
+                      value={sku.optionStock}
+                      type="number"
+                      pattern="[0-9]*"
+                      onChange={(e) =>
+                        setProductInputs((prevInputs) => {
+                          const updatedOptions = [...prevInputs.options];
+                          updatedOptions[skuIndex] = {
+                            ...updatedOptions[skuIndex],
+                            optionStock: e.target.value,
+                          };
+                          return {
+                            ...prevInputs,
+                            options: updatedOptions,
+                            totalStock: sumTotalStock(updatedOptions),
+                          };
+                        })
+                      }
+                      required
+                      sx={{ marginTop: 2, marginLeft: 1 }}
+                    />
+
+                    <ButtonGroup
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: 2,
+                      }}
+                    >
+                      {productInputs.options.length > 1 && (
+                        <Button
+                          onClick={() => handleDeleteOption(skuIndex)}
+                          sx={{ marginLeft: 1, height: 20, width: 20 }}
+                          disabled={state.isEditing}
+                        >
+                          <RemoveIcon />
+                        </Button>
+                      )}
+                      {skuIndex === productInputs.options.length - 1 && (
+                        <Button
+                          onClick={() => handleAddOption(skuIndex)}
+                          sx={{ marginLeft: 1, height: 20, width: 20 }}
+                          disabled={state.isEditing}
+                        >
+                          <AddIcon />
+                        </Button>
+                      )}
+                    </ButtonGroup>
+                  </Box>
+                </div>
+              ))}
+
+              {showInfoAlert && (
+                <Alert
+                  severity="info"
+                  sx={{ marginTop: 2 }}
+                  onClose={() => setShowInfoAlert(false)}
+                >
+                  up to 5 options
+                </Alert>
+              )}
+
+              <TextField
+                id="totalStock"
+                label="총 수량"
+                value={sumTotalStock()}
+                sx={{ marginTop: 2 }}
+                disabled={state.isEditing}
+              />
+              <TextField
+                id="productPrice"
+                label="상품 가격"
+                value={productInputs.productPrice}
+                onChange={(e) =>
+                  setProductInputs({
+                    ...productInputs,
+                    productPrice: e.target.value,
+                  })
+                }
+                type="number"
+                pattern="[0-9]*"
+                required
+                sx={{ marginTop: 2 }}
+                disabled={state.isEditing}
+              />
+              <TextField
+                id="productDescription"
+                label="상품 설명"
+                value={productInputs.productDescription}
+                onChange={(e) =>
+                  setProductInputs({
+                    ...productInputs,
+                    productDescription: e.target.value,
+                  })
+                }
+                required
+                sx={{ marginTop: 2, marginBottom: 2 }}
+                disabled={state.isEditing}
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["판매시작일", "판매종료일"]}>
+                  <DatePicker
+                    label="판매시작일"
+                    value={productInputs.productSaleStart}
+                    onChange={(newDate) =>
+                      setProductInputs((prevInputs) => ({
+                        ...prevInputs,
+                        productSaleStart: newDate,
+                      }))
+                    }
+                    readOnly={state.isEditing}
+                  />
+                  <DatePicker
+                    label="판매종료일"
+                    value={productInputs.productSaleEnd}
+                    onChange={(newDate) =>
+                      setProductInputs((prevInputs) => ({
+                        ...prevInputs,
+                        productSaleEnd: newDate,
+                      }))
+                    }
+                    readOnly={state.isEditing}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Box>
+
+            <Box
+              className="pr-description-button"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: 2,
+                marginBottom: 2,
+              }}
+            >
+              <Button
+                variant="contained"
+                onClick={onReset}
+                disabled={state.isEditing}
+              >
+                reset
+              </Button>
+
+              {isEditing ? (
+                <Button variant="contained" onClick={handleUpdate}>
+                  Update
+                </Button>
+              ) : (
+                <Button variant="contained" onClick={onSubmit}>
+                  Submit
+                </Button>
+              )}
+            </Box>
+            <Box>
+              {showSuccessAlert && (
+                <Alert
+                  severity="success"
+                  onClose={() => setShowSuccessAlert(false)}
+                >
+                  Success: Product registered successfully!
+                </Alert>
+              )}
+
+              {showErrorAlert && (
+                <Alert
+                  severity="error"
+                  onClose={() => setShowErrorAlert(false)}
+                >
+                  Error: Please fill in all required fields.
+                </Alert>
+              )}
+            </Box>
           </Container>
         </Container>
-      </main>
-      <Footer />
+      </Container>
     </>
   );
 };
