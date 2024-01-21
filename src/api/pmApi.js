@@ -5,7 +5,9 @@ const base_url =
 
 export const getProduct = async () => {
   try {
-    const response = await axios.get(`${base_url}/api/product`);
+    const response = await axios.get(
+      `${base_url}/api/produc/getCategoryProduct`
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -29,25 +31,26 @@ export const addProduct = async (formData) => {
   }
 };
 
-export const editProduct = async (productId, requestBody) => {
+export const editProduct = async (requestBody) => {
   try {
     const response = await axios.put(
-      `${base_url}/api/product/editProduct/${productId}`,
+      `${base_url}/api/product/editProduct`,
       requestBody
     );
     return response;
   } catch (error) {
     console.error(error);
-    throw error;
   }
 };
 
 export const deleteProduct = async (productId) => {
   try {
-    const response = await axios.delete(`${base_url}/api/product/${productId}`);
+    const response = await axios.delete(
+      `${base_url}/api/product/deleteProduct`,
+      { data: { productId } }
+    );
     return response;
   } catch (error) {
     console.error(error);
-    throw error;
   }
 };

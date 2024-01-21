@@ -25,71 +25,47 @@ const PM = () => {
   const { state: productInputs } = useLocation();
   const [checkedProducts, setCheckedProducts] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-
+  const [categories, setCategories] = useState({});
   const [products, setProducts] = useState([]);
+
+  const getProductsCategory = async (category) => {
+    // get product 요청
+    try {
+      const getProducts = await getProduct(category);
+      setCategories(getProducts || []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getProductsCategory();
+  }, []);
+
+  const getRegisteredProducts = async () => {
+    // get 새롭게 등록된 product 요청
+    try {
+      const addProducts = await getProduct(productInputs);
+      setProducts(addProducts || []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (productInputs) {
-      const getRegisteredProducts = async () => {
-        try {
-          const fetchedProducts = await getProduct(productInputs);
-          setProducts(fetchedProducts || []);
-        } catch (error) {
-          console.error(error);
-        }
-      };
       getRegisteredProducts();
-    } else {
-      // productInputs 없을시, mockProduct 불러오기
-      setProducts([mockProduct]);
     }
   }, [productInputs]);
 
-  const mockProduct = {
-    productId: 1,
-    productName: "mock",
-    categoryName: "인기상품",
-    options: [
-      {
-        optionName: "s",
-        optionStock: 10,
-      },
-      {
-        optionName: "m",
-        optionStock: 10,
-      },
-      {
-        optionName: "l",
-        optionStock: 10,
-      },
-    ],
-    productPrice: 100,
-    productSaleStart: "2022-01-01",
-    productSaleEnd: "2022-01-10",
-  };
-
-  // const [products, setProducts] = useState(
-  //   productInputs && Array.isArray(productInputs.products)
-  //     ? productInputs.products
-  //     : []
-  // );
-
-  // useEffect(() => {
-  //   if (productInputs) {
-  //     const getRegisteredProducts = async () => {
-  //       try {
-  //         const fetchedProducts = await getProduct(productInputs);
-  //         setProducts(fetchedProducts || []);
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     };
-  //     getRegisteredProducts();
-  //   }
-  // }, [productInputs]);
-
   const handleRegister = () => {
     navigate("/product_register", { state: { isEditing: false } });
+  };
+
+  const handleEdit = (optionCid) => {
+    navigate("/product_register", {
+      state: { isEditing: true, optionCid: optionCid },
+    });
   };
 
   const handleSelectAllClick = () => {
@@ -113,12 +89,6 @@ const PM = () => {
     }
 
     setCheckedProducts(newCheckedProducts);
-  };
-
-  const handleEdit = (productId) => {
-    navigate("/product_register", {
-      state: { isEditing: true, productId: productId },
-    });
   };
 
   const handleDelete = async () => {

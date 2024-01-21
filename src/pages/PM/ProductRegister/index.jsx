@@ -29,17 +29,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// get - api/product/getCategoryProduct
+
 // post - api/product/addProduct
 // put - api/product/editProduct{productId}
-import { getProduct, addProduct, editProduct } from "../../../api/pmApi";
+import { addProduct, editProduct } from "../../../api/pmApi";
 
 const ProductRegister = (props) => {
   const navigate = useNavigate();
-  const { state } = useLocation(); // state.isEditing의 값에 따라 새 물품 등록인지 편집인지 결정. state.productId로 데이터 요청
+  const { state } = useLocation(); // state.isEditing의 값에 따라 새 물품 등록인지 편집인지 결정
   const [date, setDate] = useState(dayjs());
   const isEditing = state ? state.isEditing : false;
-  const [products, setProducts] = useState([]);
   const [productInputs, setProductInputs] = useState({
     productId: "",
     productImages: [],
@@ -100,6 +99,7 @@ const ProductRegister = (props) => {
   };
 
   const handleImageUpload = (e) => {
+    // 이미지 업로드
     const files = e.target.files;
 
     if (productInputs.productImages.length + files.length > 5) {
@@ -137,6 +137,7 @@ const ProductRegister = (props) => {
   const handleNextImage = () => handlePrevNextImage(1);
 
   const onSubmit = async () => {
+    // post 요청
     try {
       const isFormValid =
         productInputs.productName &&
@@ -164,7 +165,11 @@ const ProductRegister = (props) => {
             productSaleEnd: dayjs(productInputs.productSaleEnd).format(
               "YYYY-MM-DD"
             ),
-            options: productInputs.options,
+            options: productInputs.options.map((option) => ({
+              optionCid: option.optionCid,
+              optionName: option.optionName,
+              optionStock: option.optionStock,
+            })),
             category: productInputs.categoryName,
           })
         );
@@ -193,19 +198,19 @@ const ProductRegister = (props) => {
   };
 
   useEffect(() => {
+    // state.isEditing으로 edit mode
     if (state.isEditing) {
       const editingProducts = async () => {
         try {
-          const editData = await getProduct(state.productId);
-          const optionsArray = Array.isArray(editData.options)
-            ? editData.options
+          const optionsArray = Array.isArray(state.optionCid)
+            ? state.optionCid
             : [];
 
           setProductInputs({
-            productId: editData.productId,
-            productImages: editData.productId,
-            productName: editData.productName,
-            categoryName: editData.categoryName,
+            productId: state.productId,
+            productImages: state.productId,
+            productName: state.productName,
+            categoryName: state.categoryName,
             options:
               optionsArray.length > 0
                 ? optionsArray
@@ -216,11 +221,11 @@ const ProductRegister = (props) => {
                       optionStock: "",
                     },
                   ],
-            totalStock: editData.totalStock,
-            productPrice: editData.productPrice,
-            productDescription: editData.productDescription,
-            productSaleStart: editData.productSaleStart,
-            productSaleEnd: editData.productSaleEnd,
+            totalStock: state.totalStock,
+            productPrice: state.productPrice,
+            productDescription: state.productDescription,
+            productSaleStart: state.productSaleStart,
+            productSaleEnd: state.productSaleEnd,
           });
         } catch (error) {
           console.error("Error:", error);
@@ -228,13 +233,14 @@ const ProductRegister = (props) => {
       };
       editingProducts();
     }
-  }, [state.isEditing, state.productId]);
+  }, [state.isEditing, state.optionCid]);
 
-  const handleUpdate = async () => {
-    const { options, productId } = productInputs;
+  const handleEdit = async () => {
+    // 수량 수정
+    const { options } = productInputs;
 
     try {
-      if (state.isEditing && productId) {
+      if (state.isEditing) {
         const hasValidOption = options.every(
           (sku) => sku.optionStock === 0 || sku.optionStock > 0
         );
@@ -249,7 +255,7 @@ const ProductRegister = (props) => {
             options: optionStockUpdates,
           };
 
-          const response = await editProduct(productId, requestBody);
+          const response = await editProduct(requestBody);
           console.log(response);
 
           alert("상품이 업데이트되었습니다.");
@@ -267,6 +273,7 @@ const ProductRegister = (props) => {
   };
 
   const onReset = () => {
+    // 초기화
     setProductInputs({
       productImages: [],
       imageIndex: 0,
@@ -645,7 +652,7 @@ const ProductRegister = (props) => {
 
               <Button
                 variant="contained"
-                onClick={state.isEditing ? handleUpdate : onSubmit}
+                onClick={state.isEditing ? handleEdit : onSubmit}
               >
                 {state.isEditing ? "수정" : "등록"}
               </Button>
