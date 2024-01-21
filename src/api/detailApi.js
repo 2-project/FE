@@ -1,9 +1,9 @@
 import http from "./instance";
 
 export const getGoodsDetails = (params) =>
-  http.get("/product/productDetail", params);
+  http.get("/api/product/productDetail", params);
 
 export const addGoodsToCart = (data) =>
-  http.postJSON("/product", {
+  http.postJSON("/api/product", {
     data,
   });
