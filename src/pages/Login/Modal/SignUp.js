@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import styles from "./SignUp.module.css";
 import userBasicIcon_1 from "../../../assets/icons/basic_profile_1.png";
+import { addSignUp } from "../../../api/signUpApi";
 
 function MemberLoginModal({ onClose }) {
   const [userId, setuserId] = useState("");
@@ -64,7 +65,7 @@ function MemberLoginModal({ onClose }) {
         // 기타 필요한 회원가입 정보 추가
       };
 
-      fetch("백엔드API주소", {
+      /* fetch("백엔드API주소", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,6 +73,20 @@ function MemberLoginModal({ onClose }) {
         body: JSON.stringify(signupData),
       })
         .then((response) => response.json())
+        .then((data) => {
+          // 서버 응답에 대한 처리
+          console.log("회원가입 성공:", data);
+          // 추가적인 프론트엔드 로직 수행
+        })
+        .catch((error) => {
+          console.error("회원가입 실패:", error);
+          // 오류 처리
+        });
+    } else {
+      alert("회원가입 조건을 확인해주세요.");
+    } */
+      // addSignUp 함수 호출
+      addSignUp(signupData)
         .then((data) => {
           // 서버 응답에 대한 처리
           console.log("회원가입 성공:", data);
