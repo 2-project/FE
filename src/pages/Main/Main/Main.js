@@ -7,9 +7,7 @@ import Footer from '../../../components/Footer/Footer';
 const Main = () => {
   return (
     <div>
-      <Header />
       <ImageSlider />
-      <Footer />
     </div>
   );
 };

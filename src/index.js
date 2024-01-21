@@ -31,6 +31,19 @@ root.render(
       <App />
     </ThemeProvider>
     {/* </React.StrictMode> */}
+    {/* <React.StrictMode> */}
+    <ThemeProvider theme={theme}>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
+      <App />
+    </ThemeProvider>
+    {/* </React.StrictMode> */}
   </BrowserRouter>
 );
 
