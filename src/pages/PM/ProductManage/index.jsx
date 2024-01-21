@@ -6,178 +6,157 @@ import {
   AppBar,
   Toolbar,
   Typography,
+  Checkbox,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import MUIDataTable from "mui-datatables";
-import Header from "../../../components/Header/Header";
-import Footer from "../../../components/Footer/Footer";
 // get - api/product/getCategoryProduct
 // delete - api/product/{productId}
 import { getProduct, deleteProduct } from "../../../api/pmApi";
 
 const PM = () => {
   const navigate = useNavigate();
-  const { productInputs } = useLocation(); // productInputs으로 product 불러오기
-  const [isRegistered, setIsRegistered] = useState(false);
+  const { state: productInputs } = useLocation();
+  const [checkedProducts, setCheckedProducts] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const getRegisteredProducts = async () => {
-      try {
-        const products = await getProduct();
-        setProducts(products || []);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getRegisteredProducts();
-  }, []);
+    if (productInputs) {
+      const getRegisteredProducts = async () => {
+        try {
+          const fetchedProducts = await getProduct(productInputs);
+          setProducts(fetchedProducts || []);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      getRegisteredProducts();
+    } else {
+      // productInputs 없을시, mockProduct 불러오기
+      setProducts([mockProduct]);
+    }
+  }, [productInputs]);
+
+  const mockProduct = {
+    productId: 1,
+    productName: "mock",
+    categoryName: "인기상품",
+    options: [
+      {
+        optionName: "s",
+        optionStock: 10,
+      },
+      {
+        optionName: "m",
+        optionStock: 10,
+      },
+      {
+        optionName: "l",
+        optionStock: 10,
+      },
+    ],
+    productPrice: 100,
+    productSaleStart: "2022-01-01",
+    productSaleEnd: "2022-01-10",
+  };
+
+  // const [products, setProducts] = useState(
+  //   productInputs && Array.isArray(productInputs.products)
+  //     ? productInputs.products
+  //     : []
+  // );
+
+  // useEffect(() => {
+  //   if (productInputs) {
+  //     const getRegisteredProducts = async () => {
+  //       try {
+  //         const fetchedProducts = await getProduct(productInputs);
+  //         setProducts(fetchedProducts || []);
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     };
+  //     getRegisteredProducts();
+  //   }
+  // }, [productInputs]);
 
   const handleRegister = () => {
-    setIsRegistered(false);
     navigate("/product_register", { state: { isEditing: false } });
   };
 
-  const handleEdit = (tableMeta) => {
-    console.log("tableMeta", tableMeta);
-    const { rowData } = tableMeta;
-    navigate("/product_register", {
-      state: { isEditing: true, productId: rowData[0] },
-    });
-  };
-
-  const handleDelete = async (tableMeta) => {
-    console.log("tableMeta", tableMeta);
-    const { rowData } = tableMeta;
-    const productId = rowData[0];
-    try {
-      const response = await deleteProduct(productId);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
+  const handleSelectAllClick = () => {
+    if (selectAll) {
+      setCheckedProducts([]);
+      setSelectAll(false);
+    } else {
+      setCheckedProducts(products.map((product) => product.productId));
+      setSelectAll(true);
     }
   };
 
-  const sumTotalStock = () => {
-    const totalStock = (productInputs.options || []).reduce((result, sku) => {
+  const handleCheckboxChange = (productId) => {
+    const currentIndex = checkedProducts.indexOf(productId);
+    const newCheckedProducts = [...checkedProducts];
+
+    if (currentIndex === -1) {
+      newCheckedProducts.push(productId);
+    } else {
+      newCheckedProducts.splice(currentIndex, 1);
+    }
+
+    setCheckedProducts(newCheckedProducts);
+  };
+
+  const handleEdit = (productId) => {
+    navigate("/product_register", {
+      state: { isEditing: true, productId: productId },
+    });
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (checkedProducts.length === 0) {
+        alert("선택된 상품이 없습니다.");
+        return;
+      }
+
+      const promises = checkedProducts.map(async (productId) => {
+        await deleteProduct(productId);
+      });
+
+      await Promise.all(promises);
+
+      const updatedProducts = products.filter(
+        (product) => !checkedProducts.includes(product.productId)
+      );
+
+      setProducts(updatedProducts);
+      setCheckedProducts([]);
+      setSelectAll(false);
+
+      alert("선택한 상품이 삭제되었습니다.");
+    } catch (error) {
+      console.error(error);
+      alert("상품 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  const sumTotalStock = (options) => {
+    const totalStock = (options || []).reduce((result, sku) => {
       result += parseFloat(sku.optionStock) || 0;
       return result;
     }, 0);
 
     return totalStock;
   };
-
-  const calculateTotalPrice = () => {
-    const productPrice = parseFloat(productInputs.productPrice) || 0;
-    return productPrice * sumTotalStock();
-  };
-
-  const options = {
-    filter: true,
-    filterType: "dropdown",
-    responsive: "scroll",
-    selectableRows: "multiple",
-  };
-
-  const columns = [
-    { name: "productId", label: "ID" },
-    {
-      name: "productImages",
-      label: "이미지",
-      options: {
-        customBodyRender: (value) => {
-          const representativeImage =
-            Array.isArray(value) && value.length > 0 ? value[0] : <></>;
-          return (
-            <img
-              src={representativeImage}
-              alt="Representative Image"
-              style={{ maxWidth: "50px", maxHeight: "50px" }}
-            />
-          );
-        },
-      },
-    },
-    { name: "productName", label: "상품명" },
-    { name: "categoryName", label: "카테고리" },
-    { name: "optionName", label: "옵션명" },
-    {
-      name: "optionStock",
-      label: "옵션 수량",
-      type: "number",
-    },
-    { name: "totalStock", label: "총 수량", type: "number" },
-    {
-      name: "productPrice",
-      label: "상품 가격",
-      type: "number",
-    },
-    { name: "totalPrice", label: "총 가격", type: "number" },
-    { name: "productDescription", label: "상품 설명" },
-    { name: "productSaleStart", label: "판매시작일" },
-    { name: "productSaleEnd", label: "판매종료일" },
-    {
-      name: "Actions",
-      label: "Actions",
-      options: {
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return <Button onClick={() => handleEdit(tableMeta)}>Edit</Button>;
-        },
-        setCellProps: () => ({
-          style: {
-            whiteSpace: "nowrap",
-            position: "sticky",
-            right: "0",
-            background: "white",
-            zIndex: 100,
-          },
-        }),
-        setCellHeaderProps: () => ({
-          style: {
-            whiteSpace: "nowrap",
-            position: "sticky",
-            right: 0,
-            background: "var(--main-color)",
-            color: "white",
-            zIndex: 101,
-          },
-        }),
-      },
-    },
-  ];
-
-  // const rows = [
-  //   {
-  //     productId: productInputs.productId,
-  //     productImages: productInputs.productImages,
-  //     productName: productInputs.productName,
-  //     categoryName: productInputs.categoryName,
-  //     options: productInputs.options,
-  //     productPrice: productInputs.productPrice,
-  //     totalStock: sumTotalStock(productInputs.options),
-  //     totalPrice: calculateTotalPrice(
-  //       productInputs.productPrice,
-  //       productInputs.options
-  //     ),
-  //     productDescription: productInputs.productDescription,
-  //     productSaleStart: productInputs.productSaleStart,
-  //     productSaleEnd: productInputs.productSaleEnd,
-  //   },
-  // ];
-
-  const rows = products.map((product) => ({
-    productId: product.productId,
-    productImages: product.productImages,
-    productName: product.productName,
-    categoryName: product.categoryName,
-    options: product.options,
-    productPrice: product.productPrice,
-    totalStock: sumTotalStock(product.options),
-    totalPrice: calculateTotalPrice(product.productPrice, product.options),
-    productDescription: product.productDescription,
-    productSaleStart: product.productSaleStart,
-    productSaleEnd: product.productSaleEnd,
-  }));
 
   return (
     <>
@@ -191,29 +170,122 @@ const PM = () => {
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 상품 관리
               </Typography>
-              <Button variant="contained" onClick={handleRegister}>
-                상품 등록
-              </Button>
             </Toolbar>
           </AppBar>
         </Box>
 
-        <Box sx={{ paddingTop: 5, paddingBottom: 5 }}>
-          <MUIDataTable
-            title={"MUJI MALL"}
-            data={rows}
-            columns={columns}
-            options={options}
-            onRowClick={(rowData) => handleEdit({ rowData })}
-            contextActions={[
-              {
-                icon: "delete",
-                tooltip: "Delete Product",
-                onClick: (event, rowData) => handleDelete({ rowData }),
-              },
-            ]}
-          />
-        </Box>
+        <Button
+          variant="contained"
+          onClick={handleRegister}
+          sx={{ marginTop: 2, marginBottom: 2, float: "right" }}
+        >
+          상품 등록
+        </Button>
+
+        <TableContainer
+          component={Paper}
+          sx={{ marginTop: 5, marginBottom: 5 }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox" align="center">
+                  <Checkbox
+                    indeterminate={
+                      checkedProducts.length > 0 &&
+                      checkedProducts.length < products.length
+                    }
+                    checked={selectAll}
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  ID
+                </TableCell>
+                {/* <TableCell>이미지</TableCell> */}
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  상품명
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  카테고리
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  옵션 (수량)
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  총 수량
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  상품 가격
+                </TableCell>
+                {/* <TableCell>상품 설명</TableCell> */}
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  판매시작일
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  판매종료일
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: "bold" }}
+                ></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {products.map((product) => (
+                <TableRow key={product.productId}>
+                  <TableCell padding="checkbox" align="center">
+                    <Checkbox
+                      onChange={() => handleCheckboxChange(product.productId)}
+                      checked={checkedProducts.includes(product.productId)}
+                    />
+                  </TableCell>
+                  <TableCell align="center">{product.productId}</TableCell>
+                  {/* <TableCell>
+                      {Array.isArray(product.productImages) &&
+                      product.productImages.length > 0 ? (
+                        <img
+                          src={product.productImages[0]}
+                          alt="Product Image"
+                          style={{ maxWidth: "50px", maxHeight: "50px" }}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </TableCell> */}
+                  <TableCell align="center">{product.productName}</TableCell>
+                  <TableCell align="center">{product.categoryName}</TableCell>
+                  <TableCell align="center">
+                    {product.options.map((option, index) => (
+                      <React.Fragment key={index}>
+                        {index > 0 && <br />}
+                        {`${option.optionName} (${option.optionStock})`}
+                      </React.Fragment>
+                    ))}
+                  </TableCell>
+                  <TableCell align="center">
+                    {sumTotalStock(product.options)}
+                  </TableCell>
+                  <TableCell align="center">{product.productPrice}</TableCell>
+                  {/* <TableCell>{product.productDescription}</TableCell> */}
+                  <TableCell align="center">
+                    {product.productSaleStart}
+                  </TableCell>
+                  <TableCell align="center">{product.productSaleEnd}</TableCell>
+                  <TableCell align="center">
+                    <Button onClick={() => handleEdit(product.productId)}>
+                      수정
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Button variant="contained" onClick={handleDelete}>
+          삭제
+        </Button>
       </Container>
     </>
   );

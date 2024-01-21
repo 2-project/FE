@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -14,7 +14,6 @@ import {
   Avatar,
   Card,
   CardMedia,
-  Alert,
   ButtonGroup,
   Divider,
   ImageList,
@@ -25,27 +24,22 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import Header from "../../../components/Header/Header";
-import Footer from "../../../components/Footer/Footer";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// get - api/product/getCategoryProduct
 // post - api/product/addProduct
 // put - api/product/editProduct{productId}
-import { addProduct, editProduct } from "../../../api/pmApi";
+import { getProduct, addProduct, editProduct } from "../../../api/pmApi";
 
 const ProductRegister = (props) => {
   const navigate = useNavigate();
   const { state } = useLocation(); // state.isEditing의 값에 따라 새 물품 등록인지 편집인지 결정. state.productId로 데이터 요청
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [showFileUploadError, setShowFileUploadError] = useState(false);
-  const [showInfoAlert, setShowInfoAlert] = useState(false);
   const [date, setDate] = useState(dayjs());
-  const [isEditing, setIsEditing] = useState(false);
-
+  const isEditing = state ? state.isEditing : false;
+  const [products, setProducts] = useState([]);
   const [productInputs, setProductInputs] = useState({
     productId: "",
     productImages: [],
@@ -71,7 +65,9 @@ const ProductRegister = (props) => {
   };
 
   const handleAddOption = () => {
-    if (productInputs.options.length < 5) {
+    if (productInputs.options.length === 0) {
+      alert("최소 1개의 옵션을 선택하세요.");
+    } else if (productInputs.options.length < 5) {
       setProductInputs((prevInputs) => ({
         ...prevInputs,
         options: [
@@ -83,7 +79,7 @@ const ProductRegister = (props) => {
         ],
       }));
     } else {
-      setShowInfoAlert(true);
+      alert("옵션은 최대 5개까지 선택됩니다.");
     }
   };
 
@@ -107,27 +103,27 @@ const ProductRegister = (props) => {
     const files = e.target.files;
 
     if (productInputs.productImages.length + files.length > 5) {
-      setShowFileUploadError(true);
+      alert("파일은 최대 5개까지 업로드됩니다.");
     } else {
       const newProductImages = [...productInputs.productImages, ...files].slice(
         0,
         5
       );
 
-      setProductInputs({
-        ...productInputs,
+      setProductInputs((prevInputs) => ({
+        ...prevInputs,
         productImages: newProductImages,
         imageIndex: newProductImages.length - 1,
-      });
-
-      setShowFileUploadError(false);
+      }));
     }
   };
 
-  const handlePrevImage = () => {
+  const handlePrevNextImage = (direction) => {
     if (productInputs.productImages.length > 1) {
       const newIndex =
-        (productInputs.imageIndex - 1 + productInputs.productImages.length) %
+        (productInputs.imageIndex +
+          direction +
+          productInputs.productImages.length) %
         productInputs.productImages.length;
 
       setProductInputs((prevInputs) => ({
@@ -137,21 +133,8 @@ const ProductRegister = (props) => {
     }
   };
 
-  const handleNextImage = () => {
-    if (productInputs.productImages.length > 1) {
-      const newIndex =
-        (productInputs.imageIndex + 1) % productInputs.productImages.length;
-
-      setProductInputs((prevInputs) => ({
-        ...prevInputs,
-        imageIndex: newIndex,
-      }));
-    }
-  };
-
-  const handleEditing = () => {
-    setIsEditing(true);
-  };
+  const handlePrevImage = () => handlePrevNextImage(-1);
+  const handleNextImage = () => handlePrevNextImage(1);
 
   const onSubmit = async () => {
     try {
@@ -192,29 +175,60 @@ const ProductRegister = (props) => {
         const response = await addProduct(formData);
 
         console.log(response);
-        setShowSuccessAlert(true);
-        setShowErrorAlert(false);
-        navigate("/product_manage", { state: { productInputs } });
+
+        alert("상품 등록이 완료되었습니다.");
+        navigate("/product_manage", { state: { products: productInputs } });
       } else {
-        setShowErrorAlert(true);
-        setShowSuccessAlert(false);
-
         if (!isFormValid) {
-          setShowErrorAlert(true);
-          console.error("Error: Form data is not valid");
+          alert("빈칸을 채워주세요.");
         }
-
         if (productInputs.productImages.length === 0) {
-          setShowFileUploadError(true);
-          console.error("Error: Please upload at least one file.");
+          alert("파일을 한 개 이상 올려주세요.");
         }
       }
     } catch (error) {
       console.error("Error:", error);
-      setShowErrorAlert(true);
-      setShowSuccessAlert(false);
+      alert("상품 등록 중 오류가 발생했습니다.");
     }
   };
+
+  useEffect(() => {
+    if (state.isEditing) {
+      const editingProducts = async () => {
+        try {
+          const editData = await getProduct(state.productId);
+          const optionsArray = Array.isArray(editData.options)
+            ? editData.options
+            : [];
+
+          setProductInputs({
+            productId: editData.productId,
+            productImages: editData.productId,
+            productName: editData.productName,
+            categoryName: editData.categoryName,
+            options:
+              optionsArray.length > 0
+                ? optionsArray
+                : [
+                    {
+                      optionCid: "",
+                      optionName: "",
+                      optionStock: "",
+                    },
+                  ],
+            totalStock: editData.totalStock,
+            productPrice: editData.productPrice,
+            productDescription: editData.productDescription,
+            productSaleStart: editData.productSaleStart,
+            productSaleEnd: editData.productSaleEnd,
+          });
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+      editingProducts();
+    }
+  }, [state.isEditing, state.productId]);
 
   const handleUpdate = async () => {
     const { options, productId } = productInputs;
@@ -227,31 +241,28 @@ const ProductRegister = (props) => {
 
         if (hasValidOption) {
           const optionStockUpdates = options.map((sku) => ({
+            optionCid: sku.optionCid,
             optionStock: sku.optionStock,
           }));
 
           const requestBody = {
-            productId: Number(productId),
             options: optionStockUpdates,
           };
 
           const response = await editProduct(productId, requestBody);
           console.log(response);
 
-          setShowSuccessAlert(true);
-          setShowErrorAlert(false);
+          alert("상품이 업데이트되었습니다.");
+          navigate("/product_manage");
         } else {
-          setShowErrorAlert(true);
-          setShowSuccessAlert(false);
-          console.error("Error: Please enter valid option stock values.");
+          alert("수량을 입력해주세요.");
         }
       } else {
-        console.error("Error: Invalid productId or editing state.");
+        alert("상품을 찾을 수 없습니다.");
       }
     } catch (error) {
       console.error("Error:", error);
-      setShowErrorAlert(true);
-      setShowSuccessAlert(false);
+      alert("상품 업데이트 중 오류가 발생했습니다.");
     }
   };
 
@@ -272,11 +283,7 @@ const ProductRegister = (props) => {
       productSaleStart: null,
       productSaleEnd: null,
     });
-
-    setShowSuccessAlert(false);
-    setShowErrorAlert(false);
-    setShowFileUploadError(false);
-    setShowInfoAlert(false);
+    alert("모든 입력이 초기화되었습니다.");
   };
 
   return (
@@ -321,35 +328,13 @@ const ProductRegister = (props) => {
               sx={{ marginBottom: 5 }}
               disabled={state.isEditing}
             >
-              upload
+              파일 선택
               <ImageUploadInput
                 type="file"
                 onChange={handleImageUpload}
                 accept="image/*"
               />
             </Button>
-
-            <Box sx={{ marginBottom: 2 }}>
-              {showFileUploadError &&
-                productInputs.productImages.length === 0 && (
-                  <Alert
-                    severity="error"
-                    onClose={() => setShowErrorAlert(false)}
-                  >
-                    Error: Please upload at least one file.
-                  </Alert>
-                )}
-
-              {showFileUploadError &&
-                productInputs.productImages.length > 0 && (
-                  <Alert
-                    severity="error"
-                    onClose={() => setShowFileUploadError(false)}
-                  >
-                    Error: Up to 5 files are allowed.
-                  </Alert>
-                )}
-            </Box>
 
             <Card
               sx={{
@@ -576,16 +561,6 @@ const ProductRegister = (props) => {
                 </div>
               ))}
 
-              {showInfoAlert && (
-                <Alert
-                  severity="info"
-                  sx={{ marginTop: 2 }}
-                  onClose={() => setShowInfoAlert(false)}
-                >
-                  up to 5 options
-                </Alert>
-              )}
-
               <TextField
                 id="totalStock"
                 label="총 수량"
@@ -634,7 +609,7 @@ const ProductRegister = (props) => {
                         productSaleStart: newDate,
                       }))
                     }
-                    readOnly={state.isEditing}
+                    disabled={state.isEditing}
                   />
                   <DatePicker
                     label="판매종료일"
@@ -645,7 +620,7 @@ const ProductRegister = (props) => {
                         productSaleEnd: newDate,
                       }))
                     }
-                    readOnly={state.isEditing}
+                    disabled={state.isEditing}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -665,37 +640,15 @@ const ProductRegister = (props) => {
                 onClick={onReset}
                 disabled={state.isEditing}
               >
-                reset
+                초기화
               </Button>
 
-              {isEditing ? (
-                <Button variant="contained" onClick={handleUpdate}>
-                  Update
-                </Button>
-              ) : (
-                <Button variant="contained" onClick={onSubmit}>
-                  Submit
-                </Button>
-              )}
-            </Box>
-            <Box>
-              {showSuccessAlert && (
-                <Alert
-                  severity="success"
-                  onClose={() => setShowSuccessAlert(false)}
-                >
-                  Success: Product registered successfully!
-                </Alert>
-              )}
-
-              {showErrorAlert && (
-                <Alert
-                  severity="error"
-                  onClose={() => setShowErrorAlert(false)}
-                >
-                  Error: Please fill in all required fields.
-                </Alert>
-              )}
+              <Button
+                variant="contained"
+                onClick={state.isEditing ? handleUpdate : onSubmit}
+              >
+                {state.isEditing ? "수정" : "등록"}
+              </Button>
             </Box>
           </Container>
         </Container>
