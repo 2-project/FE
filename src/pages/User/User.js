@@ -223,6 +223,7 @@ function User({ onClose }) {
           </Button>
         </div>
       </div>
+
       <div className={styles.rightItem}>
         <div className={styles.rightHeader}>
           <span className={styles.rightTitle}>마이페이지</span>
