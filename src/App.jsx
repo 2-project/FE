@@ -13,24 +13,32 @@ import Login from "./pages/Login/Login";
 import PM from "./pages/PM/ProductManage";
 import ProductRegister from "./pages/PM/ProductRegister";
 import Detail from "./pages/Detail/Detail";
+import OrderHistory from "./pages/User/OrderHistory/OrderHistory";
 import Order from "./pages/Order/Order";
 import Cart from "./pages/Cart/Cart";
+import ProductList from "./pages/Main/ProductList/ProductList";
+import Register from "./pages/Register/Register";
+import User from "./pages/User/User";
+import HeaderLayout from "./pages/HeaderLayout";
+import UserInfo from "./pages/User/UserInfo/UserInfo";
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Main />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/product_manage" element={<PM />}></Route>
-        <Route path="/product_register" element={<ProductRegister />}></Route>
-        <Route path="/detail" element={<Detail />}></Route>
-        {/* <Route path="/login" element={<Cart />}></Route> */}
-        {/* <Route path="/login" component={Login} /> */}
-        <Route path="/order" component={Order} />
-        <Route path="/cart" component={Cart} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={<Navigate to="/main" replace />} />
+      <Route element={<HeaderLayout />}>
+        <Route path="/main" element={<Main />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/products" element={<ProductList />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/pm" element={<PM />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/user" element={<User />} />
+        <Route path="/userinfo" element={<UserInfo />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/orderhistory" element={<OrderHistory />} />
+      </Route>
+    </Routes>
   );
 }
 
