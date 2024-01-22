@@ -34,8 +34,7 @@ import { addProduct, editOption } from "../../../api/pmApi";
 const ProductRegister = (props) => {
   const navigate = useNavigate();
   const { state } = useLocation(); // state.isEditing의 값에 따라 새 물품 등록인지 편집인지 결정
-  const [date, setDate] = useState(dayjs());
-  const isEditing = state ? state.isEditing : false;
+  // const isEditing = state ? state.isEditing : false;
   const [loading, setLoading] = useState(false); // 로딩되는지 여부
   const [productInputs, setProductInputs] = useState({
     productId: "",
@@ -62,9 +61,7 @@ const ProductRegister = (props) => {
   };
 
   const handleAddOption = () => {
-    if (productInputs.options.length === 0) {
-      alert("최소 1개의 옵션을 선택하세요.");
-    } else if (productInputs.options.length < 5) {
+    if (productInputs.options.length < 5) {
       setProductInputs((prevInputs) => ({
         ...prevInputs,
         options: [
@@ -87,36 +84,43 @@ const ProductRegister = (props) => {
     }));
   };
 
-  const sumTotalStock = () => {
-    const totalStock = (productInputs.options || []).reduce((result, sku) => {
-      result += parseFloat(sku.optionStock) || 0;
+  const sumTotalStock = (options) => {
+    return (options || []).reduce((result, option) => {
+      result += parseFloat(option.optionStock) || 0;
       return result;
     }, 0);
-
-    return totalStock;
   };
 
   const handleImageUpload = (e) => {
-    // 이미지 업로드
     const files = e.target.files;
 
     if (productInputs.productImages.length + files.length > 5) {
-      alert("파일은 최대 5개까지 업로드됩니다.");
-    } else {
-      const newProductImages = [...productInputs.productImages, ...files].slice(
-        0,
-        5
-      );
-
-      setProductInputs((prevInputs) => ({
-        ...prevInputs,
-        productImages: newProductImages,
-        imageIndex: newProductImages.length - 1,
-      }));
+      alert("이미지는 최대 5개까지 업로드됩니다.");
+      return;
     }
+
+    const newProductImages = [...productInputs.productImages, ...files].slice(
+      0,
+      5
+    );
+
+    const isValidFileType = Array.from(files).every((file) =>
+      file.type.startsWith("image/")
+    );
+
+    if (!isValidFileType) {
+      alert("이미지 파일만 선택해주세요.");
+      return;
+    }
+
+    setProductInputs((prevInputs) => ({
+      ...prevInputs,
+      productImages: newProductImages,
+      imageIndex: newProductImages.length - 1,
+    }));
   };
 
-  const handlePrevNextImage = (direction) => {
+  const previewImage = (direction) => {
     if (productInputs.productImages.length > 1) {
       const newIndex =
         (productInputs.imageIndex +
@@ -131,11 +135,10 @@ const ProductRegister = (props) => {
     }
   };
 
-  const handlePrevImage = () => handlePrevNextImage(-1);
-  const handleNextImage = () => handlePrevNextImage(1);
+  const handlePrevImage = () => previewImage(-1);
+  const handleNextImage = () => previewImage(1);
 
   const onSubmit = async () => {
-    // post 요청
     try {
       const isFormValid =
         productInputs.productName &&
@@ -184,21 +187,21 @@ const ProductRegister = (props) => {
         navigate("/product_manage", { state: { products: productInputs } });
       } else {
         if (!isFormValid) {
-          alert("빈칸을 채워주세요.");
+          alert("모든 빈칸을 입력해주세요.");
         }
         if (productInputs.productImages.length === 0) {
-          alert("파일을 한 개 이상 올려주세요.");
+          alert("이미지 파일을 한 개 이상 선택해주세요.");
         }
       }
     } catch (error) {
       console.error("Error:", error);
       alert("상품 등록 중 오류가 발생했습니다.");
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    // state.isEditing으로 edit mode
-    if (state.isEditing) {
+    if (state?.isEditing) {
       const editProduct = async () => {
         try {
           const optionsArray = Array.isArray(state.optionCid)
@@ -232,17 +235,21 @@ const ProductRegister = (props) => {
       };
       editProduct();
     }
-  }, [state.isEditing, state.optionCid]);
+  }, [state?.isEditing, state?.optionCid]);
 
   const handleEdit = async () => {
-    // 수량 수정
     const { options } = productInputs;
 
     try {
-      if (state.isEditing) {
+      if (state?.isEditing) {
         const hasValidOption = options.every(
           (sku) => sku.optionStock === 0 || sku.optionStock > 0
         );
+
+        if (!hasValidOption) {
+          alert("0 이상의 값을 입력하세요.");
+          return;
+        }
 
         if (hasValidOption) {
           const optionStockUpdates = options.map((sku) => ({
@@ -270,10 +277,10 @@ const ProductRegister = (props) => {
       console.error("Error:", error);
       alert("상품 업데이트 중 오류가 발생했습니다.");
     }
+    setLoading(false);
   };
 
   const onReset = () => {
-    // 초기화
     setProductInputs({
       productImages: [],
       imageIndex: 0,
