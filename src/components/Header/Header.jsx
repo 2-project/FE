@@ -77,13 +77,6 @@ function Header() {
           </div>
         </div>
       </header>
-
-      <div className="product-list">
-        <div className="sub-section">인기상품</div>
-        <div className="sub-section">주간특가</div>
-        <div className="sub-section">매거진</div>
-        <div className="sub-section">아울렛</div>
-      </div>
     </div>
   );
 }
