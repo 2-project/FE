@@ -41,3 +41,7 @@ td {
 .point_color01 {
   color: var(--main-color);
 }
+.info-shipping {
+  border: 1px solid var(--main-color);
+  color: var(--main-color);
+}

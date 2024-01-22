@@ -3,7 +3,7 @@ import { localToken } from "../../utils/auth";
 import { toast } from "react-toastify";
 
 const base_url =
-  "http://ec2-3-34-191-119.ap-northeast-2.compute.amazonaws.com:8080";
+  "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080";
 
 //인스턴스 생성
 const instance = axios.create({
@@ -21,6 +21,8 @@ instance.interceptors.request.use(
       Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     const token = localToken.get();
+    // const token =
+    //   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoYXkwIiwicm9sZXMiOiJST0xFX1VTRVIiLCJleHAiOjE3MDU5MzA3NzR9.ESMX3sqCQ7lWyqGFdxki_iFK2kPrOXqVf7A9oxiCVag";
 
     let auth = "";
 
