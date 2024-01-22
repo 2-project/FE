@@ -16,8 +16,6 @@ import {
   Paper,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-// get - api/product/getCategoryProduct
-// delete - api/product/{productId}
 import { getProduct, deleteProduct } from "../../../api/pmApi";
 
 const PM = () => {

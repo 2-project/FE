@@ -29,10 +29,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-// post - api/product/addProduct
-// put - api/product/editProduct{productId}
-import { addProduct, editProduct } from "../../../api/pmApi";
+import { addProduct, editOption } from "../../../api/pmApi";
 
 const ProductRegister = (props) => {
   const navigate = useNavigate();
@@ -202,7 +199,7 @@ const ProductRegister = (props) => {
   useEffect(() => {
     // state.isEditing으로 edit mode
     if (state.isEditing) {
-      const editProducts = async () => {
+      const editProduct = async () => {
         try {
           const optionsArray = Array.isArray(state.optionCid)
             ? state.optionCid
@@ -233,7 +230,7 @@ const ProductRegister = (props) => {
           console.error("Error:", error);
         }
       };
-      editProducts();
+      editProduct();
     }
   }, [state.isEditing, state.optionCid]);
 
@@ -258,7 +255,7 @@ const ProductRegister = (props) => {
           };
 
           setLoading(true);
-          const response = await editProduct(requestBody);
+          const response = await editOption(requestBody);
           setProductInputs(response);
 
           alert("상품이 업데이트되었습니다.");
