@@ -84,11 +84,13 @@ const ProductRegister = (props) => {
     }));
   };
 
-  const sumTotalStock = (options) => {
-    return (options || []).reduce((result, option) => {
-      result += parseFloat(option.optionStock) || 0;
+  const sumTotalStock = () => {
+    const totalStock = (productInputs.options || []).reduce((result, sku) => {
+      result += parseFloat(sku.optionStock) || 0;
       return result;
     }, 0);
+
+    return totalStock;
   };
 
   const handleImageUpload = (e) => {
