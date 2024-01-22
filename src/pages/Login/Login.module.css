@@ -1,5 +1,8 @@
 .loginContainer {
-  max-width: 400px;
+  margin-top: 100;
+  max-width: 30rem;
+  padding-top: 10rem;
+  height: calc(100vh - 10rem);
 }
 
 .loginHeader {
