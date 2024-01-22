@@ -263,7 +263,7 @@ function MemberLoginModal({ onClose }) {
             //src={userBasicIcon_1}
             src={profilePicture}
             alt="프로필사진"
-          ></img>
+          />
           <input
             className={styles.uploadName}
             value={profilePicture ? profilePicture.userName : "첨부파일"}
