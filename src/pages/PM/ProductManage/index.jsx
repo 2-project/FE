@@ -24,21 +24,21 @@ const PM = () => {
   const [checkedProducts, setCheckedProducts] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [loading, setLoading] = useState(false); // 로딩되는지 여부
-  const [categories, setCategories] = useState({});
   const [products, setProducts] = useState([]);
-
-  const fetchCategory = async (category) => {
-    // get product 요청
-    try {
-      setLoading(true);
-      const getProducts = await getProduct(category);
-      setCategories(getProducts || []);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const [categories, setCategories] = useState({});
 
   useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        setLoading(true);
+        const response = await getProduct(productInputs);
+        setCategories(response || []);
+      } catch (error) {
+        console.error(error);
+      }
+      setLoading(false);
+    };
+
     fetchCategory();
   }, [productInputs]);
 
@@ -48,7 +48,7 @@ const PM = () => {
 
   const handleEdit = (optionCid) => {
     navigate("/product_register", {
-      state: { isEditing: true, optionCid: optionCid },
+      state: { isEditing: true, optionCid },
     });
   };
 
@@ -82,11 +82,11 @@ const PM = () => {
         return;
       }
 
-      const promises = checkedProducts.map(async (productId) => {
-        await deleteProduct(productId);
-      });
-
-      await Promise.all(promises);
+      await Promise.all(
+        checkedProducts.map(async (productId) => {
+          await deleteProduct(productId);
+        })
+      );
 
       const updatedProducts = products.filter(
         (product) => !checkedProducts.includes(product.productId)
@@ -104,12 +104,10 @@ const PM = () => {
   };
 
   const sumTotalStock = (options) => {
-    const totalStock = (options || []).reduce((result, sku) => {
-      result += parseFloat(sku.optionStock) || 0;
+    return (options || []).reduce((result, option) => {
+      result += parseFloat(option.optionStock) || 0;
       return result;
     }, 0);
-
-    return totalStock;
   };
 
   return (
@@ -170,6 +168,9 @@ const PM = () => {
                   총 수량
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                  STATUS
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   상품 가격
                 </TableCell>
                 {/* <TableCell>상품 설명</TableCell> */}
@@ -219,6 +220,9 @@ const PM = () => {
                   </TableCell>
                   <TableCell align="center">
                     {sumTotalStock(product.options)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {sumTotalStock(product.options) === 0 ? "SOLDOUT" : "SALES"}
                   </TableCell>
                   <TableCell align="center">{product.productPrice}</TableCell>
                   {/* <TableCell>{product.productDescription}</TableCell> */}
