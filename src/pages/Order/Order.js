@@ -77,6 +77,12 @@ function Order({ onClose }) {
 
     setCheckedUsers(newCheckedUsers);
   };
+  const userName = "하름";
+  const recipientName = userName;
+  const phoneNum = "123-456-7890";
+  const message = "안전배송~ 빠른배송~~";
+  const userPhone = "123-456-7890";
+  const userAddress = "서울시";
 
   const newAddressHandleSubmit = () => {
     // 새로운 주소 입력 모달을 열기
@@ -86,8 +92,7 @@ function Order({ onClose }) {
     setIsModalOpen(false);
   };
   const submitNewAddress = () => {
-    // 여기에 새로운 주소를 처리하는 로직을 추가하세요.
-    // 예를 들어, 새로운 주소를 서버에 저장하거나 다른 필요한 작업을 수행할 수 있습니다.
+    // 여기에 새로운 주소를 처리하는 로직
 
     closeModal();
   };
@@ -96,13 +101,13 @@ function Order({ onClose }) {
     try {
       // 서버로 전송할 데이터 준비
       const orderData = {
-        name,
-        phoneNumber,
+        recipientName,
+        phoneNum,
         address,
-        deliveryMessage,
+        message,
         isDefaultAddress,
         selectedProducts: users.map((user) => ({
-          productInfo: user.productInfo,
+          productInfo: user.productName,
           price: user.price,
           quantity: user.quantity,
           subtotal: user.subtotal,
@@ -128,18 +133,19 @@ function Order({ onClose }) {
       window.alert("주문 처리 중 오류가 발생했습니다.");
     }
   };
+
   const textFieldStyle = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: "47%",
+    width: "55%",
     color: "black",
   };
   const textFieldStyleInput = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: "60%",
+    width: "50%",
     margin: "8px auto",
   };
 
@@ -155,24 +161,6 @@ function Order({ onClose }) {
           <Box className={styles.productContainer}>
             <TableContainer component={Paper} className={styles.tableContainer}>
               <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        indeterminate={
-                          checkedUsers.length > 0 &&
-                          checkedUsers.length < users.length
-                        }
-                        checked={selectAll}
-                        onChange={handleSelectAllClick}
-                      />
-                    </TableCell>
-                    <TableCell>상품정보</TableCell>
-                    <TableCell>판매가</TableCell>
-                    <TableCell>배송비</TableCell>
-                    <TableCell>주문금액</TableCell>
-                  </TableRow>
-                </TableHead>
                 <TableBody>
                   {users.map((user) => (
                     <TableRow key={user.shoppingId}>
@@ -210,7 +198,7 @@ function Order({ onClose }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                margin: "0 310px 0 310px",
+                margin: "0 340px 0 340px",
               }}
             >
               <InputLabel
@@ -228,7 +216,7 @@ function Order({ onClose }) {
               <Button
                 style={{
                   marginTop: "40px",
-                  padding: "10px 20px 10px 20px",
+                  padding: "8px 17px 8px 17px",
                   fontSize: "medium",
                 }}
                 className={styles.newAddressBtn}
@@ -267,7 +255,6 @@ function Order({ onClose }) {
                     fullWidth
                     margin="normal"
                     style={{ flex: 1 }}
-                    // 필요한 경우 onChange 이벤트 핸들러 등을 추가
                   />
                   <Button
                     variant="outlined"
@@ -277,7 +264,6 @@ function Order({ onClose }) {
                     우편번호
                   </Button>
                 </Box>
-
                 <Box
                   style={{
                     display: "flex",
@@ -291,7 +277,6 @@ function Order({ onClose }) {
                 </Box>
               </Box>
             </Modal>
-
             <Box
               className={styles.userInfoForm}
               style={{ textAlign: "center", marginTop: "30px" }}
@@ -302,7 +287,7 @@ function Order({ onClose }) {
               <TextField
                 label="이  름"
                 variant="outlined"
-                value={name}
+                value={userName}
                 onChange={(e) => setName(e.target.value)}
                 fullWidth
                 margin="normal"
@@ -314,7 +299,7 @@ function Order({ onClose }) {
               <TextField
                 label="휴대폰 번호"
                 variant="outlined"
-                value={phoneNumber}
+                value={userPhone}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 fullWidth
                 margin="normal"
@@ -326,7 +311,7 @@ function Order({ onClose }) {
               <TextField
                 label="배송 주소"
                 variant="outlined"
-                value={address}
+                value={userAddress}
                 onChange={(e) => setAddress(e.target.value)}
                 fullWidth
                 margin="normal"
@@ -341,8 +326,8 @@ function Order({ onClose }) {
                   />
                 }
                 label="기본 배송지로 저장"
-                style={{
-                  width: "60%",
+                sx={{
+                  width: "50%",
                   paddingBottom: "10px",
                 }}
               />
@@ -353,7 +338,7 @@ function Order({ onClose }) {
               <TextField
                 label="배송 메시지"
                 variant="outlined"
-                value={deliveryMessage}
+                value={message}
                 onChange={(e) => setDeliveryMessage(e.target.value)}
                 fullWidth
                 margin="normal"
@@ -363,7 +348,7 @@ function Order({ onClose }) {
 
             <Grid
               container
-              spacing={3}
+              spacing={2}
               alignItems="center"
               sx={{
                 justifyContent: "center",
@@ -414,9 +399,8 @@ function Order({ onClose }) {
             <Button
               sx={{
                 fontSize: "x-large",
-                color: "white",
-                padding: "15px 45px",
-                margin: "30px 0 100px 0",
+                padding: "15px 40px",
+                margin: "30px 0 30px 0",
               }}
               onClick={paymentHandleSubmit}
               variant="contained"

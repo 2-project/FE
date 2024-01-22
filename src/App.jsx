@@ -24,17 +24,18 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/main" replace />} />
-        <Route path="/main" element={<Main />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/products" element={<ProductList />} />
-        <Route path="/order" element={<Order />} />
-        <Route path="/product_manage" element={<PM />} />
-        <Route path="/product_register" element={<ProductRegister />} />
-        <Route path="/detail" element={<Detail />}></Route>
-        <Route path="/user" element={<User />} />
-        <Route path="/userinfo" element={<UserInfo />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/orderhistory" element={<OrderHistory />} />
+      <Route path="/main" element={<Main />} />
+
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/products" element={<ProductList />} />
+      <Route path="/order" element={<Order />} />
+      <Route path="/product_manage" element={<PM />} />
+      <Route path="/product_register" element={<ProductRegister />} />
+      <Route path="/detail" element={<Detail />}></Route>
+      <Route path="/user" element={<User />} />
+      <Route path="/userinfo" element={<UserInfo />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/orderhistory" element={<OrderHistory />} />
     </Routes>
   );
 }
