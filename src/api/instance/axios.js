@@ -3,7 +3,7 @@ import { localToken } from "../../utils/auth";
 import { toast } from "react-toastify";
 
 const base_url =
-  "http://ec2-43-201-5-79.ap-northeast-2.compute.amazonaws.com";
+  "http://ec2-3-34-191-119.ap-northeast-2.compute.amazonaws.com:8080";
 
 //인스턴스 생성
 const instance = axios.create({
@@ -56,9 +56,9 @@ instance.interceptors.response.use(
     if (response) {
       if (response.status === 401) {
         toast.info("로그인이 필요합니다.");
-        setInterval(() => {
-          window.location.href = "/login";
-        }, 2000);
+        // setInterval(() => {
+        //   window.location.href = "/login";
+        // }, 2000);
 
         //TODO: history에 푸쉬, 로그인 뒤에 원래 있던 페이지로 이동
       } else if (response.status === 503) {
