@@ -25,12 +25,14 @@ const PM = () => {
   const { state: productInputs } = useLocation();
   const [checkedProducts, setCheckedProducts] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [loading, setLoading] = useState(false); // 로딩되는지 여부
   const [categories, setCategories] = useState({});
   const [products, setProducts] = useState([]);
 
-  const getProductsCategory = async (category) => {
+  const fetchCategory = async (category) => {
     // get product 요청
     try {
+      setLoading(true);
       const getProducts = await getProduct(category);
       setCategories(getProducts || []);
     } catch (error) {
@@ -39,23 +41,7 @@ const PM = () => {
   };
 
   useEffect(() => {
-    getProductsCategory();
-  }, []);
-
-  const getRegisteredProducts = async () => {
-    // get 새롭게 등록된 product 요청
-    try {
-      const addProducts = await getProduct(productInputs);
-      setProducts(addProducts || []);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    if (productInputs) {
-      getRegisteredProducts();
-    }
+    fetchCategory();
   }, [productInputs]);
 
   const handleRegister = () => {

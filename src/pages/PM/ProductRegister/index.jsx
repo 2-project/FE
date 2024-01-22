@@ -39,6 +39,7 @@ const ProductRegister = (props) => {
   const { state } = useLocation(); // state.isEditing의 값에 따라 새 물품 등록인지 편집인지 결정
   const [date, setDate] = useState(dayjs());
   const isEditing = state ? state.isEditing : false;
+  const [loading, setLoading] = useState(false); // 로딩되는지 여부
   const [productInputs, setProductInputs] = useState({
     productId: "",
     productImages: [],
@@ -177,9 +178,10 @@ const ProductRegister = (props) => {
         for (let i = 0; i < productInputs.productImages.length; i++) {
           formData.append("productImages", productInputs.productImages[i]);
         }
-        const response = await addProduct(formData);
 
-        console.log(response);
+        setLoading(true);
+        const response = await addProduct(formData);
+        setProductInputs(response);
 
         alert("상품 등록이 완료되었습니다.");
         navigate("/product_manage", { state: { products: productInputs } });
@@ -200,7 +202,7 @@ const ProductRegister = (props) => {
   useEffect(() => {
     // state.isEditing으로 edit mode
     if (state.isEditing) {
-      const editingProducts = async () => {
+      const editProducts = async () => {
         try {
           const optionsArray = Array.isArray(state.optionCid)
             ? state.optionCid
@@ -231,7 +233,7 @@ const ProductRegister = (props) => {
           console.error("Error:", error);
         }
       };
-      editingProducts();
+      editProducts();
     }
   }, [state.isEditing, state.optionCid]);
 
@@ -255,8 +257,9 @@ const ProductRegister = (props) => {
             options: optionStockUpdates,
           };
 
+          setLoading(true);
           const response = await editProduct(requestBody);
-          console.log(response);
+          setProductInputs(response);
 
           alert("상품이 업데이트되었습니다.");
           navigate("/product_manage");
