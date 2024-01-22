@@ -5,7 +5,7 @@ import PolicyTable from "./PolicyTable";
 const Description = () => {
   return (
     <>
-      <div style={{ position: "sticky", top: 0 }}>
+      <div style={{ position: "sticky", top: 0, marginTop: "40px" }}>
         <ToggleButtonGroup style={{ backgroundColor: "white" }}>
           <a href="#section01" style={{ textDecoration: "none" }}>
             <ToggleButton style={{ width: "380px" }}>상세정보</ToggleButton>

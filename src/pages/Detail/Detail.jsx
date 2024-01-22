@@ -11,14 +11,22 @@ import { getGoodsDetails } from "../../api/detailApi";
 const Detail = () => {
   const requestGoodsDetail = async () => {
     try {
-      const res = await getGoodsDetails({ productId: "2232323" });
+      const res = await getGoodsDetails(1);
       console.log("res", res);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const withFetch = async () => {
+    const res = await fetch(
+      "http://ec2-3-34-191-119.ap-northeast-2.compute.amazonaws.com:8080/api/product/productDetail/1"
+    );
+    console.log("ress", res.json());
+  };
   useEffect(() => {
     requestGoodsDetail();
+    withFetch();
   }, []);
   return (
     <div>
