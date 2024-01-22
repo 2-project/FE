@@ -55,146 +55,82 @@ function Login({ onClose }) {
   };
 
   return (
-    <Container maxWidth="false" className={styles.loginContainer}>
-      <Box sx={{ mt: 4, mb: 4 }} className={styles.loginBox}>
-        <Box className={styles.loginHeader}>
-          <Typography variant="h4" gutterBottom className={styles.formTitle}>
-            로그인
-          </Typography>
-          <span>
-            <img className={styles.loginLogo} src={LoginLogo} alt="로고"></img>
-          </span>
-        </Box>
-        <Box className={styles.textContainer}>
-          <TextField
-            label="이메일"
-            type="email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={LoginId}
-            onChange={handleLoginIdChange}
-            placeholder="이메일 아이디를 입력하세요."
-            className="form-input"
-            error={!isEmailValid && LoginId.trim() !== ""}
-            helperText={
-              !isEmailValid &&
-              LoginId.trim() !== "" &&
-              "올바른 이메일 형식이 아닙니다."
-            }
-          />
-          <TextField
-            label="비밀번호"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={LoginPassword}
-            onChange={handlePasswordChange}
-            placeholder="비밀번호를 입력하세요."
-            className="form-input"
-            error={!isPasswordValid && LoginPassword.trim() !== ""}
-            helperText={
-              !isPasswordValid &&
-              LoginPassword.trim() !== "" &&
-              "비밀번호는 소문자와 숫자를 포함한 8~20자여야 합니다."
-            }
-          />
-          <Box
-            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-            className={styles.buttonBox}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              className={styles.createButton}
-              onClick={handleButton}
-              disabled={!isEmailValid || !isPasswordValid}
-            >
+    <>
+      <Container maxWidth="false" className={styles.loginContainer}>
+        <Box sx={{ mt: 4, mb: 4 }} className={styles.loginBox}>
+          <Box className={styles.loginHeader}>
+            <Typography variant="h4" gutterBottom className={styles.formTitle}>
               로그인
-            </Button>
+            </Typography>
+            <span>
+              <img
+                className={styles.loginLogo}
+                src={LoginLogo}
+                alt="로고"
+              ></img>
+            </span>
           </Box>
-          <div className={styles.goSignUp}>
-            <span onClick={handleMemberButton}>회원가입 하러가기</span>
-            <img className={styles.goSignUpArrowIcon} src={goSignUpIcon} />
-          </div>
-        </Box>
-      </Box>
-      {ismemberLoginOpen && (
-        <MemberLoginModal onClose={() => setMemberLoginOpen(false)} />
-      )}
-    </Container>
-    <Container maxWidth="false" className={styles.loginContainer}>
-      <Box sx={{ mt: 4, mb: 4 }} className={styles.loginBox}>
-        <Box className={styles.loginHeader}>
-          <Typography variant="h4" gutterBottom className={styles.formTitle}>
-            로그인
-          </Typography>
-          <span>
-            <img className={styles.loginLogo} src={LoginLogo} alt="로고"></img>
-          </span>
-        </Box>
-        <Box className={styles.textContainer}>
-          <TextField
-            label="이메일"
-            type="email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={LoginId}
-            onChange={handleLoginIdChange}
-            placeholder="이메일 아이디를 입력하세요."
-            className="form-input"
-            error={!isEmailValid && LoginId.trim() !== ""}
-            helperText={
-              !isEmailValid &&
-              LoginId.trim() !== "" &&
-              "올바른 이메일 형식이 아닙니다."
-            }
-          />
-          <TextField
-            label="비밀번호"
-            type="password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={LoginPassword}
-            onChange={handlePasswordChange}
-            placeholder="비밀번호를 입력하세요."
-            className="form-input"
-            error={!isPasswordValid && LoginPassword.trim() !== ""}
-            helperText={
-              !isPasswordValid &&
-              LoginPassword.trim() !== "" &&
-              "비밀번호는 소문자와 숫자를 포함한 8~20자여야 합니다."
-            }
-          />
-          <Box
-            sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
-            className={styles.buttonBox}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              className={styles.createButton}
-              onClick={handleButton}
-              disabled={!isEmailValid || !isPasswordValid}
+          <Box className={styles.textContainer}>
+            <TextField
+              label="이메일"
+              type="email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={LoginId}
+              onChange={handleLoginIdChange}
+              placeholder="이메일 아이디를 입력하세요."
+              className="form-input"
+              error={!isEmailValid && LoginId.trim() !== ""}
+              helperText={
+                !isEmailValid &&
+                LoginId.trim() !== "" &&
+                "올바른 이메일 형식이 아닙니다."
+              }
+            />
+            <TextField
+              label="비밀번호"
+              type="password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={LoginPassword}
+              onChange={handlePasswordChange}
+              placeholder="비밀번호를 입력하세요."
+              className="form-input"
+              error={!isPasswordValid && LoginPassword.trim() !== ""}
+              helperText={
+                !isPasswordValid &&
+                LoginPassword.trim() !== "" &&
+                "비밀번호는 소문자와 숫자를 포함한 8~20자여야 합니다."
+              }
+            />
+            <Box
+              sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}
+              className={styles.buttonBox}
             >
-              로그인
-            </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={styles.createButton}
+                onClick={handleButton}
+                disabled={!isEmailValid || !isPasswordValid}
+              >
+                로그인
+              </Button>
+            </Box>
+            <div className={styles.goSignUp}>
+              <span onClick={handleMemberButton}>회원가입 하러가기</span>
+              <img className={styles.goSignUpArrowIcon} src={goSignUpIcon} />
+            </div>
           </Box>
-          <div className={styles.goSignUp}>
-            <span onClick={handleMemberButton}>회원가입 하러가기</span>
-            <img className={styles.goSignUpArrowIcon} src={goSignUpIcon} />
-          </div>
         </Box>
-      </Box>
-      {ismemberLoginOpen && (
-        <MemberLoginModal onClose={() => setMemberLoginOpen(false)} />
-      )}
-    </Container>
+        {ismemberLoginOpen && (
+          <MemberLoginModal onClose={() => setMemberLoginOpen(false)} />
+        )}
+      </Container>
+    </>
   );
-}
 }
 
 export default Login;
