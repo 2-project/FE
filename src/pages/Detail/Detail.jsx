@@ -30,7 +30,6 @@ const Detail = () => {
   }, []);
   return (
     <div>
-      <Header></Header>
       <div
         style={{
           display: "flex",
@@ -49,7 +48,6 @@ const Detail = () => {
         <Description></Description>
         <ScrollToTop></ScrollToTop>
       </div>
-      <Footer></Footer>
     </div>
   );
 };

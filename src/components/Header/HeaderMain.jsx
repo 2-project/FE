@@ -55,7 +55,7 @@ function HeaderMain() {
               </svg>
             </div>
           </div>
-          <div className="icons">
+          {/* <div className="icons">
             <Link to="/login">
               <div className="icon-item">
                 {IconItems[0].icon()}
@@ -74,19 +74,18 @@ function HeaderMain() {
                 <span>{IconItems[1].label}</span>
               </div>
             </Link>
-          </div>
+          </div> */}
         </div>
       </header>
-
-//       <div className="product-list">
-//         <div className="sub-section">인기상품</div>
-//         <div className="sub-section">주간특가</div>
-//         <div className="sub-section">매거진</div>
-//         <div className="sub-section">아울렛</div>
-//       </div>
-//     </div>
-//   );
-// }
+      <div className="product-list">
+        <div className="sub-section">인기상품</div>
+        <div className="sub-section">주간특가</div>
+        <div className="sub-section">매거진</div>
+        <div className="sub-section">아울렛</div>{" "}
+      </div>
+    </div>
+  );
+}
 
 // const focusSearchInput = () => {
 //   document.getElementById('search-input').focus();
@@ -152,4 +151,4 @@ function HeaderMain() {
 //   },
 // ];
 
-// export default HeaderMain;
+export default HeaderMain;
