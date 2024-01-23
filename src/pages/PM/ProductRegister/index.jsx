@@ -85,8 +85,10 @@ const ProductRegister = (props) => {
   };
 
   const sumTotalStock = () => {
-    const totalStock = (productInputs.options || []).reduce((result, sku) => {
-      result += parseFloat(sku.optionStock) || 0;
+    const { options } = productInputs;
+
+    const totalStock = options.reduce((result, option) => {
+      result += parseFloat(option.optionStock) || 0;
       return result;
     }, 0);
 
@@ -212,7 +214,9 @@ const ProductRegister = (props) => {
 
           setProductInputs({
             productId: state.productId,
-            productImages: state.productId,
+            productImages: Array.isArray(state.optionCid)
+              ? state.optionCid
+              : [],
             productName: state.productName,
             categoryName: state.categoryName,
             options:
@@ -371,11 +375,13 @@ const ProductRegister = (props) => {
                 alt={`이미지 ${productInputs.imageIndex + 1}`}
                 src={
                   productInputs.productImages &&
-                  productInputs.productImages.length > 0
-                    ? URL.createObjectURL(
-                        productInputs.productImages[productInputs.imageIndex]
-                      )
-                    : ""
+                  productInputs.productImages.length > 0 ? (
+                    URL.createObjectURL(
+                      productInputs.productImages[productInputs.imageIndex]
+                    )
+                  ) : (
+                    <></>
+                  )
                 }
               />
             </Card>

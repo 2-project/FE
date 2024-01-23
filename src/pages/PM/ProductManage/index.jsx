@@ -57,17 +57,17 @@ const PM = () => {
       setCheckedProducts([]);
       setSelectAll(false);
     } else {
-      setCheckedProducts(products.map((product) => product.productId));
+      setCheckedProducts(products.map((product) => product.productCid));
       setSelectAll(true);
     }
   };
 
-  const handleCheckboxChange = (productId) => {
-    const currentIndex = checkedProducts.indexOf(productId);
+  const handleCheckboxChange = (productCid) => {
+    const currentIndex = checkedProducts.indexOf(productCid);
     const newCheckedProducts = [...checkedProducts];
 
     if (currentIndex === -1) {
-      newCheckedProducts.push(productId);
+      newCheckedProducts.push(productCid);
     } else {
       newCheckedProducts.splice(currentIndex, 1);
     }
@@ -83,13 +83,13 @@ const PM = () => {
       }
 
       await Promise.all(
-        checkedProducts.map(async (productId) => {
-          await deleteProduct(productId);
+        checkedProducts.map(async (optionCid) => {
+          await deleteProduct(optionCid);
         })
       );
 
       const updatedProducts = products.filter(
-        (product) => !checkedProducts.includes(product.productId)
+        (product) => !checkedProducts.includes(product.optionCid)
       );
 
       setProducts(updatedProducts);
@@ -188,14 +188,14 @@ const PM = () => {
             </TableHead>
             <TableBody>
               {products.map((product) => (
-                <TableRow key={product.productId}>
+                <TableRow key={product.productCid}>
                   <TableCell padding="checkbox" align="center">
                     <Checkbox
-                      onChange={() => handleCheckboxChange(product.productId)}
-                      checked={checkedProducts.includes(product.productId)}
+                      onChange={() => handleCheckboxChange(product.productCid)}
+                      checked={checkedProducts.includes(product.productCid)}
                     />
                   </TableCell>
-                  <TableCell align="center">{product.productId}</TableCell>
+                  <TableCell align="center">{product.productCid}</TableCell>
                   <TableCell align="center">{product.productName}</TableCell>
                   <TableCell align="center">{product.categoryName}</TableCell>
                   <TableCell align="center">
@@ -218,7 +218,7 @@ const PM = () => {
                   </TableCell>
                   <TableCell align="center">{product.productSaleEnd}</TableCell>
                   <TableCell align="center">
-                    <Button onClick={() => handleEdit(product.productId)}>
+                    <Button onClick={() => handleEdit(product.productCid)}>
                       수정
                     </Button>
                   </TableCell>
