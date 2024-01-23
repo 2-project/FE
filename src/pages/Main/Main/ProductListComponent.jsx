@@ -31,7 +31,7 @@ function ProductListComponent() {
     };
 
     // 지정된 카테고리들에 대해 API 호출
-    const categoriesToFetch = ['인기상품', '주간특가', '메거진', '아울렛'];
+    const categoriesToFetch = ['인기상품', '주간특가', '매거진', '아울렛'];
     categoriesToFetch.forEach(fetchCategoryData);
   }, []);
 
@@ -151,7 +151,7 @@ function ProductListComponent() {
 
       <div className="category-section">
         <h1 className="product-grid-title product-2">
-          메거진
+          매거진
           {/* 정렬 옵션 선택 드롭다운 메뉴 */}
           <select
             className="category-dropdown"
