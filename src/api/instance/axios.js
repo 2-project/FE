@@ -56,9 +56,10 @@ instance.interceptors.response.use(
     if (response) {
       if (response.status === 401) {
         toast.info("로그인이 필요합니다.");
-        // setInterval(() => {
-        //   window.location.href = "/login";
-        // }, 2000);
+        localToken.remove();
+        setInterval(() => {
+          window.location.href = "/login";
+        }, 2000);
 
         //TODO: history에 푸쉬, 로그인 뒤에 원래 있던 페이지로 이동
       } else if (response.status === 503) {
