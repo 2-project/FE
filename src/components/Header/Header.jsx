@@ -1,9 +1,15 @@
 import React from 'react';
 import './Header.css';
 import mujiLogo from '../img/mujilogo.png';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Header() {
+  const location = useLocation();
+
+  // 로그인 페이지에서는 아이콘을 투명하게 만듭니다.
+  const isLoginPage = location.pathname === '/login';
+  const iconStyle = isLoginPage ? { opacity: 0, pointerEvents: 'none' } : {};
+
   return (
     <div className="min-h-screen">
       <header className="container mx-auto">
@@ -55,7 +61,7 @@ function Header() {
               </svg>
             </div>
           </div>
-          <div className="icons">
+          <div className="icons" style={iconStyle}>
             <Link to="/login">
               <div className="icon-item">
                 {IconItems[0].icon()}
@@ -80,10 +86,6 @@ function Header() {
     </div>
   );
 }
-
-const focusSearchInput = () => {
-  document.getElementById('search-input').focus();
-};
 
 const IconItems = [
   {
