@@ -81,9 +81,7 @@ function MemberLoginModal({ onClose }) {
             user_address: userAddress,
           }),
         }
-      );
-      // addSignUp 함수 호출
-      addSignUp(signupData)
+      )
         .then((data) => {
           // 서버 응답에 대한 처리
           console.log("회원가입 성공:", data);
