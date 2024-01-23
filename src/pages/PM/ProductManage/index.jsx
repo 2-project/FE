@@ -27,6 +27,15 @@ const PM = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState({});
 
+  const getAll = async () => {
+    const res = await getAllProduct();
+    console.log("mres", res);
+    setProducts(res.productDetailList);
+  };
+  useEffect(() => {
+    getAll();
+  }, []);
+
   const mockProducts = [
     {
       productCid: 1,
@@ -87,20 +96,20 @@ const PM = () => {
     },
   ];
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     try {
+  //       setLoading(true);
 
-        setProducts(mockProducts || []);
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    };
+  //       setProducts(mockProducts || []);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //     setLoading(false);
+  //   };
 
-    fetchProducts();
-  }, []);
+  //   fetchProducts();
+  // }, []);
 
   const handleEdit = (productCid) => {
     navigate("/product_register", {
