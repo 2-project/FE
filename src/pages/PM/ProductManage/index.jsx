@@ -27,12 +27,72 @@ const PM = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState({});
 
+  const mockProducts = [
+    {
+      productCid: 1,
+      productName: "모자",
+      productDescription: "모자설명",
+      productPrice: 210000,
+      productSaleStart: "2024-01-18",
+      productSaleEnd: "2024-01-23",
+      options: [
+        {
+          optionName: "s",
+          optionStock: 22,
+        },
+        {
+          optionName: "m",
+          optionStock: 34,
+        },
+        {
+          optionName: "l",
+          optionStock: 37,
+        },
+      ],
+      categoryName: "인기상품",
+    },
+    {
+      productCid: 2,
+      productName: "티셔츠",
+      productDescription: "티셔츠설명",
+      productPrice: 198000,
+      productSaleStart: "2024-01-10",
+      productSaleEnd: "2024-01-20",
+      options: [
+        {
+          optionName: "s",
+          optionStock: 10,
+        },
+        {
+          optionName: "m",
+          optionStock: 20,
+        },
+      ],
+      categoryName: "주간특가",
+    },
+    {
+      productCid: 3,
+      productName: "양말",
+      productDescription: "양말설명",
+      productPrice: 3000,
+      productSaleStart: "2024-01-10",
+      productSaleEnd: "2024-01-20",
+      options: [
+        {
+          optionName: "free",
+          optionStock: 0,
+        },
+      ],
+      categoryName: "인기상품",
+    },
+  ];
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await getAllProduct();
-        setCategories(response || []);
+
+        setProducts(mockProducts || []);
       } catch (error) {
         console.error(error);
       }
@@ -40,15 +100,11 @@ const PM = () => {
     };
 
     fetchProducts();
-  }, [productInputs]);
+  }, []);
 
-  const handleRegister = () => {
-    navigate("/product_register", { state: { isEditing: false } });
-  };
-
-  const handleEdit = (optionCid) => {
+  const handleEdit = (productCid) => {
     navigate("/product_register", {
-      state: { isEditing: true, optionCid },
+      state: { isEditing: true, productCid },
     });
   };
 
@@ -83,13 +139,13 @@ const PM = () => {
       }
 
       await Promise.all(
-        checkedProducts.map(async (optionCid) => {
-          await deleteProduct(optionCid);
+        checkedProducts.map(async (productCid) => {
+          await deleteProduct(productCid);
         })
       );
 
       const updatedProducts = products.filter(
-        (product) => !checkedProducts.includes(product.optionCid)
+        (product) => !checkedProducts.includes(product.productCid)
       );
 
       setProducts(updatedProducts);
@@ -103,14 +159,88 @@ const PM = () => {
     }
   };
 
-  const sumTotalStock = () => {
-    const totalStock = (productInputs.options || []).reduce((result, sku) => {
-      result += parseFloat(sku.optionStock) || 0;
+  const handleRegister = () => {
+    navigate("/product_register", { state: { isEditing: false } });
+  };
+
+  const sumTotalStock = (options) => {
+    return (options || []).reduce((result, option) => {
+      result += parseFloat(option.optionStock) || 0;
       return result;
     }, 0);
-
-    return totalStock;
   };
+
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await getAllProduct();
+  //       setCategories(response || []);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //     setLoading(false);
+  //   };
+
+  //   fetchProducts();
+  // }, [productInputs]);
+
+  // const handleEdit = (optionCid) => {
+  //   navigate("/product_register", {
+  //     state: { isEditing: true, optionCid },
+  //   });
+  // };
+
+  // const handleSelectAllClick = () => {
+  //   if (selectAll) {
+  //     setCheckedProducts([]);
+  //     setSelectAll(false);
+  //   } else {
+  //     setCheckedProducts(products.map((product) => product.productCid));
+  //     setSelectAll(true);
+  //   }
+  // };
+
+  // const handleCheckboxChange = (productCid) => {
+  //   const currentIndex = checkedProducts.indexOf(productCid);
+  //   const newCheckedProducts = [...checkedProducts];
+
+  //   if (currentIndex === -1) {
+  //     newCheckedProducts.push(productCid);
+  //   } else {
+  //     newCheckedProducts.splice(currentIndex, 1);
+  //   }
+
+  //   setCheckedProducts(newCheckedProducts);
+  // };
+
+  // const handleDelete = async () => {
+  //   try {
+  //     if (checkedProducts.length === 0) {
+  //       alert("선택된 상품이 없습니다.");
+  //       return;
+  //     }
+
+  //     await Promise.all(
+  //       checkedProducts.map(async (optionCid) => {
+  //         await deleteProduct(optionCid);
+  //       })
+  //     );
+
+  //     const updatedProducts = products.filter(
+  //       (product) => !checkedProducts.includes(product.optionCid)
+  //     );
+
+  //     setProducts(updatedProducts);
+  //     setCheckedProducts([]);
+  //     setSelectAll(false);
+
+  //     alert("선택한 상품이 삭제되었습니다.");
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("상품 삭제 중 오류가 발생했습니다.");
+  //   }
+  // };
 
   return (
     <>

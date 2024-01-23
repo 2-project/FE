@@ -37,7 +37,7 @@ const ProductRegister = (props) => {
   // const isEditing = state ? state.isEditing : false;
   const [loading, setLoading] = useState(false); // 로딩되는지 여부
   const [productInputs, setProductInputs] = useState({
-    productId: "",
+    productCid: "",
     productImages: [],
     imageIndex: 0,
     productName: "",
@@ -85,12 +85,13 @@ const ProductRegister = (props) => {
   };
 
   const sumTotalStock = () => {
-    const { options } = productInputs;
-
-    const totalStock = options.reduce((result, option) => {
-      result += parseFloat(option.optionStock) || 0;
-      return result;
-    }, 0);
+    const totalStock = ((productInputs && productInputs.options) || []).reduce(
+      (result, sku) => {
+        result += parseFloat(sku.optionStock) || 0;
+        return result;
+      },
+      0
+    );
 
     return totalStock;
   };
@@ -213,7 +214,7 @@ const ProductRegister = (props) => {
             : [];
 
           setProductInputs({
-            productId: state.productId,
+            productCid: state.productCid,
             productImages: Array.isArray(state.optionCid)
               ? state.optionCid
               : [],
@@ -241,10 +242,10 @@ const ProductRegister = (props) => {
       };
       editProduct();
     }
-  }, [state?.isEditing, state?.optionCid]);
+  }, [state?.isEditing, state?.productCid]);
 
   const handleEdit = async () => {
-    const { options } = productInputs;
+    const { options, productCid } = productInputs;
 
     try {
       if (state?.isEditing) {
@@ -264,6 +265,7 @@ const ProductRegister = (props) => {
           }));
 
           const requestBody = {
+            productCid: productCid,
             options: optionStockUpdates,
           };
 
