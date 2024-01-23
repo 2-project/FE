@@ -89,8 +89,8 @@ header {
   cursor: pointer;
 }
 
-@media (max-width: 1630px) {
+/* @media (max-width: 1630px) {
   .icon-item span {
     display: none;
   }
-}
+} */

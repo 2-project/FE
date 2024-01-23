@@ -1,15 +1,26 @@
 import React, { useEffect } from "react";
 import "./Header.css";
 import mujiLogo from "../img/mujilogo.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { localToken } from "../../utils/auth";
 
 function Header() {
-  useEffect(() => {
-    console.log("sss");
-    const tok = localToken.get();
-    console.log("localToken.get()", tok);
-  }, []);
+  useEffect(() => {});
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // 로그인 페이지에서는 아이콘을 투명하게 만듭니다.
+  const isLoginPage = location.pathname === "/login";
+  const iconStyle = isLoginPage ? { opacity: 0, pointerEvents: "none" } : {};
+
+  const handleLoginOrLogOut = () => {
+    if (localToken.get()) {
+      localToken.remove();
+    }
+
+    navigate("/login");
+  };
+
   return (
     <div className="min-h-screen">
       <header className="container mx-auto">
@@ -61,13 +72,13 @@ function Header() {
               </svg>
             </div>
           </div>
-          <div className="icons">
-            <Link to="/login">
+          <div className="icons" style={iconStyle}>
+            <a onClick={handleLoginOrLogOut}>
               <div className="icon-item">
                 {IconItems[0].icon()}
                 <span>{IconItems[0].label}</span>
               </div>
-            </Link>
+            </a>
             <Link to="/cart">
               <div className="icon-item">
                 {IconItems[2].icon()}
@@ -83,13 +94,6 @@ function Header() {
           </div>
         </div>
       </header>
-
-      <div className="product-list">
-        <div className="sub-section">인기상품</div>
-        <div className="sub-section">주간특가</div>
-        <div className="sub-section">매거진</div>
-        <div className="sub-section">아울렛</div>
-      </div>
     </div>
   );
 }
