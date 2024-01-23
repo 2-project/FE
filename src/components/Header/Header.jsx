@@ -1,13 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.css";
 import mujiLogo from "../img/mujilogo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { localToken } from "../../utils/auth";
 
 function Header() {
-  useEffect(() => {});
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [tokenState, setToken] = useState(null);
+  useEffect(() => {
+    const tok = localToken?.get();
+    setToken(tok);
+  }, []);
 
   // 로그인 페이지에서는 아이콘을 투명하게 만듭니다.
   const isLoginPage = location.pathname === "/login";
@@ -16,6 +21,7 @@ function Header() {
   const handleLoginOrLogOut = () => {
     if (localToken.get()) {
       localToken.remove();
+      setToken(null);
     }
 
     navigate("/login");
@@ -76,7 +82,7 @@ function Header() {
             <a onClick={handleLoginOrLogOut}>
               <div className="icon-item">
                 {IconItems[0].icon()}
-                <span>{IconItems[0].label}</span>
+                <span>{tokenState ? "로그아웃" : "로그인"}</span>
               </div>
             </a>
             <Link to="/cart">
@@ -120,7 +126,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: localToken.get() ? "로그아웃" : "로그인",
+    label: "로그인",
   },
   {
     icon: () => (
