@@ -3,14 +3,17 @@ import DefaultPic from "../../../assets/detail/goods_default.png";
 
 const ImageViewer = ({ data }) => {
   const [imgView, setImgView] = useState(null);
+  console.log("ddd", data);
 
   const handleChangeViewer = (img) => {
     setImgView(img);
   };
 
   useEffect(() => {
-    // setImgView(mainPic);
-  }, []);
+    if (data.productImages) {
+      setImgView(data.productImages[0].productImagePath);
+    }
+  }, [data]);
   const ImageList = () => {
     return (
       <div
