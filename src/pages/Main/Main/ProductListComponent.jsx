@@ -6,19 +6,19 @@ function ProductListComponent() {
   const [categories, setCategories] = useState({
     인기상품: [],
     주간특가: [],
-    메거진: [],
+    매거진: [],
     아울렛: [],
   });
   const [categorySortingOptions, setCategorySortingOptions] = useState({
     인기상품: 'latest',
     주간특가: 'latest',
-    메거진: 'latest',
+    매거진: 'latest',
     아울렛: 'latest',
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const categoriesToFetch = ['인기상품', '주간특가', '메거진', '아울렛'];
+    const categoriesToFetch = ['인기상품', '주간특가', '매거진', '아울렛'];
     categoriesToFetch.forEach(fetchCategoryData);
   }, []);
 
@@ -147,14 +147,14 @@ function ProductListComponent() {
         </div>
       </div>
 
-      <div className="category-section product-2" key="메거진">
+      <div className="category-section product-2" key="매거진">
         <h1 className="product-grid-title">
-          메거진
+          매거진
           <select
             className="category-dropdown"
-            value={categorySortingOptions['메거진']}
+            value={categorySortingOptions['매거진']}
             onChange={(e) =>
-              handleSortingOptionChange('메거진', e.target.value)
+              handleSortingOptionChange('매거진', e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -164,8 +164,8 @@ function ProductListComponent() {
         </h1>
         <div className="product-grid">
           {sortProducts(
-            categories['메거진'],
-            categorySortingOptions['메거진']
+            categories['매거진'],
+            categorySortingOptions['매거진']
           ).map((product) => (
             <div
               key={product.id}

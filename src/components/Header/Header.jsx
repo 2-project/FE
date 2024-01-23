@@ -5,37 +5,56 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { localToken } from '../../utils/auth';
 
 function Header() {
-  const location = useLocation();
   const navigate = useNavigate();
-
   const [tokenState, setToken] = useState(null);
+  const currentLocation = useLocation();
+
   useEffect(() => {
-    const tok = localToken?.get();
-    setToken(tok);
+    setToken(localToken.get());
   }, []);
 
-  const isLoginPage = location.pathname === '/login';
-  const iconStyle = isLoginPage ? { opacity: 0, pointerEvents: 'none' } : {};
-
   const handleLoginOrLogOut = () => {
-    if (localToken.get()) {
+    if (tokenState) {
       localToken.remove();
       setToken(null);
     }
-
     navigate('/login');
   };
-  const updatedIconItems = IconItems.map((item, index) => {
-    if (index === 1 && tokenState) {
-      return {
-        ...item,
-        label: '마이페이지',
-        icon: item.icon,
-        path: '/user',
-      };
-    }
-    return item;
-  });
+
+  // 아이콘 클릭 이벤트 핸들러
+  // const handleNavigation = (path) => {
+  //   if (path === '/order' && !tokenState) {
+  //     navigate('/login');
+  //   } else {
+  //     navigate(path);
+  //   }
+  // };
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
+  const isLoginPage = currentLocation.pathname === '/login'; // 'currentLocation' 변수 사용
+  const iconStyle = isLoginPage ? { opacity: 0, pointerEvents: 'none' } : {};
+
+  const iconsConfig = tokenState
+    ? [
+        { icon: IconItems[2].icon, label: '장바구니', path: '/cart' },
+        { icon: IconItems[1].icon, label: '마이페이지', path: '/user' },
+        {
+          icon: IconItems[0].icon,
+          label: '로그아웃',
+          action: handleLoginOrLogOut,
+        },
+      ]
+    : [
+        {
+          icon: IconItems[2].icon,
+          label: '장바구니',
+          action: () => navigate('/login'),
+        },
+        { icon: IconItems[1].icon, label: '주문배송', path: '/order' },
+        { icon: IconItems[0].icon, label: '로그인', path: '/login' },
+      ];
 
   return (
     <div className="min-h-screen">
@@ -89,19 +108,18 @@ function Header() {
             </div>
           </div>
           <div className="icons" style={iconStyle}>
-            <a onClick={handleLoginOrLogOut}>
-              <div className="icon-item">
-                {updatedIconItems[0].icon()}
-                <span>{tokenState ? '로그아웃' : '로그인'}</span>
+            {iconsConfig.map((item, index) => (
+              <div
+                key={index}
+                className="icon-item"
+                onClick={() =>
+                  item.action ? item.action() : handleNavigation(item.path)
+                }
+                style={{ cursor: 'pointer' }}
+              >
+                {item.icon()}
+                <span>{item.label}</span>
               </div>
-            </a>
-            {updatedIconItems.slice(1).map((item, index) => (
-              <Link to={tokenState && index === 0 ? item.path : `/cart`}>
-                <div className="icon-item">
-                  {item.icon()}
-                  <span>{item.label}</span>
-                </div>
-              </Link>
             ))}
           </div>
         </div>
@@ -109,7 +127,6 @@ function Header() {
     </div>
   );
 }
-
 const focusSearchInput = () => {
   document.getElementById('search-input').focus();
 };
