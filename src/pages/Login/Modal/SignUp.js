@@ -65,13 +65,16 @@ function MemberLoginModal({ onClose }) {
         // 기타 필요한 회원가입 정보 추가
       };
 
-      /* fetch("백엔드API주소", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signupData),
-      })
+      /*  fetch(
+        "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(signupData),
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           // 서버 응답에 대한 처리
