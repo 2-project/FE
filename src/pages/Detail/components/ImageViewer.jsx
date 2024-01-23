@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DefaultPic from "../../../assets/detail/goods_default.png";
 
 const ImageViewer = ({ data }) => {
-  const [imgView, setImgView] = useState(
-    data?.productImages ? data?.productImages[0]?.productImagePath : null
-  );
+  const [imgView, setImgView] = useState(null);
+  console.log("ddd", data);
+
   const handleChangeViewer = (img) => {
     setImgView(img);
   };
+
+  useEffect(() => {
+    if (data.productImages) {
+      setImgView(data.productImages[0].productImagePath);
+    }
+  }, [data]);
   const ImageList = () => {
     return (
       <div
