@@ -56,8 +56,8 @@ function MemberLoginModal({ onClose }) {
     if (isSignupButtonEnabled) {
       const signupData = {
         userName,
-        email: userId,
-        password: userPwd,
+        user_id: userId,
+        user_pwd: userPwd,
         confirmPassword,
         userPhone,
         userAddress,
@@ -65,35 +65,29 @@ function MemberLoginModal({ onClose }) {
         // 기타 필요한 회원가입 정보 추가
       };
 
-      /*  fetch(
+      fetch(
         "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080/auth/signup",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(signupData),
+          /* body: JSON.stringify(signupData), */
+          body: JSON.stringify({
+            user_id: userId,
+            user_pwd: userPwd,
+            user_name: userName,
+            user_phone: userPhone,
+            user_address: userAddress,
+          }),
         }
       )
-        .then((response) => response.json())
         .then((data) => {
           // 서버 응답에 대한 처리
           console.log("회원가입 성공:", data);
           // 추가적인 프론트엔드 로직 수행
-        })
-        .catch((error) => {
-          console.error("회원가입 실패:", error);
-          // 오류 처리
-        });
-    } else {
-      alert("회원가입 조건을 확인해주세요.");
-    } */
-      // addSignUp 함수 호출
-      addSignUp(signupData)
-        .then((data) => {
-          // 서버 응답에 대한 처리
-          console.log("회원가입 성공:", data);
-          // 추가적인 프론트엔드 로직 수행
+          alert("가입을 축하합니다.");
+          onClose();
         })
         .catch((error) => {
           console.error("회원가입 실패:", error);
