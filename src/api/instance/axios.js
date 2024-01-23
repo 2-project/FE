@@ -20,9 +20,7 @@ instance.interceptors.request.use(
     config.headers["time-zone"] =
       Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    // const token = localToken.get();
-    const token =
-      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXBlcmNvZGluZ0BhZG1pbi5jb20iLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJleHAiOjE3MDU5OTkxOTd9.2QHTKh90ytF1N5iY8vnrevs_FPZAdKz_-XD8T1elXrU";
+    const token = localToken.get();
 
     let auth = "";
 
@@ -58,9 +56,10 @@ instance.interceptors.response.use(
     if (response) {
       if (response.status === 401) {
         toast.info("로그인이 필요합니다.");
-        // setInterval(() => {
-        //   window.location.href = "/login";
-        // }, 2000);
+        localToken.remove();
+        setInterval(() => {
+          window.location.href = "/login";
+        }, 2000);
 
         //TODO: history에 푸쉬, 로그인 뒤에 원래 있던 페이지로 이동
       } else if (response.status === 503) {

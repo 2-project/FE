@@ -1,10 +1,10 @@
-import './ProductListComponent.css';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import "./ProductListComponent.css";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ProductListComponent() {
   const [categories, setCategories] = useState({});
-  const [selectedCategory, setSelectedCategory] = useState('electronics');
+  const [selectedCategory, setSelectedCategory] = useState("electronics");
   const [categorySortingOptions, setCategorySortingOptions] = useState({});
   const navigate = useNavigate();
 
@@ -32,11 +32,9 @@ function ProductListComponent() {
       }
     };
 
-    // 각 카테고리별 데이터를 가져오는 함수를 호출합니다.
-    fetchCategoryData('electronics');
-    fetchCategoryData('jewelery');
-    fetchCategoryData('men-clothing');
-    fetchCategoryData('women-clothing');
+    // 지정된 카테고리들에 대해 API 호출
+    const categoriesToFetch = ["인기상품", "주간특가", "매거진", "아울렛"];
+    categoriesToFetch.forEach(fetchCategoryData);
   }, []);
 
   // 상품을 정렬하는 함수
@@ -46,11 +44,11 @@ function ProductListComponent() {
     }
 
     switch (option) {
-      case 'latest':
+      case "latest":
         return [...products].sort((a, b) => b.id - a.id); // 최신순
-      case 'highestPrice':
+      case "highestPrice":
         return [...products].sort((a, b) => b.price - a.price); // 가격 높은 순
-      case 'lowestPrice':
+      case "lowestPrice":
         return [...products].sort((a, b) => a.price - b.price); // 가격 낮은 순
       default:
         return products;
@@ -66,7 +64,7 @@ function ProductListComponent() {
   };
 
   const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleProductClick = (productId) => {
@@ -81,9 +79,9 @@ function ProductListComponent() {
           {/* 정렬 옵션 선택 드롭다운 메뉴 */}
           <select
             className="category-dropdown"
-            value={categorySortingOptions['electronics'] || 'latest'}
+            value={categorySortingOptions["electronics"] || "latest"}
             onChange={(e) =>
-              handleSortingOptionChange('electronics', e.target.value)
+              handleSortingOptionChange("electronics", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -94,8 +92,8 @@ function ProductListComponent() {
 
         <div className="product-grid">
           {sortProducts(
-            categories['electronics'],
-            categorySortingOptions['electronics'] || 'latest'
+            categories["electronics"],
+            categorySortingOptions["electronics"] || "latest"
           ).map((product) => (
             <div
               key={product.id}
@@ -120,9 +118,9 @@ function ProductListComponent() {
           {/* 정렬 옵션 선택 드롭다운 메뉴 */}
           <select
             className="category-dropdown"
-            value={categorySortingOptions['jewelery'] || 'latest'}
+            value={categorySortingOptions["jewelery"] || "latest"}
             onChange={(e) =>
-              handleSortingOptionChange('jewelery', e.target.value)
+              handleSortingOptionChange("jewelery", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -133,8 +131,8 @@ function ProductListComponent() {
 
         <div className="product-grid">
           {sortProducts(
-            categories['jewelery'],
-            categorySortingOptions['jewelery'] || 'latest'
+            categories["jewelery"],
+            categorySortingOptions["jewelery"] || "latest"
           ).map((product) => (
             <div
               key={product.id}
@@ -155,13 +153,13 @@ function ProductListComponent() {
 
       <div className="category-section">
         <h1 className="product-grid-title product-2">
-          메거진
+          매거진
           {/* 정렬 옵션 선택 드롭다운 메뉴 */}
           <select
             className="category-dropdown"
-            value={categorySortingOptions['men-clothing'] || 'latest'}
+            value={categorySortingOptions["men-clothing"] || "latest"}
             onChange={(e) =>
-              handleSortingOptionChange('men-clothing', e.target.value)
+              handleSortingOptionChange("men-clothing", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -172,8 +170,8 @@ function ProductListComponent() {
 
         <div className="product-grid">
           {sortProducts(
-            categories['men-clothing'],
-            categorySortingOptions['men-clothing'] || 'latest'
+            categories["men-clothing"],
+            categorySortingOptions["men-clothing"] || "latest"
           ).map((product) => (
             <div
               key={product.id}
@@ -198,9 +196,9 @@ function ProductListComponent() {
           {/* 정렬 옵션 선택 드롭다운 메뉴 */}
           <select
             className="category-dropdown"
-            value={categorySortingOptions['women-clothing'] || 'latest'}
+            value={categorySortingOptions["women-clothing"] || "latest"}
             onChange={(e) =>
-              handleSortingOptionChange('women-clothing', e.target.value)
+              handleSortingOptionChange("women-clothing", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -211,8 +209,8 @@ function ProductListComponent() {
 
         <div className="product-grid">
           {sortProducts(
-            categories['women-clothing'],
-            categorySortingOptions['women-clothing'] || 'latest'
+            categories["women-clothing"],
+            categorySortingOptions["women-clothing"] || "latest"
           ).map((product) => (
             <div
               key={product.id}
