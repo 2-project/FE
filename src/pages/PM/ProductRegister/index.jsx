@@ -41,7 +41,7 @@ const ProductRegister = (props) => {
     productImages: [],
     imageIndex: 0,
     productName: "",
-    categoryName: "",
+    category: "",
     options: [
       {
         optionCid: "",
@@ -57,7 +57,7 @@ const ProductRegister = (props) => {
   });
 
   const handleSelectCategory = (e) => {
-    setProductInputs({ ...productInputs, categoryName: e.target.value });
+    setProductInputs({ ...productInputs, category: e.target.value });
   };
 
   const handleAddOption = () => {
@@ -147,7 +147,7 @@ const ProductRegister = (props) => {
     try {
       const isFormValid =
         productInputs.productName &&
-        productInputs.categoryName &&
+        productInputs.category &&
         productInputs.options.length > 0 &&
         productInputs.options.every(
           (sku) => sku.optionName && sku.optionStock
@@ -176,7 +176,7 @@ const ProductRegister = (props) => {
               optionName: option.optionName,
               optionStock: option.optionStock,
             })),
-            category: productInputs.categoryName,
+            category: productInputs.category,
           })
         );
 
@@ -219,7 +219,7 @@ const ProductRegister = (props) => {
               ? state.optionCid
               : [],
             productName: state.productName,
-            categoryName: state.categoryName,
+            category: state.category,
             options:
               optionsArray.length > 0
                 ? optionsArray
@@ -293,7 +293,7 @@ const ProductRegister = (props) => {
       productImages: [],
       imageIndex: 0,
       productName: "",
-      categoryName: "",
+      category: "",
       options: [
         {
           optionName: "",
@@ -485,9 +485,9 @@ const ProductRegister = (props) => {
               <FormControl sx={{ marginTop: 2 }} disabled={state.isEditing}>
                 <InputLabel>카테고리</InputLabel>
                 <Select
-                  id="categoryName"
+                  id="category"
                   label="카테고리"
-                  value={productInputs.categoryName}
+                  value={productInputs.category}
                   onChange={handleSelectCategory}
                   required
                 >
@@ -623,9 +623,9 @@ const ProductRegister = (props) => {
                 disabled={state.isEditing}
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["판매시작일", "판매종료일"]}>
+                <DemoContainer components={["판매 시작일", "판매 종료일"]}>
                   <DatePicker
-                    label="판매시작일"
+                    label="판매 시작일"
                     value={productInputs.productSaleStart}
                     onChange={(newDate) =>
                       setProductInputs((prevInputs) => ({
@@ -636,7 +636,7 @@ const ProductRegister = (props) => {
                     disabled={state.isEditing}
                   />
                   <DatePicker
-                    label="판매종료일"
+                    label="판매 종료일"
                     value={productInputs.productSaleEnd}
                     onChange={(newDate) =>
                       setProductInputs((prevInputs) => ({
