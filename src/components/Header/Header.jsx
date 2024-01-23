@@ -1,23 +1,29 @@
-import React from 'react';
-import './Header.css';
-import mujiLogo from '../img/mujilogo.png';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from "react";
+import "./Header.css";
+import mujiLogo from "../img/mujilogo.png";
+import { Link } from "react-router-dom";
+import { localToken } from "../../utils/auth";
 
 function Header() {
+  useEffect(() => {
+    console.log("sss");
+    const tok = localToken.get();
+    console.log("localToken.get()", tok);
+  }, []);
   return (
     <div className="min-h-screen">
       <header className="container mx-auto">
         <div className="header-content">
           <Link to="/">
-            <img src={mujiLogo} alt="MUJI 로고" style={{ height: '50px' }} />
+            <img src={mujiLogo} alt="MUJI 로고" style={{ height: "50px" }} />
           </Link>
           <div className="search-bar">
             <div
               className="search-container"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                position: 'relative',
+                display: "flex",
+                alignItems: "center",
+                position: "relative",
               }}
             >
               <input
@@ -25,9 +31,9 @@ function Header() {
                 id="search-input"
                 style={{
                   flex: 1,
-                  padding: '10px 40px 10px 10px',
-                  border: '2px solid #ccc',
-                  borderRadius: '5px',
+                  padding: "10px 40px 10px 10px",
+                  border: "2px solid #ccc",
+                  borderRadius: "5px",
                 }}
               />
               <svg
@@ -38,13 +44,13 @@ function Header() {
                 stroke="currentColor"
                 className="search-icon"
                 style={{
-                  position: 'absolute',
-                  right: '10px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  padding: '10px',
-                  color: '#ccc',
-                  cursor: 'pointer',
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: "10px",
+                  color: "#ccc",
+                  cursor: "pointer",
                 }}
               >
                 <path
@@ -89,7 +95,7 @@ function Header() {
 }
 
 const focusSearchInput = () => {
-  document.getElementById('search-input').focus();
+  document.getElementById("search-input").focus();
 };
 
 const IconItems = [
@@ -110,7 +116,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: '로그인',
+    label: localToken.get() ? "로그아웃" : "로그인",
   },
   {
     icon: () => (
@@ -129,7 +135,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: '주문배송',
+    label: "주문배송",
   },
   {
     icon: () => (
@@ -148,7 +154,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: '장바구니',
+    label: "장바구니",
   },
 ];
 

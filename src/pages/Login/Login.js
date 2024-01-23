@@ -5,6 +5,7 @@ import LoginLogo from "../../assets/image/Login-MujiLogo.png";
 import goSignUpIcon from "../../assets/icons/goSignUpIcon.svg";
 import styles from "./Login.module.css";
 import MemberLoginModal from "./Modal/SignUp";
+import { localToken } from "../../utils/auth";
 
 function Login({ onClose }) {
   const [userId, setuserId] = useState("");
@@ -41,6 +42,8 @@ function Login({ onClose }) {
         if (response.ok) {
           // 로그인 성공, 필요한 경우 추가 작업 수행
           navigate("/main");
+          const loginRes = await response.json();
+          localToken.set(loginRes.access_token);
         } else {
           // 로그인 실패 처리, 사용자에게 오류 메시지를 표시할 수 있습니다.
           console.error("로그인 실패");
