@@ -14,9 +14,9 @@ import DeleteAccountModal from "../DeleteAccountModal/DeleteAccountModal";
 
 function UserInfo({ userInfo, onClose }) {
   const [userId, setUserId] = useState("");
-  const [userPassword, setUserPassword] = useState("");
+  const [userPwd, setUserPwd] = useState("");
   const [userName, setUserName] = useState("");
-  const [userPhoneNumber, setUserPhoneNumber] = useState("");
+  const [userPhone, setUserPhone] = useState("");
   const [userAddress, setUserAddress] = useState("");
   const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState(false);
 
@@ -25,14 +25,17 @@ function UserInfo({ userInfo, onClose }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/users/${userId}`);
+        // const response = await fetch(`http://localhost:3000/users/${userId}`);
+        const response = await fetch(
+          "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080/api/{userCid}/info"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
         const userData = await response.json();
         setUserId(userData.userId);
         setUserName(userData.userName);
-        setUserPhoneNumber(userData.userPhoneNumber);
+        setUserPhone(userData.userPhone);
         setUserAddress(userData.userAddress);
       } catch (error) {}
     };
@@ -48,9 +51,9 @@ function UserInfo({ userInfo, onClose }) {
       },
       body: JSON.stringify({
         userId,
-        userPassword,
+        userPwd,
         userName,
-        userPhoneNumber,
+        userPhone,
         userAddress,
       }),
     })
@@ -86,163 +89,145 @@ function UserInfo({ userInfo, onClose }) {
     // width: "60%",
     margin: "8px auto",
   };
-  // const textFieldStyleInput = {
-  //   display: "flex",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   width: "60%",
-  //   margin: "8px auto",
-  // };
 
   return (
-    <Container maxWidth={false} className={styles.userContainer}>
-      <Box className={styles.card}>
-        <Box className={styles.leftItem}>
-          <Stack direction="column" spacing={2}>
-            <Typography variant="h6" className={styles.leftTitle}>
-              나의 주문
-            </Typography>
-            <Button
-              variant="text"
-              color="primary"
-              className={styles.leftBody}
-              onClick={handleButton}
-            >
-              주문내역
-            </Button>
-            <Typography variant="h8" className={styles.leftTitle}>
-              회원 정보
-            </Typography>
-            <Button
-              variant="text"
-              color="primary"
-              className={styles.leftBody}
-              onClick={handleButton1}
-            >
-              회원정보 수정
-            </Button>
-            <Button
-              variant="text"
-              color="primary"
-              className={styles.leftBody}
-              onClick={handleButton2}
-            >
-              회원탈퇴
-            </Button>
-          </Stack>
-        </Box>
-        <Box className={styles.rightItem}>
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "60rem",
-              height: "40em",
-              marginTop: "5rem",
-              p: 4,
-            }}
-          >
-            <Typography variant="h4" className={styles.title}>
-              회원 정보 수정
-            </Typography>
-          </Box>
-        </Box>
+    <div className={styles.userContainer}>
+      <div className={styles.card}>
+        <div className={styles.leftItem}>
+          <span className={styles.leftTitle}>나의 주문</span>
+          <Button className={styles.leftBody} onClick={handleButton}>
+            주문내역
+          </Button>
+          <span className={styles.leftTitle}>회원 정보</span>
+          <Button className={styles.leftBody} onClick={handleButton1}>
+            회원정보 수정
+          </Button>
+          <Button className={styles.leftBody} onClick={handleButton2}>
+            회원탈퇴
+          </Button>
+        </div>
+      </div>
 
-        <Box
-          className={styles.rightItem}
-          style={{
-            textAlign: "left",
-          }}
-        >
+      <div className={styles.rightItem}>
+        <div className={styles.rightHeader}>
+          <span className={styles.rightTitle}>회원정보 수정</span>
+        </div>
+
+        <div className={styles.userBodyContainer}>
           <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "60rem",
-              height: "40em",
-              marginTop: "10rem",
-              p: 4,
+            className={styles.rightItem}
+            style={{
+              textAlign: "left",
             }}
           >
             <Box
-              className={styles.userInfoForm}
-              style={{ textAlign: "center", marginTop: "30px" }}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "55%",
+                transform: "translate(-50%, -50%)",
+                width: "40rem",
+                height: "15rem",
+                // marginTop: "10rem",
+                p: 4,
+              }}
             >
-              <InputLabel htmlFor="userName" style={textFieldStyle}>
-                아 이 디*
-              </InputLabel>
-              <TextField
-                label={userId}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={userId}
-                disabled
-                className={styles.inputField}
-              />
+              {/* <div className={styles.profileUploadBox}>
+                <input
+                  className={styles.uploadName}
+                  // value={profilePicture ? profilePicture.userName : "첨부파일"}
+                  placeholder="프로필 사진 업로드"
+                  readOnly
+                />
+                <label htmlFor="file" className={styles.profileLabel}>
+                  사진 찾기
+                </label>
+                <input
+                  id="file"
+                  type="file"
+                  className={styles.userProfilePicture}
+                  // onChange={handleFileChange}
+                />
+              </div> */}
 
-              <InputLabel htmlFor="phone-number" style={textFieldStyle}>
-                새 비밀번호*
-              </InputLabel>
-              <TextField
-                label="새 비밀번호"
-                type="password"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={userPassword}
-                onChange={(e) => setUserPassword(e.target.value)}
-                className={styles.inputField}
-              />
+              <Box
+                className={styles.userInfoForm}
+                style={{ textAlign: "center", marginTop: "30px" }}
+              >
+                <InputLabel htmlFor="userName" style={textFieldStyle}>
+                  아 이 디*
+                </InputLabel>
+                <TextField
+                  label={userId}
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={userId}
+                  disabled
+                  className={styles.inputField}
+                />
 
-              <InputLabel htmlFor="userAddress" style={textFieldStyle}>
-                이 름*
-              </InputLabel>
-              <TextField
-                label={userName}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={userName}
-                disabled
-                className={styles.inputField}
-              />
+                <InputLabel htmlFor="password" style={textFieldStyle}>
+                  새 비밀번호*
+                </InputLabel>
+                <TextField
+                  label="새 비밀번호"
+                  type="password"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={userPwd}
+                  onChange={(e) => setUserPwd(e.target.value)}
+                  className={styles.inputField}
+                />
 
-              <InputLabel htmlFor="message" style={textFieldStyle}>
-                주 소*
-              </InputLabel>
-              <TextField
-                label="주소"
-                type="address"
-                variant="outlined"
+                <InputLabel htmlFor="userAddress" style={textFieldStyle}>
+                  이 름*
+                </InputLabel>
+                <TextField
+                  label={userName}
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={userName}
+                  disabled
+                  className={styles.inputField}
+                />
+
+                <InputLabel htmlFor="message" style={textFieldStyle}>
+                  주 소*
+                </InputLabel>
+                <TextField
+                  label="주소"
+                  type="address"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={userAddress}
+                  onChange={(e) => setUserAddress(e.target.value)}
+                  className={styles.inputField}
+                />
+              </Box>
+              <Button
+                variant="contained"
+                color="primary"
                 fullWidth
-                margin="normal"
-                value={userAddress}
-                onChange={(e) => setUserAddress(e.target.value)}
-                className={styles.inputField}
-              />
+                onClick={handleUpdate}
+                className={styles.updateButton}
+                style={{ marginTop: "2rem" }}
+              >
+                정보 수정
+              </Button>
             </Box>
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={handleUpdate}
-              className={styles.updateButton}
-              style={{ marginTop: "2rem" }}
-            >
-              정보 수정
-            </Button>
+            {isDeleteAccountOpen && (
+              <DeleteAccountModal
+                onClose={() => setIsDeleteAccountOpen(false)}
+              />
+            )}
           </Box>
-          {isDeleteAccountOpen && (
-            <DeleteAccountModal onClose={() => setIsDeleteAccountOpen(false)} />
-          )}
-        </Box>
-      </Box>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 }
 
