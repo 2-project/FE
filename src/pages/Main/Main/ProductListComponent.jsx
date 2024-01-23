@@ -9,13 +9,12 @@ function ProductListComponent() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 카테고리별 상품 데이터를 가져오는 함수
+    // Fake Store API에서 카테고리별 상품 데이터를 가져오는 함수
     const fetchCategoryData = async (category) => {
       try {
-        // 카테고리 이름을 인코딩하여 URL에 포함
-        const encodedCategory = encodeURIComponent(category);
-        const url = `http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080/api/product?categoryName=${encodedCategory}`;
-        const response = await fetch(url);
+        const response = await fetch(
+          `https://fakestoreapi.com/products/category/${category}`
+        );
         if (response.ok) {
           const data = await response.json();
           setCategories((prevCategories) => ({
@@ -23,16 +22,21 @@ function ProductListComponent() {
             [category]: data,
           }));
         } else {
-          console.error(`API 호출 실패. 카테고리: ${category}`);
+          console.error(`API 호출이 실패했습니다. 카테고리: ${category}`);
         }
       } catch (error) {
-        console.error(`API 호출 중 오류. 카테고리: ${category}`, error);
+        console.error(
+          `API 호출 중 오류가 발생했습니다. 카테고리: ${category}`,
+          error
+        );
       }
     };
 
-    // 지정된 카테고리들에 대해 API 호출
-    const categoriesToFetch = ['인기상품', '주간특가', '메거진', '아울렛'];
-    categoriesToFetch.forEach(fetchCategoryData);
+    // 각 카테고리별 데이터를 가져오는 함수를 호출합니다.
+    fetchCategoryData('electronics');
+    fetchCategoryData('jewelery');
+    fetchCategoryData('men-clothing');
+    fetchCategoryData('women-clothing');
   }, []);
 
   // 상품을 정렬하는 함수
