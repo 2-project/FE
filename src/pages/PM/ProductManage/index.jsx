@@ -16,7 +16,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getProduct, deleteProduct } from "../../../api/pmApi";
+import { getAllProduct, deleteProduct } from "../../../api/pmApi";
 
 const PM = () => {
   const navigate = useNavigate();
@@ -28,10 +28,10 @@ const PM = () => {
   const [categories, setCategories] = useState({});
 
   useEffect(() => {
-    const fetchCategory = async () => {
+    const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await getProduct(productInputs);
+        const response = await getAllProduct(productInputs);
         setCategories(response || []);
       } catch (error) {
         console.error(error);
@@ -39,7 +39,7 @@ const PM = () => {
       setLoading(false);
     };
 
-    fetchCategory();
+    fetchProducts();
   }, [productInputs]);
 
   const handleRegister = () => {
@@ -156,7 +156,6 @@ const PM = () => {
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   ID
                 </TableCell>
-                {/* <TableCell>이미지</TableCell> */}
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   상품명
                 </TableCell>
@@ -175,7 +174,6 @@ const PM = () => {
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   상품 가격
                 </TableCell>
-                {/* <TableCell>상품 설명</TableCell> */}
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
                   판매시작일
                 </TableCell>
@@ -198,18 +196,6 @@ const PM = () => {
                     />
                   </TableCell>
                   <TableCell align="center">{product.productId}</TableCell>
-                  {/* <TableCell>
-                      {Array.isArray(product.productImages) &&
-                      product.productImages.length > 0 ? (
-                        <img
-                          src={product.productImages[0]}
-                          alt="Product Image"
-                          style={{ maxWidth: "50px", maxHeight: "50px" }}
-                        />
-                      ) : (
-                        <></>
-                      )}
-                    </TableCell> */}
                   <TableCell align="center">{product.productName}</TableCell>
                   <TableCell align="center">{product.categoryName}</TableCell>
                   <TableCell align="center">
@@ -227,7 +213,6 @@ const PM = () => {
                     {sumTotalStock(product.options) === 0 ? "SOLDOUT" : "SALES"}
                   </TableCell>
                   <TableCell align="center">{product.productPrice}</TableCell>
-                  {/* <TableCell>{product.productDescription}</TableCell> */}
                   <TableCell align="center">
                     {product.productSaleStart}
                   </TableCell>
