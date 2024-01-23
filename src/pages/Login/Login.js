@@ -44,6 +44,7 @@ function Login({ onClose }) {
         } else {
           // 로그인 실패 처리, 사용자에게 오류 메시지를 표시할 수 있습니다.
           console.error("로그인 실패");
+          alert("이메일 아이디와 비밀번호를 다시 확인해주세요.");
         }
       } catch (error) {
         console.error("로그인 중 오류 발생:", error);

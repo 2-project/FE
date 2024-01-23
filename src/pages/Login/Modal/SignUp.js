@@ -88,6 +88,7 @@ function MemberLoginModal({ onClose }) {
           // 서버 응답에 대한 처리
           console.log("회원가입 성공:", data);
           // 추가적인 프론트엔드 로직 수행
+          alert("가입을 축하합니다.");
           onClose();
         })
         .catch((error) => {
