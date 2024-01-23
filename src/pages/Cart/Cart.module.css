@@ -1,0 +1,240 @@
+.content {
+  width: 100%;
+  height: auto;
+  overflow-y: auto;
+}
+
+.header {
+  margin-top: 30px;
+  margin-bottom: 1.6rem;
+}
+
+.title {
+  font-size: 2.3rem;
+  display: flex;
+  justify-content: center;
+  color: #333;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: large;
+  color: #888;
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+.productContainer {
+  background-color: white;
+  padding: 20px;
+  height: 35rem;
+  flex: 1;
+  box-shadow: 0 3px 6px rgba(70, 70, 70, 0.1);
+}
+
+.product {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.productName {
+  font-size: 1rem;
+  color: #333;
+}
+
+.productDelete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  background-color: white;
+  color: rgb(149, 30, 30);
+  font-size: xx-large;
+}
+
+.productItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 2rem;
+  font-size: small;
+  margin: 0 110px 0 110px;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+.productItems {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 15rem;
+  overflow-y: auto;
+}
+
+.productTitle {
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 1.6rem;
+}
+
+.tableContainer {
+  margin-bottom: 1.6rem;
+}
+
+.paymentBtn {
+  background-color: #2a2c2a;
+  color: #fff;
+  padding: 0 30px 0 30px;
+  font-weight: 500;
+  font-size: 1.3rem;
+}
+
+.optionBtn {
+  border: 1px solid rgb(149, 30, 30);
+  margin-top: 10px;
+}
+.productContainer {
+  justify-content: left;
+}
+
+.productInfo {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2rem;
+}
+
+.productQuantity {
+  width: 20%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.productSubtotal {
+  width: 15%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-left: 2rem;
+}
+
+.secondContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.thirdContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.payContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-top: 2px solid black;
+  padding: 20px 0;
+  border-bottom: 1px solid lightGrey;
+}
+
+.Container {
+  margin-top: 1rem;
+  display: flex;
+  width: 80%;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 50px;
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+}
+
+.productprice {
+  font-size: x-large;
+  display: flex;
+  margin-top: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.plus {
+  font-size: xx-large;
+  display: flex;
+  margin-top: 70px;
+  justify-content: center;
+  padding: 0 50px 0 50px;
+}
+
+.sum {
+  font-size: xx-large;
+  display: flex;
+  margin-top: 70px;
+  justify-content: center;
+  padding-left: 60px;
+}
+
+.deliveryprice {
+  font-size: x-large;
+  display: flex;
+  margin-top: 50px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 70px;
+}
+
+.totalDeliveryPriceText {
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  color: rgb(141, 138, 138);
+  margin-left: 60px;
+}
+
+.delivery {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: small;
+}
+
+.deliveryText {
+  display: flex;
+  margin: 7px 20px 0 20px;
+  align-items: center;
+  justify-content: center;
+  color: rgb(141, 138, 138);
+}
+
+.cash {
+  margin-right: 30px;
+  margin-bottom: 60px;
+  font-size: medium;
+}
+
+.price {
+  display: flex;
+  margin-top: 70px;
+  margin-right: 100px;
+  align-items: center;
+  justify-content: center;
+}
+
+.productList {
+  display: flex;
+  margin-top: 2rem;
+  justify-content: center;
+  padding-right: 3rem;
+}
+
+.button11 {
+  border: 1px solid rgb(149, 30, 30);
+}

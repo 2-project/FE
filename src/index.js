@@ -10,12 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#7f0019',
+      main: "#7f0019",
     },
   },
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     {/* <React.StrictMode> */}

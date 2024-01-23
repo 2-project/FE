@@ -1,5 +1,5 @@
 Header {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   background-color: #ffffff;
   margin: 0;
   padding: 0;
@@ -89,8 +89,8 @@ header {
   cursor: pointer;
 }
 
-@media (max-width: 1630px) {
+/* @media (max-width: 1630px) {
   .icon-item span {
     display: none;
   }
-}
+} */

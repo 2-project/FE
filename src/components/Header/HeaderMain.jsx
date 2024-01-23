@@ -1,92 +1,91 @@
-// import React from 'react';
-// import './Header.css';
-// import mujiLogo from '../img/mujilogo.png';
-// import { Link } from 'react-router-dom';
+import React from "react";
+import "./Header.css";
+import mujiLogo from "../../assets/images/mujilogo.png";
+import { Link } from "react-router-dom";
 
-// function HeaderMain() {
-//   return (
-//     <div className="min-h-screen">
-//       <header className="container mx-auto">
-//         <div className="header-content">
-//           <Link to="/">
-//             <img src={mujiLogo} alt="MUJI 로고" style={{ height: '50px' }} />
-//           </Link>
-//           <div className="search-bar">
-//             <div
-//               className="search-container"
-//               style={{
-//                 display: 'flex',
-//                 alignItems: 'center',
-//                 position: 'relative',
-//               }}
-//             >
-//               <input
-//                 type="text"
-//                 id="search-input"
-//                 style={{
-//                   flex: 1,
-//                   padding: '10px 40px 10px 10px',
-//                   border: '2px solid #ccc',
-//                   borderRadius: '5px',
-//                 }}
-//               />
-//               <svg
-//                 xmlns="http://www.w3.org/2000/svg"
-//                 fill="none"
-//                 viewBox="0 0 24 24"
-//                 strokeWidth={1.5}
-//                 stroke="currentColor"
-//                 className="search-icon"
-//                 style={{
-//                   position: 'absolute',
-//                   right: '10px',
-//                   top: '50%',
-//                   transform: 'translateY(-50%)',
-//                   padding: '10px',
-//                   color: '#ccc',
-//                   cursor: 'pointer',
-//                 }}
-//               >
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-//                 />
-//               </svg>
-//             </div>
-//           </div>
-//           <div className="icons">
-//             <Link to="/login">
-//               <div className="icon-item">
-//                 {IconItems[0].icon()}
-//                 <span>{IconItems[0].label}</span>
-//               </div>
-//             </Link>
-//             <Link to="/cart">
-//               <div className="icon-item">
-//                 {IconItems[2].icon()}
-//                 <span>{IconItems[2].label}</span>
-//               </div>
-//             </Link>
-//             <Link to="/order">
-//               <div className="icon-item">
-//                 {IconItems[1].icon()}
-//                 <span>{IconItems[1].label}</span>
-//               </div>
-//             </Link>
-//           </div>
-//         </div>
-//       </header>
-
-//       <div className="product-list">
-//         <div className="sub-section">인기상품</div>
-//         <div className="sub-section">주간특가</div>
-//         <div className="sub-section">매거진</div>
-//         <div className="sub-section">아울렛</div>
-//       </div>
-//     </div>
-//   );
-// }
+function HeaderMain() {
+  return (
+    <div className="min-h-screen">
+      <header className="container mx-auto">
+        <div className="header-content">
+          <Link to="/">
+            <img src={mujiLogo} alt="MUJI 로고" style={{ height: "50px" }} />
+          </Link>
+          <div className="search-bar">
+            <div
+              className="search-container"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <input
+                type="text"
+                id="search-input"
+                style={{
+                  flex: 1,
+                  padding: "10px 40px 10px 10px",
+                  border: "2px solid #ccc",
+                  borderRadius: "5px",
+                }}
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="search-icon"
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: "10px",
+                  color: "#ccc",
+                  cursor: "pointer",
+                }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+              </svg>
+            </div>
+          </div>
+          {/* <div className="icons">
+            <Link to="/login">
+              <div className="icon-item">
+                {IconItems[0].icon()}
+                <span>{IconItems[0].label}</span>
+              </div>
+            </Link>
+            <Link to="/cart">
+              <div className="icon-item">
+                {IconItems[2].icon()}
+                <span>{IconItems[2].label}</span>
+              </div>
+            </Link>
+            <Link to="/order">
+              <div className="icon-item">
+                {IconItems[1].icon()}
+                <span>{IconItems[1].label}</span>
+              </div>
+            </Link>
+          </div> */}
+        </div>
+      </header>
+      <div className="product-list">
+        <div className="sub-section">인기상품</div>
+        <div className="sub-section">주간특가</div>
+        <div className="sub-section">매거진</div>
+        <div className="sub-section">아울렛</div>{" "}
+      </div>
+    </div>
+  );
+}
 
 // const focusSearchInput = () => {
 //   document.getElementById('search-input').focus();
@@ -152,4 +151,4 @@
 //   },
 // ];
 
-// export default HeaderMain;
+export default HeaderMain;
