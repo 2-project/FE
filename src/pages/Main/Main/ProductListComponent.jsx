@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './ProductListComponent.css';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./ProductListComponent.css";
 
 function ProductListComponent() {
   const [categories, setCategories] = useState({
@@ -10,15 +10,15 @@ function ProductListComponent() {
     아울렛: [],
   });
   const [categorySortingOptions, setCategorySortingOptions] = useState({
-    인기상품: 'latest',
-    주간특가: 'latest',
-    메거진: 'latest',
-    아울렛: 'latest',
+    인기상품: "latest",
+    주간특가: "latest",
+    메거진: "latest",
+    아울렛: "latest",
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const categoriesToFetch = ['인기상품', '주간특가', '메거진', '아울렛'];
+    const categoriesToFetch = ["인기상품", "주간특가", "메거진", "아울렛"];
     categoriesToFetch.forEach(fetchCategoryData);
   }, []);
 
@@ -27,7 +27,7 @@ function ProductListComponent() {
       const encodedCategory = encodeURIComponent(category);
       const url = `http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080/api/product?categoryName=${encodedCategory}`;
       const response = await fetch(url);
-      if (!response.ok) throw new Error('Network response was not ok.');
+      if (!response.ok) throw new Error("Network response was not ok.");
 
       const data = await response.json();
       console.log(data); // Debugging to see the data structure
@@ -38,24 +38,24 @@ function ProductListComponent() {
           id: product.productCid,
           title: product.productName,
           price: product.productPrice,
-          image: product.productImages[0]?.productImagePath || '',
+          image: product.productImages[0]?.productImagePath || "",
         }));
         setCategories((prev) => ({ ...prev, [category]: transformedData }));
       } else {
-        console.error('Expected data to be an array but got:', typeof data);
+        console.error("Expected data to be an array but got:", typeof data);
       }
     } catch (error) {
-      console.error('Error fetching category data:', error);
+      console.error("Error fetching category data:", error);
     }
   }
 
   function sortProducts(products, option) {
     switch (option) {
-      case 'latest':
+      case "latest":
         return [...products].sort((a, b) => b.id - a.id);
-      case 'highestPrice':
+      case "highestPrice":
         return [...products].sort((a, b) => b.price - a.price);
-      case 'lowestPrice':
+      case "lowestPrice":
         return [...products].sort((a, b) => a.price - b.price);
       default:
         return products;
@@ -70,7 +70,11 @@ function ProductListComponent() {
   }
 
   function handleProductClick(productId) {
-    navigate(`/detail/${productId}`);
+    navigate(`/detail`, {
+      state: {
+        productId: productId,
+      },
+    });
   }
 
   return (
@@ -80,9 +84,9 @@ function ProductListComponent() {
           인기상품
           <select
             className="category-dropdown"
-            value={categorySortingOptions['인기상품']}
+            value={categorySortingOptions["인기상품"]}
             onChange={(e) =>
-              handleSortingOptionChange('인기상품', e.target.value)
+              handleSortingOptionChange("인기상품", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -92,8 +96,8 @@ function ProductListComponent() {
         </h1>
         <div className="product-grid">
           {sortProducts(
-            categories['인기상품'],
-            categorySortingOptions['인기상품']
+            categories["인기상품"],
+            categorySortingOptions["인기상품"]
           ).map((product) => (
             <div
               key={product.id}
@@ -117,9 +121,9 @@ function ProductListComponent() {
           주간특가
           <select
             className="category-dropdown"
-            value={categorySortingOptions['주간특가']}
+            value={categorySortingOptions["주간특가"]}
             onChange={(e) =>
-              handleSortingOptionChange('주간특가', e.target.value)
+              handleSortingOptionChange("주간특가", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -129,8 +133,8 @@ function ProductListComponent() {
         </h1>
         <div className="product-grid">
           {sortProducts(
-            categories['주간특가'],
-            categorySortingOptions['주간특가']
+            categories["주간특가"],
+            categorySortingOptions["주간특가"]
           ).map((product) => (
             <div
               key={product.id}
@@ -154,9 +158,9 @@ function ProductListComponent() {
           메거진
           <select
             className="category-dropdown"
-            value={categorySortingOptions['메거진']}
+            value={categorySortingOptions["메거진"]}
             onChange={(e) =>
-              handleSortingOptionChange('메거진', e.target.value)
+              handleSortingOptionChange("메거진", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -166,8 +170,8 @@ function ProductListComponent() {
         </h1>
         <div className="product-grid">
           {sortProducts(
-            categories['메거진'],
-            categorySortingOptions['메거진']
+            categories["메거진"],
+            categorySortingOptions["메거진"]
           ).map((product) => (
             <div
               key={product.id}
@@ -191,9 +195,9 @@ function ProductListComponent() {
           아울렛
           <select
             className="category-dropdown"
-            value={categorySortingOptions['아울렛']}
+            value={categorySortingOptions["아울렛"]}
             onChange={(e) =>
-              handleSortingOptionChange('아울렛', e.target.value)
+              handleSortingOptionChange("아울렛", e.target.value)
             }
           >
             <option value="latest">최신순</option>
@@ -203,8 +207,8 @@ function ProductListComponent() {
         </h1>
         <div className="product-grid">
           {sortProducts(
-            categories['아울렛'],
-            categorySortingOptions['아울렛']
+            categories["아울렛"],
+            categorySortingOptions["아울렛"]
           ).map((product) => (
             <div
               key={product.id}
