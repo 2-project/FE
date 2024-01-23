@@ -8,10 +8,8 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import styles from "./SignUp.module.css";
 import userBasicIcon_1 from "../../../assets/icons/basic_profile_1.png";
-import { addSignUp } from "../../../api/signUpApi";
 
 function MemberLoginModal({ onClose }) {
   const [userId, setuserId] = useState("");
@@ -64,7 +62,6 @@ function MemberLoginModal({ onClose }) {
         profilePicture: profilePicture ? profilePicture.userName : null,
         // 기타 필요한 회원가입 정보 추가
       };
-
       fetch(
         "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080/auth/signup",
         {
@@ -72,7 +69,6 @@ function MemberLoginModal({ onClose }) {
           headers: {
             "Content-Type": "application/json",
           },
-          /* body: JSON.stringify(signupData), */
           body: JSON.stringify({
             user_id: userId,
             user_pwd: userPwd,
@@ -85,7 +81,6 @@ function MemberLoginModal({ onClose }) {
         .then((data) => {
           // 서버 응답에 대한 처리
           console.log("회원가입 성공:", data);
-          // 추가적인 프론트엔드 로직 수행
           alert("가입을 축하합니다.");
           onClose();
         })
