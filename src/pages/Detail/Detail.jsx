@@ -1,32 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ImageViewer from "./components/ImageViewer";
 import ProductInfo from "./components/ProductInfo";
 import AddToCart from "./components/AddToCart";
 import Description from "./components/Description";
 import ScrollToTop from "../../components/ScrollToTop";
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
 import { getGoodsDetails } from "../../api/detailApi";
+import { useLocation } from "react-router-dom";
 
 const Detail = () => {
+  const { state } = useLocation();
+  const [goodsInfo, setGoodsInfo] = useState({});
   const requestGoodsDetail = async () => {
     try {
-      const res = await getGoodsDetails(1);
+      console.log("state?.productId", state);
+      const res = await getGoodsDetails(state?.productId || 1);
       console.log("res", res);
+      setGoodsInfo(res);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const withFetch = async () => {
-    const res = await fetch(
-      "http://ec2-3-34-191-119.ap-northeast-2.compute.amazonaws.com:8080/api/product/productDetail/1"
-    );
-    console.log("ress", res.json());
-  };
   useEffect(() => {
     requestGoodsDetail();
-    withFetch();
   }, []);
   return (
     <div>
@@ -39,13 +35,13 @@ const Detail = () => {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <ImageViewer></ImageViewer>
+          <ImageViewer data={goodsInfo}></ImageViewer>
           <div>
-            <ProductInfo></ProductInfo>
-            <AddToCart></AddToCart>
+            <ProductInfo data={goodsInfo}></ProductInfo>
+            <AddToCart data={goodsInfo}></AddToCart>
           </div>
         </div>
-        <Description></Description>
+        <Description data={goodsInfo}></Description>
         <ScrollToTop></ScrollToTop>
       </div>
     </div>

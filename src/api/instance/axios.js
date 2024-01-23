@@ -3,7 +3,6 @@ import { localToken } from "../../utils/auth";
 import { toast } from "react-toastify";
 
 const base_url =
-  /* "http://ec2-3-36-85-236.ap-northeast-2.compute.amazonaws.com:8080"; */
   "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080";
 
 //인스턴스 생성

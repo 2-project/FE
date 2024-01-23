@@ -2,7 +2,7 @@ import React from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import PolicyTable from "./PolicyTable";
 
-const Description = () => {
+const Description = ({ data }) => {
   return (
     <>
       <div style={{ position: "sticky", top: 0, marginTop: "40px" }}>
@@ -31,6 +31,7 @@ const Description = () => {
       >
         상품 상세 설명
       </div>
+      <span>{data.productDescription}</span>
       <div
         id="section02"
         style={{
