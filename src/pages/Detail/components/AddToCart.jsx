@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   ToggleButton,
   ToggleButtonGroup,
@@ -40,8 +41,7 @@ const AddToCart = ({ data }) => {
       //TODO: add to cart
       const res = await addGoodsToCart(data.productCid, params);
       console.log("res", res);
-      if (res.status === 200) {
-      }
+      toast.info(res?.message);
     }
   };
 
@@ -68,6 +68,7 @@ const AddToCart = ({ data }) => {
         {optionData.map((item, index) => {
           return (
             <ToggleButton
+              disabled={item.optionStock === 0}
               key={index}
               value={item}
               style={{

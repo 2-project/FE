@@ -20,9 +20,9 @@ instance.interceptors.request.use(
     config.headers["time-zone"] =
       Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    const token = localToken.get();
-    // const token =
-    //   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoYXkwIiwicm9sZXMiOiJST0xFX1VTRVIiLCJleHAiOjE3MDU5MzA3NzR9.ESMX3sqCQ7lWyqGFdxki_iFK2kPrOXqVf7A9oxiCVag";
+    // const token = localToken.get();
+    const token =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXBlcmNvZGluZ0BhZG1pbi5jb20iLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJleHAiOjE3MDU5OTkxOTd9.2QHTKh90ytF1N5iY8vnrevs_FPZAdKz_-XD8T1elXrU";
 
     let auth = "";
 

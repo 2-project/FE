@@ -45,3 +45,12 @@ td {
   border: 1px solid var(--main-color);
   color: var(--main-color);
 }
+.detail-img-small {
+  width: 52px;
+  height: 52px;
+  border: 1px solid #ccc;
+}
+
+.detail-img-small:hover {
+  border: 1px solid var(--main-color);
+}

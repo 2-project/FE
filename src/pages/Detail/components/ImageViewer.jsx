@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import DefaultPic from "../../../assets/detail/goods_default.png";
 
-const ImageViewer = (props) => {
-  const { pic } = props;
-  const picList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const ImageViewer = ({ data }) => {
+  const [imgView, setImgView] = useState(
+    data?.productImages ? data?.productImages[0]?.productImagePath : null
+  );
+  const handleChangeViewer = (img) => {
+    setImgView(img);
+  };
   const ImageList = () => {
     return (
       <div
@@ -12,19 +17,20 @@ const ImageViewer = (props) => {
           flexWrap: "wrap",
           justifyContent: "center",
           marginTop: "30px",
-          backgroundColor: "pink",
           gap: "10px",
         }}
       >
-        {picList.map((item) => {
+        {data?.productImages?.map((item) => {
           return (
             <img
-              style={{
-                width: "52px",
-                height: "52px",
-                backgroundColor: "gray",
-              }}
+              className="detail-img-small"
+              src={item?.productImagePath}
               alt="item pic"
+              onError={(event) => {
+                event.target.src = DefaultPic;
+                event.onerror = null;
+              }}
+              onMouseEnter={() => handleChangeViewer(item?.productImagePath)}
             ></img>
           );
         })}
@@ -39,10 +45,10 @@ const ImageViewer = (props) => {
         style={{
           width: "400px",
           height: "400px",
-          backgroundColor: "gray",
           margin: "0 30px 0 30px",
+          border: "1px solid #ccc",
         }}
-        src={pic}
+        src={imgView}
         alt="product pic"
       ></img>
       <ImageList></ImageList>
