@@ -14,7 +14,6 @@ function Header() {
     setToken(tok);
   }, []);
 
-  // 로그인 페이지에서는 아이콘을 투명하게 만듭니다.
   const isLoginPage = location.pathname === '/login';
   const iconStyle = isLoginPage ? { opacity: 0, pointerEvents: 'none' } : {};
 
@@ -22,22 +21,21 @@ function Header() {
     if (localToken.get()) {
       localToken.remove();
       setToken(null);
-      // 로그아웃 후 주문배송 아이콘을 다시 주문배송으로 바꿔줍니다.
-      navigate('/order');
-    } else {
-      navigate('/login');
     }
-  };
 
-  const handleOrderClick = () => {
-    if (tokenState) {
-      // 로그인한 경우, 주문배송 아이콘을 마이페이지로 바꿔줍니다.
-      navigate('/user');
-    } else {
-      // 로그인하지 않은 경우, 주문배송 클릭 시 로그인 페이지로 이동합니다.
-      navigate('/login');
-    }
+    navigate('/login');
   };
+  const updatedIconItems = IconItems.map((item, index) => {
+    if (index === 1 && tokenState) {
+      return {
+        ...item,
+        label: '마이페이지',
+        icon: item.icon,
+        path: '/user',
+      };
+    }
+    return item;
+  });
 
   return (
     <div className="min-h-screen">
@@ -93,21 +91,18 @@ function Header() {
           <div className="icons" style={iconStyle}>
             <a onClick={handleLoginOrLogOut}>
               <div className="icon-item">
-                {IconItems[0].icon()}
+                {updatedIconItems[0].icon()}
                 <span>{tokenState ? '로그아웃' : '로그인'}</span>
               </div>
             </a>
-            <Link to="/cart">
-              <div className="icon-item">
-                {IconItems[2].icon()}
-                <span>{IconItems[2].label}</span>
-              </div>
-            </Link>
-            <div className="icon-item" onClick={handleOrderClick}>
-              {IconItems[1].icon()}
-              <span>{tokenState ? '마이페이지' : '주문배송'}</span>{' '}
-              {/* 수정된 라벨 */}
-            </div>
+            {updatedIconItems.slice(1).map((item, index) => (
+              <Link to={tokenState && index === 0 ? item.path : `/cart`}>
+                <div className="icon-item">
+                  {item.icon()}
+                  <span>{item.label}</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </header>
@@ -156,7 +151,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: '마이페이지', // 수정된 라벨
+    label: '주문배송',
   },
   {
     icon: () => (
@@ -175,7 +170,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: '주문배송',
+    label: '장바구니',
   },
 ];
 

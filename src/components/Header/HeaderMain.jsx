@@ -1,23 +1,23 @@
-import React from "react";
-import "./Header.css";
-import mujiLogo from "../../assets/images/mujilogo.png";
-import { Link } from "react-router-dom";
+import React from 'react';
+import './Header.css';
+import mujiLogo from '../../assets/images/mujilogo.png';
+import { Link } from 'react-router-dom';
 
-function HeaderMain() {
+function HeaderMain1() {
   return (
     <div className="min-h-screen">
       <header className="container mx-auto">
         <div className="header-content">
           <Link to="/">
-            <img src={mujiLogo} alt="MUJI 로고" style={{ height: "50px" }} />
+            <img src={mujiLogo} alt="MUJI 로고" style={{ height: '50px' }} />
           </Link>
           <div className="search-bar">
             <div
               className="search-container"
               style={{
-                display: "flex",
-                alignItems: "center",
-                position: "relative",
+                display: 'flex',
+                alignItems: 'center',
+                position: 'relative',
               }}
             >
               <input
@@ -25,9 +25,9 @@ function HeaderMain() {
                 id="search-input"
                 style={{
                   flex: 1,
-                  padding: "10px 40px 10px 10px",
-                  border: "2px solid #ccc",
-                  borderRadius: "5px",
+                  padding: '10px 40px 10px 10px',
+                  border: '2px solid #ccc',
+                  borderRadius: '5px',
                 }}
               />
               <svg
@@ -38,13 +38,13 @@ function HeaderMain() {
                 stroke="currentColor"
                 className="search-icon"
                 style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  padding: "10px",
-                  color: "#ccc",
-                  cursor: "pointer",
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  padding: '10px',
+                  color: '#ccc',
+                  cursor: 'pointer',
                 }}
               >
                 <path
@@ -81,7 +81,7 @@ function HeaderMain() {
         <div className="sub-section">인기상품</div>
         <div className="sub-section">주간특가</div>
         <div className="sub-section">매거진</div>
-        <div className="sub-section">아울렛</div>{" "}
+        <div className="sub-section">아울렛</div>{' '}
       </div>
     </div>
   );
@@ -151,4 +151,4 @@ function HeaderMain() {
 //   },
 // ];
 
-export default HeaderMain;
+export default HeaderMain1;

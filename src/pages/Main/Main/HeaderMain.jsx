@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import './HeaderMain.css';
 
 function HeaderMain() {
-  // 섹션으로 스크롤하는 함수
   const scrollToSection = (sectionName) => {
     let targetClassName = '';
     switch (sectionName) {
@@ -38,8 +37,7 @@ function HeaderMain() {
 
   return (
     <div className="min-h-screen">
-      <Header /> {/* 여기서 Header 컴포넌트를 사용합니다. */}
-      {/* HeaderMain에만 특화된 추가 기능을 여기에 배치합니다. */}
+      <Header />
       <div className="product-list">
         <div
           id="popular"
