@@ -143,6 +143,7 @@ function MemberLoginModal({ onClose }) {
             userName.trim() !== "" &&
             "올바른 한글 이름을 입력하세요."
           }
+          autoComplete="off"
         />
         <Box
           className={styles.emailContainer}
@@ -168,6 +169,7 @@ function MemberLoginModal({ onClose }) {
               userId.trim() !== "" &&
               "올바른 이메일 형식이 아닙니다."
             }
+            autoComplete="off"
           />
           <Button
             variant="outlined"
@@ -231,6 +233,7 @@ function MemberLoginModal({ onClose }) {
             userPhone.trim() !== "" &&
             "올바른 휴대폰 번호를 입력하세요."
           }
+          autoComplete="off"
         />
         <TextField
           label="*주소"
@@ -248,6 +251,7 @@ function MemberLoginModal({ onClose }) {
             userAddress.trim() !== "" &&
             "올바른 주소를 입력하세요."
           }
+          autoComplete="off"
         />
         <div className={styles.profileUploadBox}>
           <img
