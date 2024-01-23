@@ -3,7 +3,6 @@ import { localToken } from "../../utils/auth";
 import { toast } from "react-toastify";
 
 const base_url =
-  /* "http://ec2-3-36-85-236.ap-northeast-2.compute.amazonaws.com:8080"; */
   "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080";
 
 //인스턴스 생성
@@ -21,7 +20,9 @@ instance.interceptors.request.use(
     config.headers["time-zone"] =
       Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    const token = localToken.get();
+    // const token = localToken.get();
+    const token =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXBlcmNvZGluZ0BhZG1pbi5jb20iLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJleHAiOjE3MDU5OTkxOTd9.2QHTKh90ytF1N5iY8vnrevs_FPZAdKz_-XD8T1elXrU";
 
     let auth = "";
 

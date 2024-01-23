@@ -31,7 +31,7 @@ const PM = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await getAllProduct(productInputs);
+        const response = await getAllProduct();
         setCategories(response || []);
       } catch (error) {
         console.error(error);
