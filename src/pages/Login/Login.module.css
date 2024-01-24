@@ -1,39 +1,51 @@
 .loginContainer {
-}
-
-.loginBox {
-
+  margin-top: 100;
+  max-width: 30rem;
+  padding-top: 10rem;
+  height: calc(100vh - 10rem);
 }
 
 .loginHeader {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    margin-bottom: 20px;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #b3b3b3;
 }
 
-.formTitle {
+.loginHeader .formTitle {
+  font-size: 28px;
+  font-weight: bold;
+  pointer-events: none;
 }
 
-.loginLogo {
+.goSignUp {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.goSignUp span:hover {
+  cursor: pointer;
+}
+
+.goSignUpArrowIcon {
+  width: 15px;
 }
 
 .textContainer {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #b3b3b3;
 }
 
-.formInput {
-    margin-bottom: 10px;
+.buttonBox {
+  padding-bottom: 20px;
 }
 
-.buttonsBox {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.cancelButton {
-    margin-right: 10px;
-}
-
-.createButton {
+.buttonBox .createButton {
+  width: 100%;
+  height: auto;
+  font-size: 18px;
+  font-weight: bold;
 }

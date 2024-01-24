@@ -6,18 +6,18 @@ import {
   Button,
   Stack,
   Container,
+  InputLabel,
 } from "@mui/material";
 import styles from "./UserInfo.module.css";
 import { useNavigate } from "react-router-dom";
 import DeleteAccountModal from "../DeleteAccountModal/DeleteAccountModal";
 
-function UserInfo({ userId, onClose }) {
-  const [loginId, setLoginId] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+function UserInfo({ userInfo, onClose }) {
+  const [userId, setUserId] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userPhoneNumber, setUserPhoneNumber] = useState("");
+  const [userAddress, setUserAddress] = useState("");
   const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -30,11 +30,10 @@ function UserInfo({ userId, onClose }) {
           throw new Error("Failed to fetch user data");
         }
         const userData = await response.json();
-        setLoginId(userData.loginId);
-        setName(userData.name);
-        setPhoneNumber(userData.phoneNumber);
-        setEmail(userData.email);
-        setAddress(userData.address);
+        setUserId(userData.userId);
+        setUserName(userData.userName);
+        setUserPhoneNumber(userData.userPhoneNumber);
+        setUserAddress(userData.userAddress);
       } catch (error) {}
     };
 
@@ -48,12 +47,11 @@ function UserInfo({ userId, onClose }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        loginId,
-        password,
-        name,
-        phoneNumber,
-        email,
-        address,
+        userId,
+        userPassword,
+        userName,
+        userPhoneNumber,
+        userAddress,
       }),
     })
       .then((response) => response.json())
@@ -70,7 +68,7 @@ function UserInfo({ userId, onClose }) {
   };
 
   const handleButton = (event) => {
-    navigate("/purchasehistory");
+    navigate("/orderhistory");
   };
 
   const handleButton1 = (event) => {
@@ -81,12 +79,27 @@ function UserInfo({ userId, onClose }) {
     setIsDeleteAccountOpen(true);
   };
 
+  const textFieldStyle = {
+    display: "flex",
+    alignItems: "left",
+    justifyContent: "left",
+    // width: "60%",
+    margin: "8px auto",
+  };
+  // const textFieldStyleInput = {
+  //   display: "flex",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   width: "60%",
+  //   margin: "8px auto",
+  // };
+
   return (
     <Container maxWidth={false} className={styles.userContainer}>
       <Box className={styles.card}>
         <Box className={styles.leftItem}>
           <Stack direction="column" spacing={2}>
-            <Typography variant="h8" className={styles.leftTitle}>
+            <Typography variant="h6" className={styles.leftTitle}>
               나의 주문
             </Typography>
             <Button
@@ -131,67 +144,88 @@ function UserInfo({ userId, onClose }) {
               p: 4,
             }}
           >
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" className={styles.title}>
               회원 정보 수정
             </Typography>
+          </Box>
+        </Box>
 
-            <TextField
-              label={name}
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={loginId}
-              disabled
-              className={styles.inputField}
-            />
-            <TextField
-              label="새 비밀번호"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={styles.inputField}
-            />
-            <TextField
-              label="이름"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={name}
-              disabled
-              className={styles.inputField}
-            />
-            <TextField
-              label="전화번호"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className={styles.inputField}
-            />
-            <TextField
-              label="이메일"
-              type="email"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={styles.inputField}
-            />
-            <TextField
-              label="주소"
-              type="address"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className={styles.inputField}
-            />
+        <Box
+          className={styles.rightItem}
+          style={{
+            textAlign: "left",
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "60rem",
+              height: "40em",
+              marginTop: "10rem",
+              p: 4,
+            }}
+          >
+            <Box
+              className={styles.userInfoForm}
+              style={{ textAlign: "center", marginTop: "30px" }}
+            >
+              <InputLabel htmlFor="userName" style={textFieldStyle}>
+                아 이 디*
+              </InputLabel>
+              <TextField
+                label={userId}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={userId}
+                disabled
+                className={styles.inputField}
+              />
+
+              <InputLabel htmlFor="phone-number" style={textFieldStyle}>
+                새 비밀번호*
+              </InputLabel>
+              <TextField
+                label="새 비밀번호"
+                type="password"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={userPassword}
+                onChange={(e) => setUserPassword(e.target.value)}
+                className={styles.inputField}
+              />
+
+              <InputLabel htmlFor="userAddress" style={textFieldStyle}>
+                이 름*
+              </InputLabel>
+              <TextField
+                label={userName}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={userName}
+                disabled
+                className={styles.inputField}
+              />
+
+              <InputLabel htmlFor="message" style={textFieldStyle}>
+                주 소*
+              </InputLabel>
+              <TextField
+                label="주소"
+                type="address"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={userAddress}
+                onChange={(e) => setUserAddress(e.target.value)}
+                className={styles.inputField}
+              />
+            </Box>
             <Button
               variant="contained"
               color="primary"

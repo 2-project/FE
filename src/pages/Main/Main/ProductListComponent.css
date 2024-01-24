@@ -1,0 +1,83 @@
+.product-grid-container {
+  padding: 1rem 20px;
+  max-width: 1200px;
+  margin: 0 100px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5열 그리드 유지 */
+  gap: 1rem; /* 그리드 간격 */
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.product-item {
+  width: 100%;
+  height: 325px;
+  /* border: 1px solid #e2e8f0; */
+  padding: 0.5rem;
+  position: relative; /* 프로덕트 아이템에 상대 위치 적용 */
+}
+
+.product-image {
+  width: 100%; /* 이미지 가로 폭 100% 유지 */
+  /* height: auto; /* 이미지 높이 자동 조절 */
+  max-height: 150px;
+}
+
+.product-name {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  font-weight: 400; /* 500 또는 600으로 조절하여 더 굵게 설정 가능 */
+}
+
+.product-grid-title {
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.category-section {
+  margin-bottom: 2rem;
+}
+
+.product-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block; /* 가로 중앙 정렬을 위해 블록 요소로 변경 */
+  margin: 0 auto; /* 가로 중앙 정렬 추가 */
+}
+.product-price {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-left: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.product-grid-title {
+  display: flex;
+  justify-content: space-between; /* 카테고리와 드롭다운을 양 끝에 배치합니다 */
+  align-items: center; /* 수직 정렬을 위해 사용합니다 */
+  font-size: 2rem;
+  padding: 0 355px;
+}
+
+/* ProductListComponent.css */
+.scroll-to-top-button {
+  /* Style your button here */
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem;
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 0%;
+  /* Make sure to add styles for responsiveness and other states as necessary */
+}

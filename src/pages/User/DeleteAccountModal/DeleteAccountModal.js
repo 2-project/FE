@@ -13,21 +13,21 @@ import styles from "./DeleteAccountModal.css";
 import Alert from "@mui/material/Alert";
 
 function DeleteAccountModal({ onClose }) {
-  const [password, setPassword] = useState("");
-  const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
+  const [LoginPassword, setLoginPassword] = useState("");
+  const [isLoginPasswordCorrect, setIsLoginPasswordCorrect] = useState(true);
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    setLoginPassword(e.target.value);
   };
 
-  const verifyPassword = async () => {
+  const verifyLoginPassword = async () => {
     try {
       const response = await fetch("/http://localhost:3000/verifyPassword", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ LoginPassword }),
       });
 
       if (!response.ok) {
@@ -35,7 +35,7 @@ function DeleteAccountModal({ onClose }) {
       }
 
       const data = await response.json();
-      return data.isPasswordCorrect;
+      return data.isLoginPasswordCorrect;
     } catch (error) {
       console.error("Error:", error);
       return false;
@@ -43,8 +43,8 @@ function DeleteAccountModal({ onClose }) {
   };
 
   const handleWithdrawal = async () => {
-    const isCorrect = await verifyPassword();
-    setIsPasswordCorrect(isCorrect);
+    const isCorrect = await verifyLoginPassword();
+    setIsLoginPasswordCorrect(isCorrect);
 
     if (isCorrect) {
       alert("회원 탈퇴가 완료되었습니다.");
@@ -90,10 +90,12 @@ function DeleteAccountModal({ onClose }) {
             label="비밀번호 확인"
             variant="outlined"
             fullWidth
-            value={password}
+            value={LoginPassword}
             onChange={handlePasswordChange}
-            error={!isPasswordCorrect}
-            helperText={!isPasswordCorrect && "비밀번호가 일치하지 않습니다."}
+            error={!isLoginPasswordCorrect}
+            helperText={
+              !isLoginPasswordCorrect && "비밀번호가 일치하지 않습니다."
+            }
             style={{ marginTop: "2rem" }}
           />
 
