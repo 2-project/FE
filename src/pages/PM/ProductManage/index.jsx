@@ -25,7 +25,6 @@ const PM = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [loading, setLoading] = useState(false); // 로딩되는지 여부
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState({});
 
   const getAll = async () => {
     const res = await getAllProduct();
@@ -35,81 +34,6 @@ const PM = () => {
   useEffect(() => {
     getAll();
   }, []);
-
-  const mockProducts = [
-    {
-      productCid: 1,
-      productName: "모자",
-      productDescription: "모자설명",
-      productPrice: 210000,
-      productSaleStart: "2024-01-18",
-      productSaleEnd: "2024-01-23",
-      options: [
-        {
-          optionName: "s",
-          optionStock: 22,
-        },
-        {
-          optionName: "m",
-          optionStock: 34,
-        },
-        {
-          optionName: "l",
-          optionStock: 37,
-        },
-      ],
-      categoryName: "인기상품",
-    },
-    {
-      productCid: 2,
-      productName: "티셔츠",
-      productDescription: "티셔츠설명",
-      productPrice: 198000,
-      productSaleStart: "2024-01-10",
-      productSaleEnd: "2024-01-20",
-      options: [
-        {
-          optionName: "s",
-          optionStock: 10,
-        },
-        {
-          optionName: "m",
-          optionStock: 20,
-        },
-      ],
-      categoryName: "주간특가",
-    },
-    {
-      productCid: 3,
-      productName: "양말",
-      productDescription: "양말설명",
-      productPrice: 3000,
-      productSaleStart: "2024-01-10",
-      productSaleEnd: "2024-01-20",
-      options: [
-        {
-          optionName: "free",
-          optionStock: 0,
-        },
-      ],
-      categoryName: "인기상품",
-    },
-  ];
-
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     try {
-  //       setLoading(true);
-
-  //       setProducts(mockProducts || []);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //     setLoading(false);
-  //   };
-
-  //   fetchProducts();
-  // }, []);
 
   const handleEdit = (productCid) => {
     navigate("/product_register", {
@@ -314,10 +238,10 @@ const PM = () => {
                   상품 가격
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  판매시작일
+                  판매 시작일
                 </TableCell>
                 <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                  판매종료일
+                  판매 종료일
                 </TableCell>
                 <TableCell
                   align="center"
@@ -336,7 +260,7 @@ const PM = () => {
                   </TableCell>
                   <TableCell align="center">{product.productCid}</TableCell>
                   <TableCell align="center">{product.productName}</TableCell>
-                  <TableCell align="center">{product.categoryName}</TableCell>
+                  <TableCell align="center">{product.category}</TableCell>
                   <TableCell align="center">
                     {product.options.map((option, index) => (
                       <React.Fragment key={index}>
@@ -349,7 +273,10 @@ const PM = () => {
                     {sumTotalStock(product.options)}
                   </TableCell>
                   <TableCell align="center">
-                    {sumTotalStock(product.options) === 0 ? "SOLDOUT" : "SALES"}
+                    {sumTotalStock(product.options) <= 0 ||
+                    new Date(product.productSaleEnd) < new Date()
+                      ? "판매 종료"
+                      : "판매 중"}
                   </TableCell>
                   <TableCell align="center">{product.productPrice}</TableCell>
                   <TableCell align="center">

@@ -1,46 +1,75 @@
-import React, { useEffect, useState } from "react";
-import "./Header.css";
-import mujiLogo from "../img/mujilogo.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { localToken } from "../../utils/auth";
+import React, { useEffect, useState } from 'react';
+import './Header.css';
+import mujiLogo from '../img/mujilogo.png';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { localToken } from '../../utils/auth';
 
 function Header() {
-  const location = useLocation();
   const navigate = useNavigate();
-
   const [tokenState, setToken] = useState(null);
+  const currentLocation = useLocation();
+
   useEffect(() => {
-    const tok = localToken?.get();
-    setToken(tok);
+    setToken(localToken.get());
   }, []);
 
-  // 로그인 페이지에서는 아이콘을 투명하게 만듭니다.
-  const isLoginPage = location.pathname === "/login";
-  const iconStyle = isLoginPage ? { opacity: 0, pointerEvents: "none" } : {};
-
   const handleLoginOrLogOut = () => {
-    if (localToken.get()) {
+    if (tokenState) {
       localToken.remove();
       setToken(null);
     }
-
-    navigate("/login");
+    navigate('/login');
   };
+
+  // 아이콘 클릭 이벤트 핸들러
+  // const handleNavigation = (path) => {
+  //   if (path === '/order' && !tokenState) {
+  //     navigate('/login');
+  //   } else {
+  //     navigate(path);
+  //   }
+  // };
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
+  const isLoginPage = currentLocation.pathname === '/login'; // 'currentLocation' 변수 사용
+  const iconStyle = isLoginPage ? { opacity: 0, pointerEvents: 'none' } : {};
+
+  const iconsConfig = tokenState
+    ? [
+        { icon: IconItems[2].icon, label: '장바구니', path: '/cart' },
+        { icon: IconItems[1].icon, label: '마이페이지', path: '/user' },
+        {
+          icon: IconItems[0].icon,
+          label: '로그아웃',
+          action: handleLoginOrLogOut,
+        },
+      ]
+    : [
+        {
+          icon: IconItems[2].icon,
+          label: '장바구니',
+          action: () => navigate('/login'),
+        },
+        { icon: IconItems[1].icon, label: '주문배송', path: '/order' },
+        { icon: IconItems[0].icon, label: '로그인', path: '/login' },
+      ];
 
   return (
     <div className="min-h-screen">
       <header className="container mx-auto">
         <div className="header-content">
           <Link to="/">
-            <img src={mujiLogo} alt="MUJI 로고" style={{ height: "50px" }} />
+            <img src={mujiLogo} alt="MUJI 로고" style={{ height: '50px' }} />
           </Link>
           <div className="search-bar">
             <div
               className="search-container"
               style={{
-                display: "flex",
-                alignItems: "center",
-                position: "relative",
+                display: 'flex',
+                alignItems: 'center',
+                position: 'relative',
               }}
             >
               <input
@@ -48,9 +77,9 @@ function Header() {
                 id="search-input"
                 style={{
                   flex: 1,
-                  padding: "10px 40px 10px 10px",
-                  border: "2px solid #ccc",
-                  borderRadius: "5px",
+                  padding: '10px 40px 10px 10px',
+                  border: '2px solid #ccc',
+                  borderRadius: '5px',
                 }}
               />
               <svg
@@ -61,13 +90,13 @@ function Header() {
                 stroke="currentColor"
                 className="search-icon"
                 style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  padding: "10px",
-                  color: "#ccc",
-                  cursor: "pointer",
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  padding: '10px',
+                  color: '#ccc',
+                  cursor: 'pointer',
                 }}
               >
                 <path
@@ -79,33 +108,27 @@ function Header() {
             </div>
           </div>
           <div className="icons" style={iconStyle}>
-            <a onClick={handleLoginOrLogOut}>
-              <div className="icon-item">
-                {IconItems[0].icon()}
-                <span>{tokenState ? "로그아웃" : "로그인"}</span>
+            {iconsConfig.map((item, index) => (
+              <div
+                key={index}
+                className="icon-item"
+                onClick={() =>
+                  item.action ? item.action() : handleNavigation(item.path)
+                }
+                style={{ cursor: 'pointer' }}
+              >
+                {item.icon()}
+                <span>{item.label}</span>
               </div>
-            </a>
-            <Link to="/cart">
-              <div className="icon-item">
-                {IconItems[2].icon()}
-                <span>{IconItems[2].label}</span>
-              </div>
-            </Link>
-            <Link to="/order">
-              <div className="icon-item">
-                {IconItems[1].icon()}
-                <span>{IconItems[1].label}</span>
-              </div>
-            </Link>
+            ))}
           </div>
         </div>
       </header>
     </div>
   );
 }
-
 const focusSearchInput = () => {
-  document.getElementById("search-input").focus();
+  document.getElementById('search-input').focus();
 };
 
 const IconItems = [
@@ -126,7 +149,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: "로그인",
+    label: '로그인',
   },
   {
     icon: () => (
@@ -145,7 +168,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: "주문배송",
+    label: '주문배송',
   },
   {
     icon: () => (
@@ -164,7 +187,7 @@ const IconItems = [
         />
       </svg>
     ),
-    label: "장바구니",
+    label: '장바구니',
   },
 ];
 

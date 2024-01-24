@@ -44,9 +44,9 @@
 }
 
 .rightTitle {
-  font-size: 3rem;
-  font-weight: 600;
-  padding: 20px 0 35px 30px;
+  font-size: 2rem;
+  font-weight: 400;
+  padding: 20px 0 35px 20px;
 }
 
 .userBodyContainer {
@@ -54,10 +54,10 @@
   text-align: left;
   border-top: solid 1px gray;
   border-bottom: solid 1px gray;
-  padding: 20px 0 35px 0;
+  padding: 10px 0 35px 0;
   justify-content: space-around;
   padding-right: 3rem;
-  height: 15rem;
+  height: 10rem;
   align-items: center;
 }
 

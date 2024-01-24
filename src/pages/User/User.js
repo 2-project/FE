@@ -78,12 +78,12 @@ function User({ onClose }) {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              width="25"
+              width="20"
               height="25"
-              viewBox="-5 -3 24 24"
+              viewBox="-5 -15 30 30"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-6 h-9"
             >
               <path
                 strokeLinecap="round"
