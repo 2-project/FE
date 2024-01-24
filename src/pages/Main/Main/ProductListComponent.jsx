@@ -68,7 +68,7 @@ function ProductListComponent() {
   }
 
   function handleProductClick(productId) {
-    navigate(`/detail/${productId}`);
+    navigate('/detail', { state: { productId: productId } });
   }
 
   return (

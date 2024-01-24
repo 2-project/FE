@@ -14,7 +14,7 @@
 
 .product-item {
   width: 100%;
-  height: 325px;
+  height: 253px;
   padding: 0.5rem;
   position: relative;
 }
@@ -28,6 +28,7 @@
   margin-top: 0.3rem;
   font-size: 1rem;
   font-weight: 400;
+  padding-left: 10px;
 }
 
 .product-grid-title {
