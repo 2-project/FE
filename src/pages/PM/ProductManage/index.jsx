@@ -27,9 +27,12 @@ const PM = () => {
   const [products, setProducts] = useState([]);
 
   const getAll = async () => {
-    const res = await getAllProduct();
-    console.log("mres", res);
-    setProducts(res.productDetailList);
+    try {
+      const res = await getAllProduct();
+      setProducts(res.productDetailList || []);
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
     getAll();
@@ -262,7 +265,7 @@ const PM = () => {
                   <TableCell align="center">{product.productName}</TableCell>
                   <TableCell align="center">{product.category}</TableCell>
                   <TableCell align="center">
-                    {product.options.map((option, index) => (
+                    {product.options?.map((option, index) => (
                       <React.Fragment key={index}>
                         {index > 0 && <br />}
                         {`${option.optionName} (${option.optionStock})`}
