@@ -87,6 +87,7 @@ function Login({ onClose }) {
               userId.trim() !== "" &&
               "올바른 이메일 형식이 아닙니다."
             }
+            autoComplete="off"
           />
           <TextField
             label="비밀번호"
