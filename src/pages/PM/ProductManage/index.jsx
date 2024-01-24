@@ -71,11 +71,11 @@ const PM = () => {
         return;
       }
 
-      await Promise.all(
-        checkedProducts.map(async (productCid) => {
-          await deleteProduct(productCid);
-        })
-      );
+      // await Promise.all(
+      //   checkedProducts.map(async (productCid) => {
+      //     await deleteProduct(productCid);
+      //   })
+      // );
 
       const updatedProducts = products.filter(
         (product) => !checkedProducts.includes(product.productCid)
