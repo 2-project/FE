@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   ToggleButton,
   ToggleButtonGroup,
@@ -6,15 +7,23 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
+import { addGoodsToCart } from "../../../api/detailApi";
 
-const AddToCart = () => {
+const AddToCart = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [openOption, setOpenOption] = useState(false);
   const [chosenOption, setChosenOption] = useState(null);
-  const optionData = ["S", "M", "L"];
+  const optionData = data.options || [];
   const [quantity, setQuantity] = useState(1);
+  const [params, setParams] = useState({
+    optionid: null,
+    quantity: null,
+  });
   const handleChangeOption = (e, newValue) => {
     setChosenOption(newValue);
+    setParams((prev) => {
+      return { ...prev, optionid: newValue?.optionCid || null };
+    });
     console.log("changed", newValue);
   };
 
@@ -25,35 +34,50 @@ const AddToCart = () => {
   const handleIncrease = () => {
     setQuantity((prev) => prev + 1);
   };
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (chosenOption === null) {
       setOpenOption(true);
     } else {
-      console.log("post data");
+      //TODO: add to cart
+      const res = await addGoodsToCart(data.productCid, params);
+      console.log("res", res);
+      toast.info(res?.message);
     }
   };
+
+  useEffect(() => {
+    setParams((prev) => {
+      return { ...prev, quantity };
+    });
+  }, [quantity]);
   return (
-    <div style={{ width: "280px", margin: "20px 0 10px 0" }}>
+    <div
+      style={{
+        width: "280px",
+        margin: "20px 0 10px 0",
+      }}
+    >
       <p>옵션 선택</p>
       <ToggleButtonGroup
         color="primary"
         value={chosenOption}
         exclusive
         onChange={handleChangeOption}
+        style={{ display: "flex", flexWrap: "wrap" }}
       >
         {optionData.map((item, index) => {
           return (
             <ToggleButton
+              disabled={item.optionStock === 0}
               key={index}
               value={item}
               style={{
-                // padding: "3px",
                 border: "3px",
-                width: "36px",
+                minWidth: "36px",
                 height: "36px",
               }}
             >
-              {item}
+              {item.optionName}
             </ToggleButton>
           );
         })}

@@ -8,40 +8,39 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import styles from "./SignUp.module.css";
 import userBasicIcon_1 from "../../../assets/icons/basic_profile_1.png";
 
 function MemberLoginModal({ onClose }) {
-  const [LoginId, setLoginId] = useState("");
-  const [LoginPassword, setLoginPassword] = useState("");
+  const [userId, setuserId] = useState("");
+  const [userPwd, setuserPwd] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
+  const [userName, setuserName] = useState("");
+  const [userPhone, setuserPhone] = useState("");
+  const [userAddress, setuserAddress] = useState("");
   const [profilePicture, setProfilePicture] = useState(userBasicIcon_1);
   const [isCheckboxChecked, setCheckboxChecked] = useState(true);
   const [isProfilePictureValid, setIsProfilePictureValid] = useState(true);
 
-  const isEmailValid = /^(?=.*[a-z\d])[a-z\d]+@[a-z]+\.[a-z]+$/i.test(LoginId);
-  const isPasswordValid = /^(?=.*[a-z])(?=.*\d).{8,20}$/.test(LoginPassword);
-  const isPhoneNumberValid = /^\d{11}$/.test(phoneNumber);
-  const isNameValid = /^[가-힣]+$/.test(name);
-  const isAddressValid = /^[가-힣\d\s-]+$/i.test(address);
+  const isEmailValid = /^(?=.*[a-z\d])[a-z\d]+@[a-z]+\.[a-z]+$/i.test(userId);
+  const isPasswordValid = /^(?=.*[a-z])(?=.*\d).{8,20}$/.test(userPwd);
+  const isuserPhoneValid = /^\d{11}$/.test(userPhone);
+  const isuserNameValid = /^[가-힣]+$/.test(userName);
+  const isuserAddressValid = /^[가-힣\d\s-]+$/i.test(userAddress);
 
   const isSignupButtonEnabled =
-    isNameValid &&
+    isuserNameValid &&
     isEmailValid &&
     isPasswordValid &&
-    confirmPassword === LoginPassword &&
-    isPhoneNumberValid &&
-    isAddressValid &&
+    confirmPassword === userPwd &&
+    isuserPhoneValid &&
+    isuserAddressValid &&
     isProfilePictureValid &&
     isCheckboxChecked;
 
   // 휴대폰 번화 폼에서 중간에 -을 넣어주는 기능
-  const formatPhoneNumber = (phoneNumber) => {
-    const cleaned = phoneNumber.replace(/\D/g, "");
+  const formatuserPhone = (userPhone) => {
+    const cleaned = userPhone.replace(/\D/g, "");
 
     // 11자리의 숫자를 입력했을 때만 형식을 변경
     if (cleaned.length === 11) {
@@ -54,28 +53,36 @@ function MemberLoginModal({ onClose }) {
   const handleSignup = () => {
     if (isSignupButtonEnabled) {
       const signupData = {
-        name,
-        email: LoginId,
-        password: LoginPassword,
+        userName,
+        user_id: userId,
+        user_pwd: userPwd,
         confirmPassword,
-        phoneNumber,
-        address,
-        profilePicture: profilePicture ? profilePicture.name : null,
+        userPhone,
+        userAddress,
+        profilePicture: profilePicture ? profilePicture.userName : null,
         // 기타 필요한 회원가입 정보 추가
       };
-
-      fetch("백엔드API주소", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signupData),
-      })
-        .then((response) => response.json())
+      fetch(
+        "http://ec2-43-203-169-73.ap-northeast-2.compute.amazonaws.com:8080/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            user_pwd: userPwd,
+            user_name: userName,
+            user_phone: userPhone,
+            user_address: userAddress,
+          }),
+        }
+      )
         .then((data) => {
           // 서버 응답에 대한 처리
           console.log("회원가입 성공:", data);
-          // 추가적인 프론트엔드 로직 수행
+          alert("가입을 축하합니다.");
+          onClose();
         })
         .catch((error) => {
           console.error("회원가입 실패:", error);
@@ -125,17 +132,18 @@ function MemberLoginModal({ onClose }) {
           variant="outlined"
           fullWidth
           margin="normal"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={userName}
+          onChange={(e) => setuserName(e.target.value)}
           className={styles.inputField}
           placeholder="한글로만 입력"
           size="small"
-          error={!isNameValid && name.trim() !== ""}
+          error={!isuserNameValid && userName.trim() !== ""}
           helperText={
-            !isNameValid &&
-            name.trim() !== "" &&
+            !isuserNameValid &&
+            userName.trim() !== "" &&
             "올바른 한글 이름을 입력하세요."
           }
+          autoComplete="off"
         />
         <Box
           className={styles.emailContainer}
@@ -150,17 +158,18 @@ function MemberLoginModal({ onClose }) {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={LoginId}
-            onChange={(e) => setLoginId(e.target.value)}
+            value={userId}
+            onChange={(e) => setuserId(e.target.value)}
             className={styles.inputField}
             placeholder="@ 필수 입력"
             size="small"
-            error={!isEmailValid && LoginId.trim() !== ""}
+            error={!isEmailValid && userId.trim() !== ""}
             helperText={
               !isEmailValid &&
-              LoginId.trim() !== "" &&
+              userId.trim() !== "" &&
               "올바른 이메일 형식이 아닙니다."
             }
+            autoComplete="off"
           />
           <Button
             variant="outlined"
@@ -178,15 +187,15 @@ function MemberLoginModal({ onClose }) {
           variant="outlined"
           fullWidth
           margin="normal"
-          value={LoginPassword}
-          onChange={(e) => setLoginPassword(e.target.value)}
+          value={userPwd}
+          onChange={(e) => setuserPwd(e.target.value)}
           className={styles.inputField}
           placeholder="영문(소문자), 숫자 합쳐서 8~20자"
           size="small"
-          error={!isPasswordValid && LoginPassword.trim() !== ""}
+          error={!isPasswordValid && userPwd.trim() !== ""}
           helperText={
             !isPasswordValid &&
-            LoginPassword.trim() !== "" &&
+            userPwd.trim() !== "" &&
             "비밀번호는 소문자와 숫자를 포함한 8~20자여야 합니다."
           }
         />
@@ -201,9 +210,9 @@ function MemberLoginModal({ onClose }) {
           className={styles.inputField}
           placeholder="영문(소문자), 숫자 합쳐서 8~20자"
           size="small"
-          error={confirmPassword !== LoginPassword && confirmPassword !== ""}
+          error={confirmPassword !== userPwd && confirmPassword !== ""}
           helperText={
-            confirmPassword !== LoginPassword &&
+            confirmPassword !== userPwd &&
             confirmPassword !== "" &&
             "비밀번호가 일치하지 않습니다."
           }
@@ -213,33 +222,36 @@ function MemberLoginModal({ onClose }) {
           variant="outlined"
           fullWidth
           margin="normal"
-          value={formatPhoneNumber(phoneNumber)}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          value={formatuserPhone(userPhone)}
+          onChange={(e) => setuserPhone(e.target.value)}
           className={styles.inputField}
           placeholder="'-' 없이 숫자만 입력"
           size="small"
-          error={!isPhoneNumberValid && phoneNumber.trim() !== ""}
+          error={!isuserPhoneValid && userPhone.trim() !== ""}
           helperText={
-            !isPhoneNumberValid &&
-            phoneNumber.trim() !== "" &&
+            !isuserPhoneValid &&
+            userPhone.trim() !== "" &&
             "올바른 휴대폰 번호를 입력하세요."
           }
+          autoComplete="off"
         />
         <TextField
           label="*주소"
           variant="outlined"
           fullWidth
           margin="normal"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          value={userAddress}
+          onChange={(e) => setuserAddress(e.target.value)}
           className={styles.inputField}
+          placeholder="상세주소까지 입력"
           size="small"
-          error={!isAddressValid && address.trim() !== ""}
+          error={!isuserAddressValid && userAddress.trim() !== ""}
           helperText={
-            !isAddressValid &&
-            address.trim() !== "" &&
+            !isuserAddressValid &&
+            userAddress.trim() !== "" &&
             "올바른 주소를 입력하세요."
           }
+          autoComplete="off"
         />
         <div className={styles.profileUploadBox}>
           <img
@@ -247,10 +259,10 @@ function MemberLoginModal({ onClose }) {
             //src={userBasicIcon_1}
             src={profilePicture}
             alt="프로필사진"
-          ></img>
+          />
           <input
             className={styles.uploadName}
-            value={profilePicture ? profilePicture.name : "첨부파일"}
+            value={profilePicture ? profilePicture.userName : "첨부파일"}
             placeholder="프로필 사진 업로드"
             readOnly
           />

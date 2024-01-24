@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.css";
 
-const ProductInfo = () => {
+const ProductInfo = ({ data }) => {
   return (
     <div
       style={{
@@ -11,18 +11,22 @@ const ProductInfo = () => {
         borderBottom: "1px solid #e1e1e1",
       }}
     >
-      <div className="product-title">
-        여성 · 사이드 심리스 · 이중 가제 파자마
-      </div>
+      <div className="product-title">{data.productName}</div>
       <div className="info-layout">
         <div className="info-title">가격</div>
-        <div className="info-content" style={{ fontSize: "18px" }}>
-          59,000원
+        <div
+          className="info-content"
+          style={{ fontSize: "18px", fontWeight: "bold" }}
+        >
+          {data.productPrice}
+          <span style={{ fontSize: "12px", fontWeight: "normal" }}>원</span>
         </div>
       </div>
       <div className="info-layout">
         <div className="info-title">배송비</div>
-        <div className="info-content">무료배송</div>
+        <div className="info-content">
+          <span className="info-shipping">무료배송</span>
+        </div>
       </div>
       <div className="info-layout">
         <div className="info-title">배송정보</div>
@@ -34,7 +38,7 @@ const ProductInfo = () => {
       </div>
       <div className="info-layout">
         <div className="info-title">상품코드</div>
-        <div className="info-content">FD1JGA4S</div>
+        <div className="info-content">{data.productCid}</div>
       </div>
     </div>
   );

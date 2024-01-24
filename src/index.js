@@ -10,27 +10,14 @@ import "react-toastify/dist/ReactToastify.css";
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#7f0019',
+      main: "#7f0019",
     },
   },
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    {/* <React.StrictMode> */}
-    <ThemeProvider theme={theme}>
-      <ToastContainer
-        position="bottom-left"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={true}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
-      <App />
-    </ThemeProvider>
-    {/* </React.StrictMode> */}
     {/* <React.StrictMode> */}
     <ThemeProvider theme={theme}>
       <ToastContainer
